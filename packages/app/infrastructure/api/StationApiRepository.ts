@@ -19,8 +19,14 @@ export class StationApiRepository implements IStationRepository {
       if (error.response?.status === 404) {
         return null
       }
+      if (error.response?.status === 403) {
+        throw new Error('Esta estación solo está disponible para usuarios Premium.')
+      }
+      if (error.response?.status === 503) {
+        throw new Error('El servicio de estaciones está temporalmente no disponible. Por favor, intenta más tarde.')
+      }
       console.error('Error fetching station by ID:', error)
-      throw error
+      throw new Error('Error al obtener la estación. Por favor, intenta de nuevo.')
     }
   }
 
@@ -28,24 +34,42 @@ export class StationApiRepository implements IStationRepository {
     try {
       const response = await apiClient.get('/stations/search', {
         params: { q: query, limit },
+        timeout: 60000, // Extended timeout for searches (60 seconds)
       })
       return (response.data.data || []).map((item: any) => this.mapToStation(item))
-    } catch (error) {
+    } catch (error: any) {
+      // Handle specific HTTP errors from backend
+      if (error.response?.status === 400) {
+        throw new Error('Por favor, proporciona un término de búsqueda válido.')
+      }
+      if (error.response?.status === 503) {
+        throw new Error('El servicio de búsqueda está temporalmente no disponible. Por favor, intenta más tarde.')
+      }
+      // Handle timeout errors
+      if (error.code === 'ECONNABORTED' || error.message?.includes('timeout')) {
+        console.error('Search timeout - backend is taking too long:', error)
+        throw new Error('La búsqueda está tardando más de lo esperado. Por favor, intenta con términos más específicos.')
+      }
       console.error('Error searching stations:', error)
-      return []
+      throw new Error('Error al buscar estaciones. Por favor, intenta de nuevo.')
     }
   }
 
-  async getPopular(limit: number = 20): Promise<Station[]> {
+  async getPopular(limit: number = 20, country?: string): Promise<Station[]> {
     try {
-      const response = await apiClient.get('/stations/popular', {
-        params: { limit },
-      })
+      const params: any = { limit }
+      if (country) {
+        params.country = country
+      }
+      const response = await apiClient.get('/stations/popular', { params })
       // Backend returns { data: [...], meta: {...} }
       return (response.data.data || []).map((item: any) => this.mapToStation(item))
-    } catch (error) {
+    } catch (error: any) {
+      if (error.response?.status === 503) {
+        throw new Error('El servicio de estaciones está temporalmente no disponible. Por favor, intenta más tarde.')
+      }
       console.error('Error fetching popular stations:', error)
-      return []
+      throw new Error('Error al obtener estaciones populares. Por favor, intenta de nuevo.')
     }
   }
 
@@ -55,15 +79,8 @@ export class StationApiRepository implements IStationRepository {
   }
 
   async getByCountry(country: string, limit: number = 20): Promise<Station[]> {
-    try {
-      const response = await apiClient.get('/stations/popular', {
-        params: { country, limit },
-      })
-      return (response.data.data || []).map((item: any) => this.mapToStation(item))
-    } catch (error) {
-      console.error('Error fetching stations by country:', error)
-      return []
-    }
+    // Use getPopular with country filter
+    return this.getPopular(limit, country)
   }
 
   private mapToStation(data: any): Station {

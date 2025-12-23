@@ -2,10 +2,12 @@
 
 import { usePlayer } from '@/hooks/usePlayer'
 import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 
 export function PlayerBar() {
   const { currentStation, playerState, togglePlayPause, stop, setVolume } = usePlayer()
   const router = useRouter()
+  const [imgError, setImgError] = useState(false)
 
   if (!currentStation) {
     return null
@@ -27,11 +29,20 @@ export function PlayerBar() {
             className="flex items-center gap-3 flex-1 min-w-0 text-left hover:opacity-80 transition-opacity focus:outline-none focus:ring-2 focus:ring-primary-500 rounded-lg"
             aria-label={`Ver detalles de ${currentStation.name}`}
           >
-            <img
-              src={currentStation.imageUrl || 'https://via.placeholder.com/48'}
-              alt={currentStation.name}
-              className="w-12 h-12 rounded-lg object-cover"
-            />
+            <div className="w-12 h-12 rounded-lg bg-neutral-200 dark:bg-neutral-800 flex items-center justify-center overflow-hidden flex-shrink-0">
+              {!imgError && currentStation.imageUrl ? (
+                <img
+                  src={currentStation.imageUrl}
+                  alt={currentStation.name}
+                  className="w-full h-full object-cover"
+                  onError={() => setImgError(true)}
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-400 to-primary-600">
+                  <span className="text-2xl text-white">📻</span>
+                </div>
+              )}
+            </div>
             <div className="flex-1 min-w-0">
               <h3 className="font-semibold text-neutral-900 dark:text-white truncate">
                 {currentStation.name}

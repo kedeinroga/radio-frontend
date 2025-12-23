@@ -21,6 +21,8 @@ export const StationCard: React.FC<StationCardProps> = ({
   onPlay,
   onFavorite,
 }) => {
+  const [imgError, setImgError] = React.useState(false)
+
   return (
     <View
       className="bg-white dark:bg-neutral-900 rounded-xl p-4 mb-3 shadow-sm"
@@ -30,12 +32,21 @@ export const StationCard: React.FC<StationCardProps> = ({
     >
       <View className="flex-row items-center gap-4">
         {/* Station Image */}
-        <Image
-          source={{ uri: station.imageUrl || 'https://via.placeholder.com/80' }}
-          className="w-20 h-20 rounded-lg bg-neutral-200"
-          accessibilityIgnoresInvertColors
-          alt={`${station.name} logo`}
-        />
+        <View className="w-20 h-20 rounded-lg bg-neutral-200 dark:bg-neutral-800 items-center justify-center overflow-hidden">
+          {!imgError && station.imageUrl ? (
+            <Image
+              source={{ uri: station.imageUrl }}
+              className="w-20 h-20 rounded-lg"
+              accessibilityIgnoresInvertColors
+              alt={`${station.name} logo`}
+              onError={() => setImgError(true)}
+            />
+          ) : (
+            <View className="w-20 h-20 bg-gradient-to-br from-primary-400 to-primary-600 items-center justify-center">
+              <Text className="text-3xl">📻</Text>
+            </View>
+          )}
+        </View>
 
         {/* Station Info */}
         <View className="flex-1">

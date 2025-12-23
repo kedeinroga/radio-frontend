@@ -13,7 +13,7 @@ const API_BASE_URL =
 // Create axios instance
 const apiClient: AxiosInstance = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 10000,
+  timeout: 30000, // Increased to 30 seconds for slow searches
   headers: {
     'Content-Type': 'application/json',
   },

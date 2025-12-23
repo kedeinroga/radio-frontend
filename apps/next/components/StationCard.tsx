@@ -27,6 +27,8 @@ export const StationCard: React.FC<StationCardProps> = ({
     router.push(`/stations/${station.id}`)
   }
 
+  const [imgError, setImgError] = React.useState(false)
+
   return (
     <div 
       onClick={handleCardClick}
@@ -34,11 +36,20 @@ export const StationCard: React.FC<StationCardProps> = ({
     >
       <div className="flex items-center gap-4">
         {/* Station Image */}
-        <img
-          src={station.imageUrl || 'https://via.placeholder.com/80'}
-          alt={`${station.name} logo`}
-          className="w-20 h-20 rounded-lg bg-neutral-200 object-cover"
-        />
+        <div className="w-20 h-20 rounded-lg bg-neutral-200 dark:bg-neutral-800 flex items-center justify-center overflow-hidden">
+          {!imgError && station.imageUrl ? (
+            <img
+              src={station.imageUrl}
+              alt={`${station.name} logo`}
+              className="w-full h-full object-cover"
+              onError={() => setImgError(true)}
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-400 to-primary-600">
+              <span className="text-3xl text-white">📻</span>
+            </div>
+          )}
+        </div>
 
         {/* Station Info */}
         <div className="flex-1 min-w-0">

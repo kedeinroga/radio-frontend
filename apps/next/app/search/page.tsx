@@ -17,6 +17,8 @@ export default function SearchPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [hasSearched, setHasSearched] = useState(false)
   const [favoritesState, setFavoritesState] = useState(0)
+  const [searchError, setSearchError] = useState<string | null>(null)
+  const [isSlowSearch, setIsSlowSearch] = useState(false)
   
   const { play, togglePlayPause, currentStation, playerState } = usePlayer()
   const { isFavorite, toggleFavorite } = useFavorites()
@@ -26,30 +28,52 @@ export default function SearchPage() {
     if (!query.trim()) {
       setStations([])
       setHasSearched(false)
+      setSearchError(null)
+      setIsSlowSearch(false)
+      setIsLoading(false) // Clear loading state when query is empty
       return
     }
 
     setIsLoading(true)
+    setSearchError(null)
+    setIsSlowSearch(false)
+    
+    // Set a timer to show slow search message after 5 seconds
+    const slowSearchTimer = setTimeout(() => {
+      setIsSlowSearch(true)
+    }, 5000)
+    
     const timeoutId = setTimeout(async () => {
       try {
         const results = await stationRepo.search(query, 20)
         setStations(results)
         setHasSearched(true)
-      } catch (error) {
+      } catch (error: any) {
         console.error('Search error:', error)
         setStations([])
+        setHasSearched(true)
+        // Set user-friendly error message
+        setSearchError(error.message || 'Error al buscar estaciones. Por favor, intenta de nuevo.')
       } finally {
         setIsLoading(false)
+        setIsSlowSearch(false)
+        clearTimeout(slowSearchTimer)
       }
     }, 500) // 500ms debounce
 
-    return () => clearTimeout(timeoutId)
+    return () => {
+      clearTimeout(timeoutId)
+      clearTimeout(slowSearchTimer)
+    }
   }, [query])
 
   const handleClear = () => {
     setQuery('')
     setStations([])
     setHasSearched(false)
+    setSearchError(null)
+    setIsSlowSearch(false)
+    setIsLoading(false) // Clear loading state
   }
 
   const handleToggleFavorite = (station: any) => {
@@ -111,9 +135,25 @@ export default function SearchPage() {
 
         {/* Results */}
         {isLoading ? (
-          <div className="flex justify-center py-12">
+          <div className="flex flex-col items-center justify-center py-12">
             <LoadingSpinner size="large" />
+            <p className="mt-4 text-sm text-gray-600 dark:text-gray-400">
+              Buscando estaciones...
+            </p>
+            {isSlowSearch && (
+              <div className="mt-4 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg max-w-md">
+                <p className="text-sm text-yellow-800 dark:text-yellow-200">
+                  ⏳ La búsqueda está tardando más de lo esperado. Por favor, ten paciencia...
+                </p>
+              </div>
+            )}
           </div>
+        ) : searchError ? (
+          <EmptyState
+            icon="⚠️"
+            title="Error en la búsqueda"
+            message={searchError}
+          />
         ) : stations.length > 0 ? (
           <div>
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">

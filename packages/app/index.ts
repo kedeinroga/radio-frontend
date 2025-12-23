@@ -12,11 +12,16 @@ export type { IPlayerRepository, PlayerState } from './domain/repositories/IPlay
 
 // Infrastructure - Only working adapters
 export { StationApiRepository } from './infrastructure/api/StationApiRepository'
+export { FavoritesApiRepository } from './infrastructure/api/FavoritesApiRepository'
+export { AnalyticsApiRepository } from './infrastructure/api/AnalyticsApiRepository'
+export { AuthApiRepository } from './infrastructure/api/AuthApiRepository'
+export type { TrendingSearch, PopularStation, ActiveUsersCount, TimeRange } from './infrastructure/api/AnalyticsApiRepository'
+export type { LoginRequest, RegisterRequest, RefreshRequest, AuthTokens, UserInfo } from './infrastructure/api/AuthApiRepository'
 export { ConsoleLogger } from './infrastructure/logging/ConsoleLogger'
 export { MockAnalyticsService } from './infrastructure/analytics/MockAnalyticsService'
 export { WebSecureStorage } from './infrastructure/storage/WebSecureStorage'
 export type { ISecureStorage } from './infrastructure/storage/ISecureStorage'
-export { default as apiClient } from './infrastructure/api/apiClient'
+export { default as apiClient, initializeApiClient } from './infrastructure/api/apiClient'
 export { HowlerPlayerAdapter } from './infrastructure/audio/HowlerPlayerAdapter'
 
 // Stores

@@ -20,6 +20,7 @@ export default function StationDetailPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(false)
   const [favoritesState, setFavoritesState] = useState(0)
+  const [imgError, setImgError] = useState(false)
 
   const { play, togglePlayPause, currentStation, playerState } = usePlayer()
   const { isFavorite, toggleFavorite } = useFavorites()
@@ -110,17 +111,20 @@ export default function StationDetailPage() {
           <div className="md:flex">
             {/* Station Image */}
             <div className="md:w-1/3 bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center p-8">
-              {station.imageUrl ? (
-                <img
-                  src={station.imageUrl}
-                  alt={station.name}
-                  className="w-full max-w-xs rounded-xl shadow-2xl"
-                />
-              ) : (
-                <div className="w-full max-w-xs aspect-square bg-gray-800 rounded-xl flex items-center justify-center">
-                  <Radio className="w-24 h-24 text-gray-600" />
-                </div>
-              )}
+              <div className="w-full max-w-xs aspect-square rounded-xl shadow-2xl overflow-hidden bg-gray-800 flex items-center justify-center">
+                {!imgError && station.imageUrl ? (
+                  <img
+                    src={station.imageUrl}
+                    alt={station.name}
+                    className="w-full h-full object-cover"
+                    onError={() => setImgError(true)}
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-400 to-primary-600">
+                    <Radio className="w-24 h-24 text-white" />
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Station Info */}
