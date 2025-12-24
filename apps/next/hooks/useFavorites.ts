@@ -16,12 +16,16 @@ export const useFavorites = () => {
           data.id,
           data.name,
           data.streamUrl,
+          data.slug || data.id, // Use slug if available, fallback to id
+          data.tags || [],
+          data.seoMetadata,
           data.imageUrl,
           data.country,
           data.genre,
-          data.isPremium,
+          data.isPremium || false,
           data.description,
-          data.bitrate
+          data.bitrate,
+          data.votes
         )
       )
     } catch (error) {

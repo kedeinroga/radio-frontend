@@ -24,7 +24,8 @@ export const StationCard: React.FC<StationCardProps> = ({
   const router = useRouter()
 
   const handleCardClick = () => {
-    router.push(`/stations/${station.id}`)
+    // Use slug for SEO-friendly URLs (backend still uses ID)
+    router.push(`/radio/${station.slug || station.id}`)
   }
 
   const [imgError, setImgError] = React.useState(false)

@@ -1,12 +1,15 @@
 import apiClient from '../api/apiClient'
 import { IStationRepository } from '../../domain/repositories/IStationRepository'
-import { Station } from '../../domain/entities/Station'
+import { Station, SEOMetadata } from '../../domain/entities/Station'
 
 /**
  * Station API Repository
  * Implements IStationRepository using backend API
  */
 export class StationApiRepository implements IStationRepository {
+  // In-memory cache for slug -> ID mapping
+  private slugToIdCache = new Map<string, string>()
+  
   async findById(id: string): Promise<Station | null> {
     try {
       const response = await apiClient.get(`/stations/${id}`)
@@ -83,17 +86,110 @@ export class StationApiRepository implements IStationRepository {
     return this.getPopular(limit, country)
   }
 
+  /**
+   * Finds a station by slug or ID
+   * Strategy: 
+   * 1. Check if input looks like UUID -> use findById
+   * 2. Check cache for slug -> ID mapping
+   * 3. Search popular stations and find by slug
+   * 4. Cache the slug -> ID mapping for future use
+   */
+  async findBySlug(slug: string): Promise<Station | null> {
+    // Check if it's already an ID (UUID format)
+    if (this.isUUID(slug)) {
+      return this.findById(slug)
+    }
+
+    // Check cache first
+    const cachedId = this.slugToIdCache.get(slug)
+    if (cachedId) {
+      return this.findById(cachedId)
+    }
+
+    // Search in popular stations and search results
+    try {
+      // Try popular stations first (most likely to contain the slug)
+      const popularStations = await this.getPopular(100)
+      const station = popularStations.find(s => s.slug === slug)
+      
+      if (station) {
+        // Cache the mapping
+        this.slugToIdCache.set(slug, station.id)
+        return station
+      }
+
+      // If not found in popular, try searching by name
+      const searchResults = await this.search(slug.replace(/-/g, ' '), 50)
+      const searchStation = searchResults.find(s => s.slug === slug)
+      
+      if (searchStation) {
+        this.slugToIdCache.set(slug, searchStation.id)
+        return searchStation
+      }
+
+      return null
+    } catch (error) {
+      console.error('Error finding station by slug:', error)
+      return null
+    }
+  }
+
+  /**
+   * Finds station by slug or ID (flexible)
+   */
+  async findBySlugOrId(slugOrId: string): Promise<Station | null> {
+    if (this.isUUID(slugOrId)) {
+      return this.findById(slugOrId)
+    }
+    return this.findBySlug(slugOrId)
+  }
+
+  /**
+   * Checks if string is a valid UUID
+   */
+  private isUUID(str: string): boolean {
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+    return uuidRegex.test(str)
+  }
+
   private mapToStation(data: any): Station {
+    // Map SEO metadata if present
+    const seoMetadata: SEOMetadata | undefined = data.seo_metadata ? {
+      title: data.seo_metadata.title || '',
+      description: data.seo_metadata.description || '',
+      keywords: data.seo_metadata.keywords || [],
+      canonicalUrl: data.seo_metadata.canonical_url || '',
+      imageUrl: data.seo_metadata.image_url || '',
+      alternateNames: data.seo_metadata.alternate_names || [],
+      lastModified: data.seo_metadata.last_modified || new Date().toISOString()
+    } : undefined
+
     return new Station(
       data.id,
       data.name,
       data.stream_url,
+      data.slug || this.generateSlug(data.name), // Fallback if backend doesn't provide slug
+      data.tags || [],
+      seoMetadata,
       data.image_url,
       data.country,
       data.genre,
-      data.is_premium || false,
+      data.is_premium_only || false,
       data.description,
-      data.bitrate
+      data.bitrate,
+      data.votes
     )
+  }
+
+  /**
+   * Generates a slug from station name (fallback)
+   */
+  private generateSlug(name: string): string {
+    return name
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '') // Remove accents
+      .replace(/[^a-z0-9]+/g, '-')     // Replace spaces/special chars with -
+      .replace(/(^-|-$)/g, '')         // Remove leading/trailing -
   }
 }
