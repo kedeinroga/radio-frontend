@@ -8,11 +8,12 @@ import {
   WebSiteSchema,
   Station
 } from '@radio-app/app'
+import { StationGridItem } from '../../../components/StationGridItem'
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://radioapp.com'
 
 interface PageProps {
-  params: { tag: string }
+  params: Promise<{ tag: string }>
 }
 
 // 🔥 ISR - Regenerate every hour
@@ -37,7 +38,8 @@ export async function generateStaticParams() {
 
 // 🔥 DYNAMIC METADATA
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const genreName = decodeURIComponent(params.tag).replace(/-/g, ' ')
+  const { tag } = await params
+  const genreName = decodeURIComponent(tag).replace(/-/g, ' ')
   const displayName = genreName.charAt(0).toUpperCase() + genreName.slice(1)
   
   return {
@@ -52,18 +54,19 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     openGraph: {
       title: `Radios de ${displayName} | RadioApp`,
       description: `Escucha las mejores radios de ${displayName} en vivo`,
-      url: `${BASE_URL}/genre/${params.tag}`,
+      url: `${BASE_URL}/genre/${tag}`,
     },
     alternates: {
-      canonical: `${BASE_URL}/genre/${params.tag}`
+      canonical: `${BASE_URL}/genre/${tag}`
     }
   }
 }
 
 // 🔥 SERVER COMPONENT WITH ISR
 export default async function GenrePage({ params }: PageProps) {
+  const { tag } = await params
   const repository = new StationApiRepository()
-  const genreName = decodeURIComponent(params.tag).replace(/-/g, ' ')
+  const genreName = decodeURIComponent(tag).replace(/-/g, ' ')
   const displayName = genreName.charAt(0).toUpperCase() + genreName.slice(1)
   
   let stations: Station[] = []
@@ -76,7 +79,7 @@ export default async function GenrePage({ params }: PageProps) {
   const breadcrumbs = [
     { name: 'Inicio', url: BASE_URL },
     { name: 'Géneros', url: `${BASE_URL}/genres` },
-    { name: displayName, url: `${BASE_URL}/genre/${params.tag}` }
+    { name: displayName, url: `${BASE_URL}/genre/${tag}` }
   ]
 
   return (
@@ -111,43 +114,17 @@ export default async function GenrePage({ params }: PageProps) {
           {stations.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {stations.map(station => (
-                <Link
+                <StationGridItem
                   key={station.id}
-                  href={`/radio/${station.slug}`}
-                  className="bg-white dark:bg-gray-900 rounded-lg p-4 shadow hover:shadow-xl transition-shadow border border-gray-200 dark:border-gray-800 group"
-                >
-                  <div className="flex flex-col items-center text-center">
-                    <img
-                      src={station.imageUrl || '/default-radio.png'}
-                      alt={station.name}
-                      className="w-20 h-20 rounded-lg object-cover mb-3 group-hover:scale-105 transition-transform"
-                      loading="lazy"
-                      onError={(e) => {
-                        e.currentTarget.src = '/default-radio.png'
-                      }}
-                    />
-                    <h3 className="font-semibold text-gray-900 dark:text-white line-clamp-2 mb-2">
-                      {station.name}
-                    </h3>
-                    {station.country && (
-                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-                        📍 {station.country}
-                      </p>
-                    )}
-                    {station.tags.length > 0 && (
-                      <div className="flex gap-1 flex-wrap justify-center">
-                        {station.tags.slice(0, 2).map((tag: string) => (
-                          <span
-                            key={tag}
-                            className="text-xs bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded"
-                          >
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </Link>
+                  station={{
+                    id: station.id,
+                    name: station.name,
+                    slug: station.slug,
+                    imageUrl: station.imageUrl,
+                    country: station.country,
+                    tags: station.tags
+                  }}
+                />
               ))}
             </div>
           ) : (

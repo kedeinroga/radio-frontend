@@ -37,13 +37,15 @@ export class SEOApiRepository implements ISEORepository {
       })
       
       const tags = response.data.data?.tags || []
-      return tags.map((item: any) =>
-        new PopularTag(
-          item.tag,
-          item.normalized_tag,
-          item.station_count
+      return tags
+        .filter((item: any) => item.tag && item.tag.trim() !== '') // Filter out empty tags
+        .map((item: any) =>
+          new PopularTag(
+            item.tag,
+            item.normalized_tag || item.tag.toLowerCase().replace(/\s+/g, '-'), // Fallback normalized tag
+            item.station_count || 0
+          )
         )
-      )
     } catch (error: any) {
       console.error('Error fetching popular tags:', error)
       return []
