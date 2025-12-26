@@ -15,8 +15,8 @@ export function PlayerBar() {
 
   const handleStationClick = () => {
     if (currentStation?.id) {
-      // Use slug for SEO-friendly URLs
-      router.push(`/radio/${currentStation.slug || currentStation.id}`)
+      // Use ID for URLs
+      router.push(`/radio/${currentStation.id}`)
     }
   }
 

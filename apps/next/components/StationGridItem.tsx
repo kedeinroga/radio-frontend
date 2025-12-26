@@ -19,7 +19,7 @@ export function StationGridItem({ station }: StationGridItemProps) {
 
   return (
     <Link
-      href={`/radio/${station.slug}`}
+      href={`/radio/${station.id}`}
       className="bg-white dark:bg-gray-900 rounded-lg p-4 shadow hover:shadow-xl transition-shadow border border-gray-200 dark:border-gray-800 group"
     >
       <div className="flex flex-col items-center text-center">

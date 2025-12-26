@@ -49,7 +49,7 @@ export function RelatedStations({
         {stations.map(station => (
           <Link 
             key={station.id} 
-            href={`/radio/${station.slug}`}
+            href={`/radio/${station.id}`}
             className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow hover:shadow-lg transition-shadow border border-gray-200 dark:border-gray-700"
           >
             <div className="flex items-center gap-3">

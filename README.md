@@ -24,7 +24,7 @@ npm run build && npm start
 # Then visit:
 # - http://localhost:3000/sitemap.xml
 # - http://localhost:3000/robots.txt
-# - http://localhost:3000/radio/[slug]
+# - http://localhost:3000/radio/[id]
 ```
 
 ## 📁 Project Structure
@@ -34,7 +34,7 @@ radio-app/
 ├── apps/
 │   ├── next/          # Next.js web app
 │   │   ├── app/
-│   │   │   ├── radio/[slug]/       # SSR station pages
+│   │   │   ├── radio/[id]/         # SSR station pages
 │   │   │   ├── country/[code]/     # ISR country pages
 │   │   │   ├── genre/[tag]/        # ISR genre pages
 │   │   │   ├── sitemap.ts          # Dynamic sitemap

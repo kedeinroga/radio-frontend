@@ -89,7 +89,7 @@ export class Station {
    * Generates canonical URL for SEO
    */
   getCanonicalUrl(baseUrl: string): string {
-    return `${baseUrl}/radio/${this.slug}`
+    return `${baseUrl}/radio/${this.id}`
   }
 
   /**

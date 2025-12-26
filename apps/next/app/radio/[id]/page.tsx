@@ -12,14 +12,14 @@ import { PlayStationButton } from '../../../components/PlayStationButton'
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://radioapp.com'
 
 interface PageProps {
-  params: Promise<{ slug: string }>
+  params: Promise<{ id: string }>
 }
 
 // 🔥 DYNAMIC METADATA FOR SEO
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { slug } = await params
+  const { id } = await params
   const repository = new StationApiRepository()
-  const station = await repository.findBySlugOrId(slug)
+  const station = await repository.findById(id)
 
   if (!station) {
     return {
@@ -38,7 +38,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       title: metadata?.title || station.name,
       description: metadata?.description || `Escucha ${station.name} en vivo`,
       images: [metadata?.imageUrl || station.imageUrl || '/default-radio.png'],
-      url: metadata?.canonicalUrl || `${BASE_URL}/radio/${station.slug}`,
+      url: metadata?.canonicalUrl || `${BASE_URL}/radio/${station.id}`,
       type: 'website',
       siteName: 'RadioApp',
     },
@@ -49,7 +49,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       images: [metadata?.imageUrl || station.imageUrl || '/default-radio.png'],
     },
     alternates: {
-      canonical: metadata?.canonicalUrl || `${BASE_URL}/radio/${station.slug}`
+      canonical: metadata?.canonicalUrl || `${BASE_URL}/radio/${station.id}`
     },
     other: {
       'last-modified': metadata?.lastModified || new Date().toISOString()
@@ -59,9 +59,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 // 🔥 SERVER COMPONENT - SSR RENDERING
 export default async function RadioStationPage({ params }: PageProps) {
-  const { slug } = await params
+  const { id } = await params
   const repository = new StationApiRepository()
-  const station = await repository.findBySlugOrId(slug)
+  const station = await repository.findById(id)
 
   if (!station) {
     notFound()
