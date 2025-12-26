@@ -16,7 +16,7 @@ export default function SearchPage() {
   const [stations, setStations] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [hasSearched, setHasSearched] = useState(false)
-  const [favoritesState, setFavoritesState] = useState(0)
+  const [, setFavoritesState] = useState(0)
   const [searchError, setSearchError] = useState<string | null>(null)
   const [isSlowSearch, setIsSlowSearch] = useState(false)
   

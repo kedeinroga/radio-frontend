@@ -7,7 +7,7 @@ export class User {
     public readonly id: string,
     public readonly email: string,
     public readonly name: string,
-    public readonly role: 'guest' | 'premium' = 'guest',
+    public readonly role: 'guest' | 'premium' | 'admin' = 'guest',
     public readonly avatarUrl?: string,
     public readonly favoriteStationIds: string[] = []
   ) {
@@ -43,6 +43,13 @@ export class User {
    */
   get isGuest(): boolean {
     return this.role === 'guest'
+  }
+
+  /**
+   * Checks if user is an admin
+   */
+  get isAdmin(): boolean {
+    return this.role === 'admin'
   }
 
   /**

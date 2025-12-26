@@ -12,7 +12,7 @@ import { useFavorites } from '@/hooks/useFavorites'
 const stationRepo = new StationApiRepository()
 
 export default function HomePage() {
-  const [favoritesState, setFavoritesState] = useState(0) // Force re-render on favorite changes
+  const [, setFavoritesState] = useState(0) // Force re-render on favorite changes
   
   const { data: stations, isLoading, error } = useQuery({
     queryKey: ['popular-stations'],

@@ -19,6 +19,44 @@ const apiClient: AxiosInstance = axios.create({
   },
 })
 
+/**
+ * Helper to get token from localStorage
+ * Works in both browser and SSR contexts
+ */
+const getTokenFromStorage = (key: string): string | null => {
+  if (typeof window === 'undefined') return null
+  try {
+    return localStorage.getItem(`@radio-app:${key}`)
+  } catch (error) {
+    console.error('Error reading token from storage:', error)
+    return null
+  }
+}
+
+/**
+ * Helper to set token in localStorage
+ */
+const setTokenInStorage = (key: string, value: string): void => {
+  if (typeof window === 'undefined') return
+  try {
+    localStorage.setItem(`@radio-app:${key}`, value)
+  } catch (error) {
+    console.error('Error writing token to storage:', error)
+  }
+}
+
+/**
+ * Helper to remove token from localStorage
+ */
+const removeTokenFromStorage = (key: string): void => {
+  if (typeof window === 'undefined') return
+  try {
+    localStorage.removeItem(`@radio-app:${key}`)
+  } catch (error) {
+    console.error('Error removing token from storage:', error)
+  }
+}
+
 // Storage for tokens (will be injected)
 let tokenStorage: {
   getAccessToken: () => Promise<string | null>
@@ -29,6 +67,7 @@ let tokenStorage: {
 
 /**
  * Initialize API client with token storage
+ * @deprecated - Now reads directly from localStorage, but kept for compatibility
  */
 export const initializeApiClient = (storage: typeof tokenStorage) => {
   tokenStorage = storage
@@ -40,12 +79,18 @@ export const initializeApiClient = (storage: typeof tokenStorage) => {
  */
 apiClient.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
-    if (tokenStorage) {
-      const token = await tokenStorage.getAccessToken()
-      if (token && config.headers) {
-        config.headers.Authorization = `Bearer ${token}`
-      }
+    // Try to get token from localStorage directly (always works after page refresh)
+    let token = getTokenFromStorage('access_token')
+    
+    // Fallback to tokenStorage if available (legacy support)
+    if (!token && tokenStorage) {
+      token = await tokenStorage.getAccessToken()
     }
+    
+    if (token && config.headers) {
+      config.headers.Authorization = `Bearer ${token}`
+    }
+    
     return config
   },
   (error: AxiosError) => {
@@ -63,17 +108,30 @@ apiClient.interceptors.response.use(
     const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean }
 
     // If error is 401 and we haven't retried yet
-    if (error.response?.status === 401 && !originalRequest._retry && tokenStorage) {
+    if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true
 
       try {
-        const refreshToken = await tokenStorage.getRefreshToken()
+        // Get refresh token from localStorage
+        let refreshToken = getTokenFromStorage('refresh_token')
+        
+        // Fallback to tokenStorage if available
+        if (!refreshToken && tokenStorage) {
+          refreshToken = await tokenStorage.getRefreshToken()
+        }
 
         if (!refreshToken) {
           // No refresh token, clear tokens and redirect to login
-          await tokenStorage.clearTokens()
+          removeTokenFromStorage('access_token')
+          removeTokenFromStorage('refresh_token')
+          if (tokenStorage) {
+            await tokenStorage.clearTokens()
+          }
+          
           if (typeof window !== 'undefined') {
-            window.location.href = '/login'
+            // Check if we're in admin area
+            const isAdminRoute = window.location.pathname.startsWith('/admin')
+            window.location.href = isAdminRoute ? '/admin/login' : '/login'
           }
           return Promise.reject(error)
         }
@@ -86,7 +144,10 @@ apiClient.interceptors.response.use(
         const { access_token } = response.data
 
         // Save new access token
-        await tokenStorage.setAccessToken(access_token)
+        setTokenInStorage('access_token', access_token)
+        if (tokenStorage) {
+          await tokenStorage.setAccessToken(access_token)
+        }
 
         // Retry original request with new token
         if (originalRequest.headers) {
@@ -96,9 +157,15 @@ apiClient.interceptors.response.use(
         return apiClient(originalRequest)
       } catch (refreshError) {
         // Refresh failed, clear tokens and redirect to login
-        await tokenStorage.clearTokens()
+        removeTokenFromStorage('access_token')
+        removeTokenFromStorage('refresh_token')
+        if (tokenStorage) {
+          await tokenStorage.clearTokens()
+        }
+        
         if (typeof window !== 'undefined') {
-          window.location.href = '/login'
+          const isAdminRoute = window.location.pathname.startsWith('/admin')
+          window.location.href = isAdminRoute ? '/admin/login' : '/login'
         }
         return Promise.reject(refreshError)
       }

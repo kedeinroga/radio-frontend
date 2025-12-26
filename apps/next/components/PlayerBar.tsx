@@ -82,12 +82,12 @@ export function PlayerBar() {
             {/* Volume Control */}
             <div className="flex items-center gap-2 min-w-[120px]">
               <button
-                onClick={() => setVolume(playerState.volume === 0 ? 0.7 : 0)}
-                aria-label={playerState.volume === 0 ? 'Unmute' : 'Mute'}
+                onClick={() => setVolume((playerState.volume ?? 0.7) === 0 ? 0.7 : 0)}
+                aria-label={(playerState.volume ?? 0.7) === 0 ? 'Unmute' : 'Mute'}
                 className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 rounded"
               >
                 <span className="text-xl">
-                  {playerState.volume === 0 ? '🔇' : playerState.volume < 0.5 ? '🔉' : '🔊'}
+                  {(playerState.volume ?? 0.7) === 0 ? '🔇' : (playerState.volume ?? 0.7) < 0.5 ? '🔉' : '🔊'}
                 </span>
               </button>
               <input

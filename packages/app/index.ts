@@ -21,6 +21,7 @@ export { SEOApiRepository } from './infrastructure/api/SEOApiRepository'
 export { FavoritesApiRepository } from './infrastructure/api/FavoritesApiRepository'
 export { AnalyticsApiRepository } from './infrastructure/api/AnalyticsApiRepository'
 export { AuthApiRepository } from './infrastructure/api/AuthApiRepository'
+export { AdminApiRepository, adminApiRepository } from './infrastructure/api/AdminApiRepository'
 export type { TrendingSearch, PopularStation, ActiveUsersCount, TimeRange } from './infrastructure/api/AnalyticsApiRepository'
 export type { LoginRequest, RegisterRequest, RefreshRequest, AuthTokens, UserInfo } from './infrastructure/api/AuthApiRepository'
 export { ConsoleLogger } from './infrastructure/logging/ConsoleLogger'
@@ -32,6 +33,7 @@ export { HowlerPlayerAdapter } from './infrastructure/audio/HowlerPlayerAdapter'
 
 // Stores
 export { usePlayerStore } from './stores/playerStore'
+export { useAuthStore } from './stores/authStore'
 
 // SEO Components
 export { RadioStationSchema, BreadcrumbSchema, WebSiteSchema } from './components/SEO/JsonLdSchema'

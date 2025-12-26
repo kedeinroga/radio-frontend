@@ -57,7 +57,20 @@ export class AuthApiRepository {
   async login(request: LoginRequest): Promise<AuthTokens> {
     try {
       const response = await apiClient.post('/auth/login', request)
-      return response.data.data
+      
+      // Backend returns tokens directly: { access_token, refresh_token, token_type }
+      const data = response.data
+      
+      if (!data.access_token || !data.refresh_token) {
+        throw new Error('Invalid authentication response from server')
+      }
+      
+      return {
+        access_token: data.access_token,
+        refresh_token: data.refresh_token,
+        token_type: data.token_type || 'Bearer',
+        expires_in: data.expires_in || 3600
+      }
     } catch (error: any) {
       if (error.response?.status === 400) {
         throw new Error('Datos de inicio de sesión inválidos.')
@@ -65,8 +78,7 @@ export class AuthApiRepository {
       if (error.response?.status === 401) {
         throw new Error('Email o contraseña incorrectos.')
       }
-      console.error('Error logging in:', error)
-      throw new Error('Error al iniciar sesión. Por favor, intenta de nuevo.')
+      throw new Error(error.message || 'Error al iniciar sesión. Por favor, intenta de nuevo.')
     }
   }
 
@@ -95,13 +107,29 @@ export class AuthApiRepository {
   async getCurrentUser(): Promise<UserInfo> {
     try {
       const response = await apiClient.get('/auth/me')
-      return response.data.data
+      
+      // Backend returns: { user: { email, id, user_type } }
+      const userData = response.data.user || response.data
+      
+      if (!userData.id || !userData.email) {
+        throw new Error('Invalid user information received from server')
+      }
+      
+      // Map user_type to role
+      const role = userData.user_type || userData.role || 'guest'
+      
+      return {
+        id: userData.id,
+        email: userData.email,
+        role: role,
+        is_premium: role === 'premium' || userData.is_premium || false,
+        created_at: userData.created_at || new Date().toISOString()
+      }
     } catch (error: any) {
       if (error.response?.status === 401) {
         throw new Error('No autenticado. Por favor, inicia sesión.')
       }
-      console.error('Error getting current user:', error)
-      throw new Error('Error al obtener información del usuario. Por favor, intenta de nuevo.')
+      throw new Error(error.message || 'Error al obtener información del usuario. Por favor, intenta de nuevo.')
     }
   }
 }

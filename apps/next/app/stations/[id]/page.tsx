@@ -19,7 +19,7 @@ export default function StationDetailPage() {
   const [station, setStation] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(false)
-  const [favoritesState, setFavoritesState] = useState(0)
+  const [, setFavoritesState] = useState(0)
   const [imgError, setImgError] = useState(false)
 
   const { play, togglePlayPause, currentStation, playerState } = usePlayer()

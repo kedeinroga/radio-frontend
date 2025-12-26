@@ -1,8 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
-import { HowlerPlayerAdapter } from '@radio-app/app/infrastructure/audio/HowlerPlayerAdapter'
-import { usePlayerStore } from '@radio-app/app/stores/playerStore'
+import { HowlerPlayerAdapter, usePlayerStore } from '@radio-app/app'
 
 let playerInstance: HowlerPlayerAdapter | null = null
 
