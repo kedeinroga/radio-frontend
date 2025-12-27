@@ -5,10 +5,26 @@ import { adminApiRepository } from '@radio-app/app'
 import { LoadingSpinner } from '@/components/LoadingSpinner'
 import Link from 'next/link'
 
+interface PopularStation {
+  station_id: string
+  name: string
+  country: string
+  plays: number
+  favicon?: string
+  url?: string
+}
+
+interface TrendingSearch {
+  search_term: string
+  count: number
+  percentage?: number
+}
+
 interface DashboardStats {
   activeUsers: number
-  popularStations: any[]
-  trendingSearches: any[]
+  guestUsers: number
+  popularStations: PopularStation[]
+  trendingSearches: TrendingSearch[]
 }
 
 export default function AdminDashboard() {
@@ -25,14 +41,16 @@ export default function AdminDashboard() {
       setLoading(true)
       setError(null)
 
-      const [activeUsersRes, popularStationsRes, trendingSearchesRes] = await Promise.all([
+      const [activeUsersRes, guestUsersRes, popularStationsRes, trendingSearchesRes] = await Promise.all([
         adminApiRepository.getActiveUsers(),
+        adminApiRepository.getGuestUsers(),
         adminApiRepository.getPopularStations('day', 5),
         adminApiRepository.getTrendingSearches('day', 5),
       ])
 
       setStats({
         activeUsers: activeUsersRes.data?.count || 0,
+        guestUsers: guestUsersRes.data?.count || 0,
         popularStations: popularStationsRes.data || [],
         trendingSearches: trendingSearchesRes.data || [],
       })
@@ -78,7 +96,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         {/* Active Users */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
           <div className="flex items-center gap-4">
@@ -90,6 +108,23 @@ export default function AdminDashboard() {
               <p className="text-3xl font-bold text-gray-900 dark:text-white">
                 {stats?.activeUsers || 0}
               </p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Authenticated</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Guest Users */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg flex items-center justify-center text-2xl">
+              👤
+            </div>
+            <div>
+              <p className="text-sm text-gray-600 dark:text-gray-400">Guest Users</p>
+              <p className="text-3xl font-bold text-gray-900 dark:text-white">
+                {stats?.guestUsers || 0}
+              </p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Last 24h</p>
             </div>
           </div>
         </div>
@@ -105,6 +140,7 @@ export default function AdminDashboard() {
               <p className="text-3xl font-bold text-gray-900 dark:text-white">
                 {stats?.popularStations?.length || 0}
               </p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Top today</p>
             </div>
           </div>
         </div>
@@ -120,6 +156,7 @@ export default function AdminDashboard() {
               <p className="text-3xl font-bold text-gray-900 dark:text-white">
                 {stats?.trendingSearches?.length || 0}
               </p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Top queries</p>
             </div>
           </div>
         </div>
@@ -157,31 +194,57 @@ export default function AdminDashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Popular Stations Preview */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-            Top Stations Today
-          </h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+              Top Stations Today
+            </h2>
+            <Link
+              href="/admin/analytics"
+              className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
+            >
+              View all →
+            </Link>
+          </div>
           <div className="space-y-3">
-            {stats?.popularStations?.slice(0, 5).map((station: any, index: number) => (
-              <div
-                key={station.station_id || index}
-                className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg"
-              >
-                <div className="flex items-center gap-3">
-                  <span className="text-lg font-bold text-gray-400 dark:text-gray-500">
-                    #{index + 1}
-                  </span>
-                  <div>
-                    <p className="font-medium text-gray-900 dark:text-white">
-                      {station.station_name || 'Unknown Station'}
+            {stats?.popularStations && stats.popularStations.length > 0 ? (
+              stats.popularStations.slice(0, 5).map((station, index) => (
+                <div
+                  key={station.station_id || index}
+                  className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg"
+                >
+                  <div className="flex items-center gap-3 flex-1 min-w-0">
+                    <span className="text-lg font-bold text-gray-400 dark:text-gray-500 flex-shrink-0">
+                      #{index + 1}
+                    </span>
+                    {station.favicon && (
+                      <img
+                        src={station.favicon}
+                        alt={station.name}
+                        className="w-8 h-8 rounded flex-shrink-0 object-cover"
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none'
+                        }}
+                      />
+                    )}
+                    <div className="min-w-0 flex-1">
+                      <p className="font-medium text-gray-900 dark:text-white truncate">
+                        {station.name}
+                      </p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                        {station.country}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="text-right flex-shrink-0 ml-2">
+                    <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                      {station.plays}
                     </p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                      {station.play_count || 0} plays
-                    </p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">plays</p>
                   </div>
                 </div>
-              </div>
-            )) || (
-              <p className="text-gray-500 dark:text-gray-400 text-center py-4">
+              ))
+            ) : (
+              <p className="text-gray-500 dark:text-gray-400 text-center py-8">
                 No data available
               </p>
             )}
@@ -190,31 +253,49 @@ export default function AdminDashboard() {
 
         {/* Trending Searches Preview */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-            Trending Searches Today
-          </h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+              Trending Searches Today
+            </h2>
+            <Link
+              href="/admin/analytics"
+              className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
+            >
+              View all →
+            </Link>
+          </div>
           <div className="space-y-3">
-            {stats?.trendingSearches?.slice(0, 5).map((search: any, index: number) => (
-              <div
-                key={search.query || index}
-                className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg"
-              >
-                <div className="flex items-center gap-3">
-                  <span className="text-lg font-bold text-gray-400 dark:text-gray-500">
-                    #{index + 1}
-                  </span>
-                  <div>
-                    <p className="font-medium text-gray-900 dark:text-white">
-                      {search.query || 'Unknown'}
+            {stats?.trendingSearches && stats.trendingSearches.length > 0 ? (
+              stats.trendingSearches.slice(0, 5).map((search, index) => (
+                <div
+                  key={search.search_term || index}
+                  className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg"
+                >
+                  <div className="flex items-center gap-3 flex-1 min-w-0">
+                    <span className="text-lg font-bold text-gray-400 dark:text-gray-500 flex-shrink-0">
+                      #{index + 1}
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <p className="font-medium text-gray-900 dark:text-white truncate">
+                        {search.search_term}
+                      </p>
+                      {search.percentage !== undefined && (
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                          {search.percentage.toFixed(1)}% of searches
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  <div className="text-right flex-shrink-0 ml-2">
+                    <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                      {search.count}
                     </p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                      {search.count || 0} searches
-                    </p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">searches</p>
                   </div>
                 </div>
-              </div>
-            )) || (
-              <p className="text-gray-500 dark:text-gray-400 text-center py-4">
+              ))
+            ) : (
+              <p className="text-gray-500 dark:text-gray-400 text-center py-8">
                 No data available
               </p>
             )}

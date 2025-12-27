@@ -22,7 +22,8 @@ The system supports three user roles:
 
 ### 🏠 Dashboard (`/admin`)
 Main dashboard showing an overview of system statistics:
-- Active users count
+- Active users count (authenticated users, last 24h)
+- Guest users count (unique IPs, last 24h)
 - Popular stations preview (top 5)
 - Trending searches preview (top 5)
 - Quick links to other admin sections
@@ -31,22 +32,29 @@ Main dashboard showing an overview of system statistics:
 - Real-time statistics
 - Error handling with retry
 - Loading states
+- Visual cards with icons
+- Station favicons display
+- Search percentage metrics
 
 ### 📈 Analytics (`/admin/analytics`)
 Detailed analytics and statistics page:
-- Active users monitoring
-- Popular stations table (top 20)
-- Trending searches table (top 20)
-- Time range selector (day/week/month)
+- Active authenticated users monitoring
+- Guest users monitoring
+- Popular stations table (top 20) with favicons
+- Trending searches table (top 20) with percentages
+- Time range selector (hour/day/week/month)
 
 **API Endpoints Used:**
-- `GET /analytics/users/active`
-- `GET /analytics/stations/popular`
-- `GET /analytics/searches/trending`
+- `GET /analytics/users/active` - Returns `{success: true, data: {count: number}}`
+- `GET /analytics/users/guest` - Returns `{success: true, data: {count: number}}`
+- `GET /analytics/stations/popular?range=X&limit=Y` - Returns `{success: true, data: [{station_id, name, country, plays, favicon, url}]}`
+- `GET /analytics/searches/trending?range=X&limit=Y` - Returns `{success: true, data: [{search_term, count, percentage}]}`
 
 **Features:**
-- Filterable by time range
-- Sortable tables
+- Filterable by time range (hour/day/week/month)
+- Detailed station information with images
+- Search query percentages
+- Responsive tables with hover effects
 - Export-ready data display
 
 ### 🌍 Translations (`/admin/translations`)

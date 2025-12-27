@@ -8,7 +8,8 @@ export class AdminApiRepository {
   // ========== ANALYTICS ==========
   
   /**
-   * Get active users count
+   * Get active authenticated users count
+   * Returns users who have made at least one authenticated request in the last 24 hours
    */
   async getActiveUsers(): Promise<any> {
     const response = await apiClient.get('/analytics/users/active')
@@ -16,9 +17,20 @@ export class AdminApiRepository {
   }
 
   /**
-   * Get popular stations statistics
+   * Get active guest (unauthenticated) users count
+   * Returns unique IP addresses that have accessed the app in the last 24 hours
    */
-  async getPopularStations(range: 'day' | 'week' | 'month' = 'day', limit: number = 10): Promise<any> {
+  async getGuestUsers(): Promise<any> {
+    const response = await apiClient.get('/analytics/users/guest')
+    return response.data
+  }
+
+  /**
+   * Get popular stations statistics
+   * @param range - Time range: 'hour', 'day', 'week', 'month'
+   * @param limit - Maximum number of results (1-100)
+   */
+  async getPopularStations(range: 'hour' | 'day' | 'week' | 'month' = 'day', limit: number = 10): Promise<any> {
     const response = await apiClient.get('/analytics/stations/popular', {
       params: { range, limit }
     })
@@ -27,8 +39,10 @@ export class AdminApiRepository {
 
   /**
    * Get trending searches
+   * @param range - Time range: 'hour', 'day', 'week', 'month'
+   * @param limit - Maximum number of results (1-100)
    */
-  async getTrendingSearches(range: 'day' | 'week' | 'month' = 'day', limit: number = 10): Promise<any> {
+  async getTrendingSearches(range: 'hour' | 'day' | 'week' | 'month' = 'day', limit: number = 10): Promise<any> {
     const response = await apiClient.get('/analytics/searches/trending', {
       params: { range, limit }
     })

@@ -4,13 +4,29 @@ import { useEffect, useState } from 'react'
 import { adminApiRepository } from '@radio-app/app'
 import { LoadingSpinner } from '@/components/LoadingSpinner'
 
-type TimeRange = 'day' | 'week' | 'month'
+type TimeRange = 'hour' | 'day' | 'week' | 'month'
+
+interface PopularStation {
+  station_id: string
+  name: string
+  country: string
+  plays: number
+  favicon?: string
+  url?: string
+}
+
+interface TrendingSearch {
+  search_term: string
+  count: number
+  percentage?: number
+}
 
 export default function AnalyticsPage() {
   const [timeRange, setTimeRange] = useState<TimeRange>('day')
   const [activeUsers, setActiveUsers] = useState<number>(0)
-  const [popularStations, setPopularStations] = useState<any[]>([])
-  const [trendingSearches, setTrendingSearches] = useState<any[]>([])
+  const [guestUsers, setGuestUsers] = useState<number>(0)
+  const [popularStations, setPopularStations] = useState<PopularStation[]>([])
+  const [trendingSearches, setTrendingSearches] = useState<TrendingSearch[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -23,13 +39,15 @@ export default function AnalyticsPage() {
       setLoading(true)
       setError(null)
 
-      const [usersRes, stationsRes, searchesRes] = await Promise.all([
+      const [usersRes, guestRes, stationsRes, searchesRes] = await Promise.all([
         adminApiRepository.getActiveUsers(),
+        adminApiRepository.getGuestUsers(),
         adminApiRepository.getPopularStations(timeRange, 20),
         adminApiRepository.getTrendingSearches(timeRange, 20),
       ])
 
       setActiveUsers(usersRes.data?.count || 0)
+      setGuestUsers(guestRes.data?.count || 0)
       setPopularStations(stationsRes.data || [])
       setTrendingSearches(searchesRes.data || [])
     } catch (err: any) {
@@ -61,7 +79,7 @@ export default function AnalyticsPage() {
 
         {/* Time Range Selector */}
         <div className="flex bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-1">
-          {(['day', 'week', 'month'] as TimeRange[]).map((range) => (
+          {(['hour', 'day', 'week', 'month'] as TimeRange[]).map((range) => (
             <button
               key={range}
               onClick={() => setTimeRange(range)}
@@ -71,7 +89,7 @@ export default function AnalyticsPage() {
                   : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
               }`}
             >
-              {range === 'day' ? 'Today' : range === 'week' ? 'This Week' : 'This Month'}
+              {range === 'hour' ? 'Last Hour' : range === 'day' ? 'Today' : range === 'week' ? 'This Week' : 'This Month'}
             </button>
           ))}
         </div>
@@ -92,22 +110,32 @@ export default function AnalyticsPage() {
       )}
 
       {/* Stats Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <StatCard
           title="Active Users"
           value={activeUsers}
+          subtitle="Authenticated"
           icon="👥"
           color="blue"
         />
         <StatCard
+          title="Guest Users"
+          value={guestUsers}
+          subtitle="Last 24h"
+          icon="👤"
+          color="indigo"
+        />
+        <StatCard
           title="Popular Stations"
           value={popularStations.length}
+          subtitle={`Top ${timeRange}`}
           icon="📻"
           color="green"
         />
         <StatCard
           title="Trending Searches"
           value={trendingSearches.length}
+          subtitle="Top queries"
           icon="🔍"
           color="purple"
         />
@@ -151,13 +179,30 @@ export default function AnalyticsPage() {
                       </span>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="text-sm font-medium text-gray-900 dark:text-white">
-                        {station.station_name || 'Unknown Station'}
+                      <div className="flex items-center gap-3">
+                        {station.favicon && (
+                          <img
+                            src={station.favicon}
+                            alt={station.name}
+                            className="w-8 h-8 rounded object-cover"
+                            onError={(e) => {
+                              e.currentTarget.style.display = 'none'
+                            }}
+                          />
+                        )}
+                        <div>
+                          <div className="text-sm font-medium text-gray-900 dark:text-white">
+                            {station.name || 'Unknown Station'}
+                          </div>
+                          <div className="text-xs text-gray-500 dark:text-gray-400">
+                            {station.country}
+                          </div>
+                        </div>
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm text-gray-900 dark:text-white font-semibold">
-                        {station.play_count || 0}
+                        {station.plays || 0}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -207,7 +252,7 @@ export default function AnalyticsPage() {
             <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
               {trendingSearches.length > 0 ? (
                 trendingSearches.map((search, index) => (
-                  <tr key={search.query || index} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                  <tr key={search.search_term || index} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className="text-lg font-bold text-gray-400 dark:text-gray-500">
                         #{index + 1}
@@ -215,8 +260,13 @@ export default function AnalyticsPage() {
                     </td>
                     <td className="px-6 py-4">
                       <div className="text-sm font-medium text-gray-900 dark:text-white">
-                        {search.query || 'Unknown'}
+                        {search.search_term || 'Unknown'}
                       </div>
+                      {search.percentage !== undefined && (
+                        <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                          {search.percentage.toFixed(1)}% of total searches
+                        </div>
+                      )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm text-gray-900 dark:text-white font-semibold">
@@ -243,16 +293,19 @@ export default function AnalyticsPage() {
 function StatCard({
   title,
   value,
+  subtitle,
   icon,
   color,
 }: {
   title: string
   value: number
+  subtitle?: string
   icon: string
-  color: 'blue' | 'green' | 'purple'
+  color: 'blue' | 'indigo' | 'green' | 'purple'
 }) {
   const colorClasses = {
     blue: 'bg-blue-100 dark:bg-blue-900/30',
+    indigo: 'bg-indigo-100 dark:bg-indigo-900/30',
     green: 'bg-green-100 dark:bg-green-900/30',
     purple: 'bg-purple-100 dark:bg-purple-900/30',
   }
@@ -266,6 +319,9 @@ function StatCard({
         <div>
           <p className="text-sm text-gray-600 dark:text-gray-400">{title}</p>
           <p className="text-3xl font-bold text-gray-900 dark:text-white">{value}</p>
+          {subtitle && (
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{subtitle}</p>
+          )}
         </div>
       </div>
     </div>
