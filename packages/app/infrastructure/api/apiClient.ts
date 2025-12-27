@@ -1,5 +1,6 @@
 import axios, { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from 'axios'
 import { Locale } from '../../domain/valueObjects/Locale'
+import { safeRedirect } from '../utils/securityHelpers'
 
 /**
  * API Client Configuration
@@ -32,7 +33,7 @@ export const getApiLocale = (): Locale => {
 // Create axios instance
 const apiClient: AxiosInstance = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 30000, // Increased to 30 seconds for slow searches
+  timeout: 15000, // Reduced from 30s to 15s for better security
   headers: {
     'Content-Type': 'application/json',
   },
@@ -155,7 +156,8 @@ apiClient.interceptors.response.use(
           if (typeof window !== 'undefined') {
             // Check if we're in admin area
             const isAdminRoute = window.location.pathname.startsWith('/admin')
-            window.location.href = isAdminRoute ? '/admin/login' : '/login'
+            const redirectUrl = isAdminRoute ? '/admin/login' : '/login'
+            safeRedirect(redirectUrl)
           }
           return Promise.reject(error)
         }
@@ -189,7 +191,8 @@ apiClient.interceptors.response.use(
         
         if (typeof window !== 'undefined') {
           const isAdminRoute = window.location.pathname.startsWith('/admin')
-          window.location.href = isAdminRoute ? '/admin/login' : '/login'
+          const redirectUrl = isAdminRoute ? '/admin/login' : '/login'
+          safeRedirect(redirectUrl)
         }
         return Promise.reject(refreshError)
       }

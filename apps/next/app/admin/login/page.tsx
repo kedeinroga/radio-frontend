@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { useAuthStore, User, WebSecureStorage } from '@radio-app/app'
+import { useAuthStore, User, WebSecureStorage, loginSchema, validateData, sanitizeErrorMessage, SecurityLog } from '@radio-app/app'
 import { AuthApiRepository } from '@radio-app/app'
 import { initializeApiClient } from '@radio-app/app'
+import { useRateLimit } from '@/hooks/useRateLimit'
 
 const authRepo = new AuthApiRepository()
 const storage = new WebSecureStorage()
@@ -15,7 +16,15 @@ export default function AdminLoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
+  const [validationErrors, setValidationErrors] = useState<Record<string, string[]>>({})
   const [isLoggingIn, setIsLoggingIn] = useState(false)
+  
+  // Rate limiting
+  const rateLimit = useRateLimit('admin-login', {
+    maxAttempts: 5,
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    blockDurationMs: 15 * 60 * 1000, // Block for 15 minutes
+  })
 
   // Check on mount if tokens are invalid but user exists
   useEffect(() => {
@@ -39,11 +48,26 @@ export default function AdminLoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError(null)
+    setValidationErrors({})
+
+    // Check if user is rate limited
+    if (rateLimit.isBlocked) {
+      setError(`Too many failed attempts. Please wait ${rateLimit.getFormattedBlockTime()} before trying again.`)
+      return
+    }
+
+    // Validate form data with Zod
+    const validation = validateData(loginSchema, { email, password })
+    if (!validation.success) {
+      setValidationErrors(validation.errors)
+      return
+    }
+
     setIsLoggingIn(true)
 
     try {
       // Step 1: Login and get tokens
-      const tokens = await authRepo.login({ email, password })
+      const tokens = await authRepo.login(validation.data)
       
       // Validate tokens
       if (!tokens?.access_token || !tokens?.refresh_token) {
@@ -86,21 +110,51 @@ export default function AdminLoginPage() {
       // Step 6: Check if user is admin
       if (!loggedUser.isAdmin) {
         setError('Access denied. Admin privileges required.')
+        
+        // Log unauthorized access attempt
+        SecurityLog.unauthorizedAccess('/admin', loggedUser.id)
+        SecurityLog.loginFailed(validation.data.email, 'User is not an admin')
+        
         // Clear tokens
         await storage.removeItem('access_token')
         await storage.removeItem('refresh_token')
         setIsLoggingIn(false)
+        
+        // Record failed attempt
+        rateLimit.recordAttempt()
         return
       }
 
-      // Step 7: Set user in store
+      // Step 7: Log successful admin login
+      SecurityLog.loginSuccess(loggedUser.id, loggedUser.email)
+      SecurityLog.adminAccess(loggedUser.id, loggedUser.email, 'Admin login successful')
+
+      // Step 8: Reset rate limit on successful login
+      rateLimit.reset()
+
+      // Step 9: Set user in store
       setUser(loggedUser)
       
-      // Step 8: Redirect to admin dashboard
+      // Step 10: Redirect to admin dashboard
       router.push('/admin')
     } catch (err: any) {
-      setError(err.message || 'Invalid email or password. Please try again.')
+      // Sanitize error message to prevent information leakage
+      const safeError = sanitizeErrorMessage(
+        err,
+        'Invalid email or password. Please try again.'
+      )
+      setError(safeError)
       setIsLoggingIn(false)
+      
+      // Log failed login attempt
+      SecurityLog.loginFailed(email, err.message || 'Unknown error')
+      
+      // Record failed attempt
+      const isNowBlocked = rateLimit.recordAttempt()
+      if (isNowBlocked) {
+        SecurityLog.rateLimitTriggered(email, rateLimit.attempts)
+        setError(`Too many failed attempts. Your account has been temporarily locked for ${rateLimit.getFormattedBlockTime()}.`)
+      }
     }
   }
 
@@ -167,10 +221,19 @@ export default function AdminLoginPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                className={`w-full px-4 py-3 border ${
+                  validationErrors.email 
+                    ? 'border-red-500 focus:ring-red-500' 
+                    : 'border-gray-300 dark:border-gray-600 focus:ring-blue-500'
+                } rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:border-transparent transition-colors`}
                 placeholder="admin@example.com"
-                disabled={isLoggingIn}
+                disabled={isLoggingIn || rateLimit.isBlocked}
               />
+              {validationErrors.email && (
+                <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                  {validationErrors.email[0]}
+                </p>
+              )}
             </div>
 
             {/* Password Field */}
@@ -186,16 +249,34 @@ export default function AdminLoginPage() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                className={`w-full px-4 py-3 border ${
+                  validationErrors.password 
+                    ? 'border-red-500 focus:ring-red-500' 
+                    : 'border-gray-300 dark:border-gray-600 focus:ring-blue-500'
+                } rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:border-transparent transition-colors`}
                 placeholder="••••••••"
-                disabled={isLoggingIn}
+                disabled={isLoggingIn || rateLimit.isBlocked}
               />
+              {validationErrors.password && (
+                <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                  {validationErrors.password[0]}
+                </p>
+              )}
             </div>
+
+            {/* Rate Limit Warning */}
+            {!rateLimit.isBlocked && rateLimit.remainingAttempts < 3 && rateLimit.remainingAttempts > 0 && (
+              <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-3">
+                <p className="text-yellow-800 dark:text-yellow-200 text-sm">
+                  ⚠️ {rateLimit.remainingAttempts} attempt{rateLimit.remainingAttempts !== 1 ? 's' : ''} remaining before temporary lockout
+                </p>
+              </div>
+            )}
 
             {/* Submit Button */}
             <button
               type="submit"
-              disabled={isLoggingIn}
+              disabled={isLoggingIn || rateLimit.isBlocked}
               className="w-full flex justify-center items-center gap-2 py-3 px-4 border border-transparent rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoggingIn ? (
@@ -205,6 +286,10 @@ export default function AdminLoginPage() {
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
                   Signing in...
+                </>
+              ) : rateLimit.isBlocked ? (
+                <>
+                  🔒 Locked ({rateLimit.getFormattedBlockTime()})
                 </>
               ) : (
                 <>

@@ -34,6 +34,8 @@ export { AdminApiRepository, adminApiRepository } from './infrastructure/api/Adm
 export type { TrendingSearch, PopularStation, ActiveUsersCount, TimeRange } from './infrastructure/api/AnalyticsApiRepository'
 export type { LoginRequest, RegisterRequest, RefreshRequest, AuthTokens, UserInfo } from './infrastructure/api/AuthApiRepository'
 export { ConsoleLogger } from './infrastructure/logging/ConsoleLogger'
+export { securityLogger, SecurityLog, SecurityEventType } from './infrastructure/logging/SecurityLogger'
+export type { SecurityEvent } from './infrastructure/logging/SecurityLogger'
 export { MockAnalyticsService } from './infrastructure/analytics/MockAnalyticsService'
 export { WebSecureStorage } from './infrastructure/storage/WebSecureStorage'
 export type { ISecureStorage } from './infrastructure/storage/ISecureStorage'
@@ -43,6 +45,66 @@ export { HowlerPlayerAdapter } from './infrastructure/audio/HowlerPlayerAdapter'
 // Infrastructure - i18n
 export { NextIntlAdapter } from './infrastructure/i18n/NextIntlAdapter'
 export { LocaleFormatter } from './infrastructure/i18n/LocaleFormatter'
+
+// Infrastructure - Security Helpers
+export { 
+  isSafeInternalRedirect, 
+  safeRedirect, 
+  sanitizeErrorMessage,
+  isValidEmail,
+  validatePasswordStrength,
+  generateSecureToken
+} from './infrastructure/utils/securityHelpers'
+
+// Infrastructure - Crypto Helpers
+export {
+  encrypt,
+  decrypt,
+  isEncryptionAvailable
+} from './infrastructure/utils/cryptoHelpers'
+
+// Infrastructure - JWT Helpers
+export {
+  decodeJWT,
+  isTokenExpired,
+  getTokenExpiration,
+  getTimeUntilExpiration,
+  willExpireSoon,
+  getTokenRole,
+  getTokenUserId,
+  getTokenId,
+  getSessionId,
+  isValidJWTFormat,
+  isTokenValid
+} from './infrastructure/utils/jwtHelpers'
+export type { JWTPayload } from './infrastructure/utils/jwtHelpers'
+
+// Infrastructure - Session Validation
+export { SessionValidator } from './infrastructure/auth/SessionValidator'
+export type { 
+  SessionMetadata, 
+  TokenValidationResult, 
+  SessionInfo 
+} from './infrastructure/auth/SessionValidator'
+
+// Infrastructure - Validation Schemas
+export {
+  loginSchema,
+  registerSchema,
+  translationSchema,
+  searchSchema,
+  stationIdSchema,
+  urlParamSchema,
+  validateData
+} from './infrastructure/validation/schemas'
+export type {
+  LoginFormData,
+  RegisterFormData,
+  TranslationFormData,
+  SearchFormData,
+  StationIdData,
+  UrlParamData
+} from './infrastructure/validation/schemas'
 
 // Stores
 export { usePlayerStore } from './stores/playerStore'

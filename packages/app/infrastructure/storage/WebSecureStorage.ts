@@ -1,16 +1,37 @@
 import { ISecureStorage } from './ISecureStorage'
+import { encrypt, decrypt, isEncryptionAvailable } from '../utils/cryptoHelpers'
 
 /**
  * Web Secure Storage
- * Uses localStorage with encryption for web platform
+ * Uses localStorage with AES-GCM encryption for web platform
+ * 
+ * Security features:
+ * - AES-GCM 256-bit encryption
+ * - Device-specific encryption key (browser fingerprint)
+ * - Random IV for each encryption
+ * - Backward compatible with unencrypted data
  */
 export class WebSecureStorage implements ISecureStorage {
   private prefix = '@radio-app:'
+  private useEncryption = isEncryptionAvailable()
+
+  constructor() {
+    if (!this.useEncryption) {
+      console.warn('Web Crypto API not available. Data will be stored without encryption.')
+    }
+  }
 
   async getItem(key: string): Promise<string | null> {
     try {
-      const value = localStorage.getItem(this.prefix + key)
-      return value
+      const encrypted = localStorage.getItem(this.prefix + key)
+      if (!encrypted) return null
+      
+      // Decrypt if encryption is available
+      if (this.useEncryption) {
+        return await decrypt(encrypted)
+      }
+      
+      return encrypted
     } catch (error) {
       console.error('Error getting item from storage:', error)
       return null
@@ -19,7 +40,12 @@ export class WebSecureStorage implements ISecureStorage {
 
   async setItem(key: string, value: string): Promise<void> {
     try {
-      localStorage.setItem(this.prefix + key, value)
+      // Encrypt if encryption is available
+      const dataToStore = this.useEncryption 
+        ? await encrypt(value)
+        : value
+      
+      localStorage.setItem(this.prefix + key, dataToStore)
     } catch (error) {
       console.error('Error setting item in storage:', error)
     }

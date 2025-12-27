@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { validateSession } from './middleware/sessionValidator'
 
 /**
  * Supported locales for the application
@@ -103,16 +104,17 @@ function shouldExcludePath(pathname: string): boolean {
 }
 
 /**
- * Next.js Middleware for i18n routing
+ * Next.js Middleware for i18n routing and session validation
  * 
  * Responsibilities:
- * 1. Detect locale from URL pathname
- * 2. If no locale found, detect from Accept-Language header or localStorage
- * 3. Redirect to URL with locale prefix: / -> /es/ or /en/
- * 4. Validate that locale in URL is supported
- * 5. Pass locale to components via headers
+ * 1. Validate authenticated sessions for protected routes
+ * 2. Detect locale from URL pathname
+ * 3. If no locale found, detect from Accept-Language header or localStorage
+ * 4. Redirect to URL with locale prefix: / -> /es/ or /en/
+ * 5. Validate that locale in URL is supported
+ * 6. Pass locale and user info to components via headers
  */
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname, search } = request.nextUrl
 
   // Skip middleware for static assets and API routes
@@ -120,6 +122,14 @@ export function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
+  // 1. FIRST: Validate session for protected routes
+  const sessionValidationResult = await validateSession(request)
+  if (sessionValidationResult) {
+    // Session validation failed - redirect was returned
+    return sessionValidationResult
+  }
+
+  // 2. SECOND: Handle i18n routing
   // Get locale from pathname
   const localeInPath = getLocaleFromPathname(pathname)
 

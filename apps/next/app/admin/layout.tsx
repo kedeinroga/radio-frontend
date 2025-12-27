@@ -1,6 +1,7 @@
 'use client'
 
 import { AdminGuard } from '@/components/AdminGuard'
+import { I18nProvider } from '@/components/I18nProvider'
 import { useInitializeApi } from '@/hooks/useInitializeApi'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
@@ -25,7 +26,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   // Don't apply AdminGuard to login page
   if (pathname === '/admin/login') {
-    return <>{children}</>
+    return (
+      <I18nProvider>
+        {children}
+      </I18nProvider>
+    )
   }
 
   const handleLogout = async () => {
@@ -39,10 +44,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   }
 
   return (
-    <AdminGuard>
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-        {/* Admin Header */}
-        <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-40">
+    <I18nProvider>
+      <AdminGuard>
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+          {/* Admin Header */}
+          <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-40">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
               <div className="flex items-center gap-8">
@@ -99,5 +105,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </main>
       </div>
     </AdminGuard>
+    </I18nProvider>
   )
 }
