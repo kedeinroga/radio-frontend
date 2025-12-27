@@ -2,11 +2,13 @@ import { MetadataRoute } from 'next'
 import { SEOApiRepository, GetSitemapData } from '@radio-app/app'
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://radioapp.com'
+const SUPPORTED_LOCALES = ['es', 'en', 'fr', 'de'] as const
 
 /**
  * Dynamic Sitemap Generator
  * Generates sitemap.xml from backend SEO data
  * Includes: home, search, countries, genres
+ * Generates URLs for all supported locales with alternates
  */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const seoRepository = new SEOApiRepository()
@@ -15,56 +17,86 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     const sitemapData = await getSitemapData.execute()
 
-    // Static pages
-    const staticPages: MetadataRoute.Sitemap = [
-      {
-        url: BASE_URL,
-        lastModified: new Date(),
-        changeFrequency: 'daily',
-        priority: 1.0,
-      },
-      {
-        url: `${BASE_URL}/search`,
-        lastModified: new Date(),
-        changeFrequency: 'daily',
-        priority: 0.8,
-      },
-      {
-        url: `${BASE_URL}/favorites`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly',
-        priority: 0.7,
+    const sitemapEntries: MetadataRoute.Sitemap = []
+
+    // Helper function to generate alternates for a given path
+    const generateAlternates = (path: string) => {
+      const alternates: { languages: Record<string, string> } = {
+        languages: {}
       }
+      
+      SUPPORTED_LOCALES.forEach(locale => {
+        alternates.languages[locale] = `${BASE_URL}/${locale}${path}`
+      })
+      
+      return alternates
+    }
+
+    // Static pages - generate for each locale
+    const staticPaths = [
+      { path: '', priority: 1.0, changeFrequency: 'daily' as const },
+      { path: '/search', priority: 0.8, changeFrequency: 'daily' as const },
+      { path: '/favorites', priority: 0.7, changeFrequency: 'weekly' as const }
     ]
 
-    // Country pages
-    const countryPages: MetadataRoute.Sitemap = sitemapData.popularCountries.map(country => ({
-      url: `${BASE_URL}/country/${country.urlSlug}`,
-      lastModified: sitemapData.lastUpdatedDate,
-      changeFrequency: 'daily' as const,
-      priority: 0.9,
-    }))
+    staticPaths.forEach(({ path, priority, changeFrequency }) => {
+      SUPPORTED_LOCALES.forEach(locale => {
+        sitemapEntries.push({
+          url: `${BASE_URL}/${locale}${path}`,
+          lastModified: new Date(),
+          changeFrequency,
+          priority,
+          alternates: generateAlternates(path)
+        })
+      })
+    })
 
-    // Genre/Tag pages
-    const genrePages: MetadataRoute.Sitemap = sitemapData.popularTags.map(tag => ({
-      url: `${BASE_URL}/genre/${tag.urlSlug}`,
-      lastModified: sitemapData.lastUpdatedDate,
-      changeFrequency: 'daily' as const,
-      priority: 0.8,
-    }))
+    // Country pages - generate for each locale
+    sitemapData.popularCountries.forEach(country => {
+      const path = `/country/${country.urlSlug}`
+      
+      SUPPORTED_LOCALES.forEach(locale => {
+        sitemapEntries.push({
+          url: `${BASE_URL}/${locale}${path}`,
+          lastModified: sitemapData.lastUpdatedDate,
+          changeFrequency: 'daily' as const,
+          priority: 0.9,
+          alternates: generateAlternates(path)
+        })
+      })
+    })
 
-    return [...staticPages, ...countryPages, ...genrePages]
+    // Genre/Tag pages - generate for each locale
+    sitemapData.popularTags.forEach(tag => {
+      const path = `/genre/${tag.urlSlug}`
+      
+      SUPPORTED_LOCALES.forEach(locale => {
+        sitemapEntries.push({
+          url: `${BASE_URL}/${locale}${path}`,
+          lastModified: sitemapData.lastUpdatedDate,
+          changeFrequency: 'daily' as const,
+          priority: 0.8,
+          alternates: generateAlternates(path)
+        })
+      })
+    })
+
+    return sitemapEntries
   } catch (error) {
     console.error('Error generating sitemap:', error)
     
-    // Return minimal sitemap on error
-    return [
-      {
-        url: BASE_URL,
+    // Return minimal sitemap on error - with all locales
+    const minimalSitemap: MetadataRoute.Sitemap = []
+    
+    SUPPORTED_LOCALES.forEach(locale => {
+      minimalSitemap.push({
+        url: `${BASE_URL}/${locale}`,
         lastModified: new Date(),
         changeFrequency: 'daily',
         priority: 1.0,
-      }
-    ]
+      })
+    })
+    
+    return minimalSitemap
   }
 }

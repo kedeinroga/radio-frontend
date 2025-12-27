@@ -1,14 +1,33 @@
 import axios, { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from 'axios'
+import { Locale } from '../../domain/valueObjects/Locale'
 
 /**
  * API Client Configuration
- * Axios instance with JWT auto-refresh interceptors
+ * Axios instance with JWT auto-refresh interceptors and i18n support
  */
 
 const API_BASE_URL =
   typeof window !== 'undefined'
     ? process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api/v1'
     : process.env.EXPO_PUBLIC_API_URL || 'http://localhost:8080/api/v1'
+
+// Global locale state (injected from i18n system)
+let currentLocale: Locale = Locale.default()
+
+/**
+ * Sets the current locale for API requests
+ * This will add the Accept-Language header to all requests
+ */
+export const setApiLocale = (locale: Locale): void => {
+  currentLocale = locale
+}
+
+/**
+ * Gets the current API locale
+ */
+export const getApiLocale = (): Locale => {
+  return currentLocale
+}
 
 // Create axios instance
 const apiClient: AxiosInstance = axios.create({
@@ -75,10 +94,15 @@ export const initializeApiClient = (storage: typeof tokenStorage) => {
 
 /**
  * Request Interceptor
- * Automatically adds JWT token to requests
+ * Automatically adds JWT token and Accept-Language header to requests
  */
 apiClient.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
+    // Add Accept-Language header for i18n
+    if (config.headers) {
+      config.headers['Accept-Language'] = currentLocale.code
+    }
+    
     // Try to get token from localStorage directly (always works after page refresh)
     let token = getTokenFromStorage('access_token')
     

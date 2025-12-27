@@ -23,13 +23,13 @@ export class StationApiRepository implements IStationRepository {
         return null
       }
       if (error.response?.status === 403) {
-        throw new Error('Esta estación solo está disponible para usuarios Premium.')
+        throw new Error('This station is only available for Premium users.')
       }
       if (error.response?.status === 503) {
-        throw new Error('El servicio de estaciones está temporalmente no disponible. Por favor, intenta más tarde.')
+        throw new Error('The stations service is temporarily unavailable. Please try again later.')
       }
       console.error('Error fetching station by ID:', error)
-      throw new Error('Error al obtener la estación. Por favor, intenta de nuevo.')
+      throw new Error('Failed to fetch station. Please try again.')
     }
   }
 
@@ -43,18 +43,18 @@ export class StationApiRepository implements IStationRepository {
     } catch (error: any) {
       // Handle specific HTTP errors from backend
       if (error.response?.status === 400) {
-        throw new Error('Por favor, proporciona un término de búsqueda válido.')
+        throw new Error('Please provide a valid search term.')
       }
       if (error.response?.status === 503) {
-        throw new Error('El servicio de búsqueda está temporalmente no disponible. Por favor, intenta más tarde.')
+        throw new Error('The search service is temporarily unavailable. Please try again later.')
       }
       // Handle timeout errors
       if (error.code === 'ECONNABORTED' || error.message?.includes('timeout')) {
         console.error('Search timeout - backend is taking too long:', error)
-        throw new Error('La búsqueda está tardando más de lo esperado. Por favor, intenta con términos más específicos.')
+        throw new Error('The search is taking longer than expected. Please try with more specific terms.')
       }
       console.error('Error searching stations:', error)
-      throw new Error('Error al buscar estaciones. Por favor, intenta de nuevo.')
+      throw new Error('Failed to search stations. Please try again.')
     }
   }
 
@@ -69,10 +69,10 @@ export class StationApiRepository implements IStationRepository {
       return (response.data.data || []).map((item: any) => this.mapToStation(item))
     } catch (error: any) {
       if (error.response?.status === 503) {
-        throw new Error('El servicio de estaciones está temporalmente no disponible. Por favor, intenta más tarde.')
+        throw new Error('The stations service is temporarily unavailable. Please try again later.')
       }
       console.error('Error fetching popular stations:', error)
-      throw new Error('Error al obtener estaciones populares. Por favor, intenta de nuevo.')
+      throw new Error('Failed to fetch popular stations. Please try again.')
     }
   }
 

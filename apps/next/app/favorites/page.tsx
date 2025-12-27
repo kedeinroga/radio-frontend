@@ -6,8 +6,10 @@ import { StationCard } from '@/components/StationCard'
 import { EmptyState } from '@/components/EmptyState'
 import { usePlayer } from '@/hooks/usePlayer'
 import { useFavorites } from '@/hooks/useFavorites'
+import { useAppTranslation } from '@/hooks/useAppTranslation'
 
 export default function FavoritesPage() {
+  const { t } = useAppTranslation()
   const [favorites, setFavorites] = useState<any[]>([])
   const { play, togglePlayPause, currentStation, playerState } = usePlayer()
   const { getFavorites, removeFavorite } = useFavorites()
@@ -40,12 +42,12 @@ export default function FavoritesPage() {
           <div className="flex items-center gap-3">
             <Heart className="w-8 h-8 text-primary-500 fill-current" />
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-              Estaciones Favoritas
+              {t('favorites.stationsFavorites')}
             </h1>
           </div>
           {favorites.length > 0 && (
             <span className="text-sm text-gray-600 dark:text-gray-400">
-              {favorites.length} {favorites.length === 1 ? 'favorita' : 'favoritas'}
+              {favorites.length} {t(favorites.length === 1 ? 'favorites.favorite' : 'favorites.favorites_other')}
             </span>
           )}
         </div>
@@ -66,8 +68,8 @@ export default function FavoritesPage() {
                 <button
                   onClick={() => handleRemove(station.id)}
                   className="absolute top-2 right-2 p-2 bg-red-500 hover:bg-red-600 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-                  aria-label={`Eliminar ${station.name} de favoritas`}
-                  title="Eliminar de favoritas"
+                  aria-label={t('favorites.removeFavorite', { name: station.name })}
+                  title={t('favorites.removeFromFavoritesShort')}
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
@@ -76,9 +78,9 @@ export default function FavoritesPage() {
           </div>
         ) : (
           <EmptyState
-            icon="❤️"
-            title="No tienes favoritas aún"
-            message="Marca tus estaciones favoritas para acceder a ellas rápidamente. Haz clic en el corazón en cualquier estación para agregarla."
+            icon={t('favorites.emptyIcon')}
+            title={t('favorites.noFavoritesTitle')}
+            message={t('favorites.noFavoritesDescription')}
           />
         )}
       </div>

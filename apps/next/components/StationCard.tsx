@@ -3,6 +3,7 @@
 import React from 'react'
 import { useRouter } from 'next/navigation'
 import { Station } from '@radio-app/app'
+import { useAppTranslation } from '@/hooks/useAppTranslation'
 
 export interface StationCardProps {
   station: Station
@@ -22,6 +23,7 @@ export const StationCard: React.FC<StationCardProps> = ({
   onFavorite,
 }) => {
   const router = useRouter()
+  const { t } = useAppTranslation()
 
   const handleCardClick = () => {
     // Use ID for URLs
@@ -66,7 +68,7 @@ export const StationCard: React.FC<StationCardProps> = ({
           </div>
 
           <p className="text-sm text-neutral-600 dark:text-neutral-400 truncate">
-            {station.country || 'Unknown'}
+            {station.country || t('stations.unknownCountry')}
           </p>
         </div>
 
@@ -79,7 +81,7 @@ export const StationCard: React.FC<StationCardProps> = ({
               onPlay()
             }}
             disabled={isBuffering}
-            aria-label={isPlaying ? 'Pause station' : 'Play station'}
+            aria-label={isPlaying ? t('player.pauseStation', { name: station.name }) : t('player.playStation', { name: station.name })}
             className="w-12 h-12 bg-primary-500 hover:bg-primary-600 disabled:bg-primary-300 rounded-full flex items-center justify-center text-white transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
           >
             {isBuffering ? (
@@ -96,7 +98,7 @@ export const StationCard: React.FC<StationCardProps> = ({
                 e.stopPropagation()
                 onFavorite()
               }}
-              aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+              aria-label={isFavorite ? t('favorites.removeFromFavorites') : t('favorites.addToFavorites')}
               className="w-12 h-12 bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 rounded-full flex items-center justify-center transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
             >
               <span className="text-xl">{isFavorite ? '❤️' : '🤍'}</span>

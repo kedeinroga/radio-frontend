@@ -37,13 +37,13 @@ export class AnalyticsApiRepository {
       return response.data.data || []
     } catch (error: any) {
       if (error.response?.status === 401) {
-        throw new Error('Debes iniciar sesión para ver analytics.')
+        throw new Error('You must be logged in to view analytics.')
       }
       if (error.response?.status === 403) {
-        throw new Error('Esta funcionalidad solo está disponible para usuarios Premium.')
+        throw new Error('This feature is only available for Premium users.')
       }
       console.error('Error fetching trending searches:', error)
-      throw new Error('Error al obtener búsquedas en tendencia. Por favor, intenta de nuevo.')
+      throw new Error('Failed to fetch trending searches. Please try again.')
     }
   }
 
@@ -60,13 +60,13 @@ export class AnalyticsApiRepository {
       return response.data.data || []
     } catch (error: any) {
       if (error.response?.status === 401) {
-        throw new Error('Debes iniciar sesión para ver analytics.')
+        throw new Error('You must be logged in to view analytics.')
       }
       if (error.response?.status === 403) {
-        throw new Error('Esta funcionalidad solo está disponible para usuarios Premium.')
+        throw new Error('This feature is only available for Premium users.')
       }
       console.error('Error fetching popular stations:', error)
-      throw new Error('Error al obtener estaciones populares. Por favor, intenta de nuevo.')
+      throw new Error('Failed to fetch popular stations. Please try again.')
     }
   }
 
@@ -79,13 +79,13 @@ export class AnalyticsApiRepository {
       return response.data.data
     } catch (error: any) {
       if (error.response?.status === 401) {
-        throw new Error('Debes iniciar sesión para ver analytics.')
+        throw new Error('You must be logged in to view analytics.')
       }
       if (error.response?.status === 403) {
-        throw new Error('Esta funcionalidad solo está disponible para usuarios Premium.')
+        throw new Error('This feature is only available for Premium users.')
       }
       console.error('Error fetching active users:', error)
-      throw new Error('Error al obtener usuarios activos. Por favor, intenta de nuevo.')
+      throw new Error('Failed to fetch active users. Please try again.')
     }
   }
 }

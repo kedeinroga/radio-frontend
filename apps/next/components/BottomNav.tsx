@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Heart, Search, Compass } from 'lucide-react'
+import { useAppTranslation } from '@/hooks/useAppTranslation'
 
 /**
  * Bottom Navigation Bar
@@ -10,25 +11,26 @@ import { Heart, Search, Compass } from 'lucide-react'
  */
 export default function BottomNav() {
   const pathname = usePathname()
+  const { t } = useAppTranslation()
 
   const navItems = [
     {
-      name: 'Favoritas',
+      name: t('navigation.favorites'),
       href: '/favorites',
       icon: Heart,
-      ariaLabel: 'Ver estaciones favoritas',
+      ariaLabel: t('navigation.ariaLabels.viewFavorites'),
     },
     {
-      name: 'Buscar',
+      name: t('navigation.search'),
       href: '/search',
       icon: Search,
-      ariaLabel: 'Buscar estaciones',
+      ariaLabel: t('navigation.ariaLabels.searchStations'),
     },
     {
-      name: 'Descubrir',
+      name: t('navigation.discover'),
       href: '/',
       icon: Compass,
-      ariaLabel: 'Descubrir estaciones',
+      ariaLabel: t('navigation.ariaLabels.discoverStations'),
     },
   ]
 
@@ -36,7 +38,7 @@ export default function BottomNav() {
     <nav
       className="fixed bottom-0 left-0 right-0 z-40 bg-gray-900 border-t border-gray-800 safe-area-inset-bottom"
       role="navigation"
-      aria-label="Navegación principal"
+      aria-label={t('navigation.ariaLabels.mainNav')}
     >
       <div className="max-w-screen-xl mx-auto px-4">
         <div className="flex items-center justify-around h-16">

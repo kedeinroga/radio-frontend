@@ -3,8 +3,10 @@
 import { usePlayer } from '@/hooks/usePlayer'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import { useAppTranslation } from '@/hooks/useAppTranslation'
 
 export function PlayerBar() {
+  const { t } = useAppTranslation()
   const { currentStation, playerState, togglePlayPause, stop, setVolume } = usePlayer()
   const router = useRouter()
   const [imgError, setImgError] = useState(false)
@@ -28,7 +30,7 @@ export function PlayerBar() {
           <button
             onClick={handleStationClick}
             className="flex items-center gap-3 flex-1 min-w-0 text-left hover:opacity-80 transition-opacity focus:outline-none focus:ring-2 focus:ring-primary-500 rounded-lg"
-            aria-label={`Ver detalles de ${currentStation.name}`}
+            aria-label={t('player.viewDetails', { name: currentStation.name })}
           >
             <div className="w-12 h-12 rounded-lg bg-neutral-200 dark:bg-neutral-800 flex items-center justify-center overflow-hidden flex-shrink-0">
               {!imgError && currentStation.imageUrl ? (
@@ -49,7 +51,7 @@ export function PlayerBar() {
                 {currentStation.name}
               </h3>
               <p className="text-sm text-neutral-600 dark:text-neutral-400 truncate">
-                {currentStation.country || 'Radio Station'}
+                {currentStation.country || t('stations.country')}
               </p>
             </div>
           </button>
@@ -60,7 +62,7 @@ export function PlayerBar() {
             <button
               onClick={togglePlayPause}
               disabled={playerState.isBuffering}
-              aria-label={playerState.isPlaying ? 'Pause' : 'Play'}
+              aria-label={playerState.isPlaying ? t('player.pause') : t('player.play')}
               className="w-12 h-12 bg-primary-500 hover:bg-primary-600 disabled:bg-primary-300 rounded-full flex items-center justify-center text-white transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
             >
               {playerState.isBuffering ? (
@@ -73,7 +75,7 @@ export function PlayerBar() {
             {/* Stop Button */}
             <button
               onClick={stop}
-              aria-label="Stop"
+              aria-label={t('player.stop')}
               className="w-10 h-10 bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700 rounded-full flex items-center justify-center transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
             >
               <span className="text-lg">⏹</span>
@@ -83,7 +85,7 @@ export function PlayerBar() {
             <div className="flex items-center gap-2 min-w-[120px]">
               <button
                 onClick={() => setVolume((playerState.volume ?? 0.7) === 0 ? 0.7 : 0)}
-                aria-label={(playerState.volume ?? 0.7) === 0 ? 'Unmute' : 'Mute'}
+                aria-label={(playerState.volume ?? 0.7) === 0 ? t('player.unmute') : t('player.mute')}
                 className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 rounded"
               >
                 <span className="text-xl">
@@ -96,7 +98,7 @@ export function PlayerBar() {
                 max="100"
                 value={(playerState.volume || 0.7) * 100}
                 onChange={(e) => setVolume(Number(e.target.value) / 100)}
-                aria-label="Volume"
+                aria-label={t('player.volume')}
                 className="w-20 h-2 bg-neutral-200 dark:bg-neutral-700 rounded-lg appearance-none cursor-pointer accent-primary-500"
               />
             </div>

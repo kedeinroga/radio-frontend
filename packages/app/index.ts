@@ -1,10 +1,15 @@
 // Domain Entities
 export { Station } from './domain/entities/Station'
+export type { StationDTO, SEOMetadata } from './domain/entities/Station'
 export { User } from './domain/entities/User'
 export { PopularCountry } from './domain/entities/PopularCountry'
 export { PopularTag } from './domain/entities/PopularTag'
 export { SitemapData } from './domain/entities/SitemapData'
-export type { SEOMetadata } from './domain/entities/Station'
+export { Translation } from './domain/entities/Translation'
+
+// Domain Value Objects
+export { Locale } from './domain/valueObjects/Locale'
+export type { LocaleCode } from './domain/valueObjects/Locale'
 
 // Domain Errors
 export * from './domain/errors/DomainErrors'
@@ -14,6 +19,10 @@ export type { IStationRepository } from './domain/repositories/IStationRepositor
 export type { IUserRepository } from './domain/repositories/IUserRepository'
 export type { IPlayerRepository, PlayerState } from './domain/repositories/IPlayerRepository'
 export type { ISEORepository } from './domain/repositories/ISEORepository'
+
+// Application Ports
+export type { ITranslator, TranslationOptions } from './application/ports/ITranslator'
+export type { ILocaleFormatter, DateFormat, NumberFormatOptions, CurrencyFormatOptions } from './application/ports/ILocaleFormatter'
 
 // Infrastructure - Only working adapters
 export { StationApiRepository } from './infrastructure/api/StationApiRepository'
@@ -28,8 +37,12 @@ export { ConsoleLogger } from './infrastructure/logging/ConsoleLogger'
 export { MockAnalyticsService } from './infrastructure/analytics/MockAnalyticsService'
 export { WebSecureStorage } from './infrastructure/storage/WebSecureStorage'
 export type { ISecureStorage } from './infrastructure/storage/ISecureStorage'
-export { default as apiClient, initializeApiClient } from './infrastructure/api/apiClient'
+export { default as apiClient, initializeApiClient, setApiLocale, getApiLocale } from './infrastructure/api/apiClient'
 export { HowlerPlayerAdapter } from './infrastructure/audio/HowlerPlayerAdapter'
+
+// Infrastructure - i18n
+export { NextIntlAdapter } from './infrastructure/i18n/NextIntlAdapter'
+export { LocaleFormatter } from './infrastructure/i18n/LocaleFormatter'
 
 // Stores
 export { usePlayerStore } from './stores/playerStore'
@@ -45,6 +58,13 @@ export { GetRelatedStations } from './application/useCases/stations/GetRelatedSt
 export { GetPopularCountries } from './application/useCases/seo/GetPopularCountries'
 export { GetPopularTags } from './application/useCases/seo/GetPopularTags'
 export { GetSitemapData } from './application/useCases/seo/GetSitemapData'
+
+// Use Cases - i18n
+export { ChangeLocaleUseCase } from './application/useCases/i18n/ChangeLocale'
+export { GetAvailableLocalesUseCase } from './application/useCases/i18n/GetAvailableLocales'
+export { GetTranslationUseCase } from './application/useCases/i18n/GetTranslation'
+export type { LocaleInfo } from './application/useCases/i18n/GetAvailableLocales'
+export type { GetTranslationRequest } from './application/useCases/i18n/GetTranslation'
 
 // Note: Components are platform-specific and should be imported from apps/next or apps/expo
 // Note: Additional use cases can be imported directly when needed:

@@ -44,10 +44,10 @@ export class AuthApiRepository {
       return response.data.data
     } catch (error: any) {
       if (error.response?.status === 400) {
-        throw new Error('Datos de registro inválidos. Verifica tu email y contraseña.')
+        throw new Error('Invalid registration data. Check your email and password.')
       }
       console.error('Error registering user:', error)
-      throw new Error('Error al registrar usuario. Por favor, intenta de nuevo.')
+      throw new Error('Failed to register user. Please try again.')
     }
   }
 
@@ -73,12 +73,12 @@ export class AuthApiRepository {
       }
     } catch (error: any) {
       if (error.response?.status === 400) {
-        throw new Error('Datos de inicio de sesión inválidos.')
+        throw new Error('Invalid login credentials.')
       }
       if (error.response?.status === 401) {
-        throw new Error('Email o contraseña incorrectos.')
+        throw new Error('Incorrect email or password.')
       }
-      throw new Error(error.message || 'Error al iniciar sesión. Por favor, intenta de nuevo.')
+      throw new Error(error.message || 'Failed to log in. Please try again.')
     }
   }
 
@@ -91,13 +91,13 @@ export class AuthApiRepository {
       return response.data.data
     } catch (error: any) {
       if (error.response?.status === 400) {
-        throw new Error('Refresh token inválido.')
+        throw new Error('Invalid refresh token.')
       }
       if (error.response?.status === 401) {
-        throw new Error('Refresh token expirado o inválido. Por favor, inicia sesión nuevamente.')
+        throw new Error('Refresh token expired or invalid. Please log in again.')
       }
       console.error('Error refreshing token:', error)
-      throw new Error('Error al refrescar token. Por favor, intenta de nuevo.')
+      throw new Error('Failed to refresh token. Please try again.')
     }
   }
 
@@ -127,9 +127,9 @@ export class AuthApiRepository {
       }
     } catch (error: any) {
       if (error.response?.status === 401) {
-        throw new Error('No autenticado. Por favor, inicia sesión.')
+        throw new Error('Not authenticated. Please log in.')
       }
-      throw new Error(error.message || 'Error al obtener información del usuario. Por favor, intenta de nuevo.')
+      throw new Error(error.message || 'Failed to fetch user information. Please try again.')
     }
   }
 }

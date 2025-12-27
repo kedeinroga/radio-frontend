@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuthStore, WebSecureStorage } from '@radio-app/app'
 import { LoadingSpinner } from './LoadingSpinner'
+import { useAppTranslation } from '@/hooks/useAppTranslation'
 
 const storage = new WebSecureStorage()
 
@@ -15,6 +16,7 @@ export function AdminGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter()
   const { user, setUser } = useAuthStore()
   const [isChecking, setIsChecking] = useState(true)
+  const { t } = useAppTranslation()
 
   useEffect(() => {
     const checkAccess = async () => {
@@ -53,7 +55,7 @@ export function AdminGuard({ children }: { children: React.ReactNode }) {
   if (isChecking || !user || !user.isAdmin) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
-        <LoadingSpinner message="Verifying access..." />
+        <LoadingSpinner message={t('auth.verifyingAccess')} />
       </div>
     )
   }

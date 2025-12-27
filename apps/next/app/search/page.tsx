@@ -7,11 +7,13 @@ import { EmptyState } from '@/components/EmptyState'
 import { LoadingSpinner } from '@/components/LoadingSpinner'
 import { usePlayer } from '@/hooks/usePlayer'
 import { useFavorites } from '@/hooks/useFavorites'
+import { useAppTranslation } from '@/hooks/useAppTranslation'
 import { StationApiRepository } from '@radio-app/app'
 
 const stationRepo = new StationApiRepository()
 
 export default function SearchPage() {
+  const { t } = useAppTranslation()
   const [query, setQuery] = useState('')
   const [stations, setStations] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(false)
@@ -141,9 +143,9 @@ export default function SearchPage() {
               Buscando estaciones...
             </p>
             {isSlowSearch && (
-              <div className="mt-4 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg max-w-md">
+              <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
                 <p className="text-sm text-yellow-800 dark:text-yellow-200">
-                  ⏳ La búsqueda está tardando más de lo esperado. Por favor, ten paciencia...
+                  ⏳ {t('search.slowSearch')}
                 </p>
               </div>
             )}
@@ -151,13 +153,13 @@ export default function SearchPage() {
         ) : searchError ? (
           <EmptyState
             icon="⚠️"
-            title="Error en la búsqueda"
+            title={t('search.errorTitle')}
             message={searchError}
           />
         ) : stations.length > 0 ? (
           <div>
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-              {stations.length} {stations.length === 1 ? 'resultado encontrado' : 'resultados encontrados'}
+              {t(stations.length === 1 ? 'search.resultsCount' : 'search.resultsCount_other', { count: stations.length })}
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {stations.map((station) => (

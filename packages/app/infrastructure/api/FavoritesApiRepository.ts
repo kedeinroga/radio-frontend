@@ -15,10 +15,10 @@ export class FavoritesApiRepository {
       return (response.data.data || []).map((item: any) => this.mapToStation(item))
     } catch (error: any) {
       if (error.response?.status === 401) {
-        throw new Error('Debes iniciar sesión para ver tus favoritos.')
+        throw new Error('You must be logged in to view your favorites.')
       }
       console.error('Error fetching favorites:', error)
-      throw new Error('Error al obtener favoritos. Por favor, intenta de nuevo.')
+      throw new Error('Failed to fetch favorites. Please try again.')
     }
   }
 
@@ -30,20 +30,20 @@ export class FavoritesApiRepository {
       await apiClient.post('/favorites', { station_id: stationId })
     } catch (error: any) {
       if (error.response?.status === 401) {
-        throw new Error('Debes iniciar sesión para agregar favoritos.')
+        throw new Error('You must be logged in to add favorites.')
       }
       if (error.response?.status === 403) {
-        throw new Error('Esta estación solo está disponible para usuarios Premium.')
+        throw new Error('This station is only available for Premium users.')
       }
       if (error.response?.status === 404) {
-        throw new Error('Estación no encontrada.')
+        throw new Error('Station not found.')
       }
       if (error.response?.status === 409) {
         // Station already in favorites - not really an error
         return
       }
       console.error('Error adding favorite:', error)
-      throw new Error('Error al agregar favorito. Por favor, intenta de nuevo.')
+      throw new Error('Failed to add favorite. Please try again.')
     }
   }
 
@@ -55,14 +55,14 @@ export class FavoritesApiRepository {
       await apiClient.delete(`/favorites/${stationId}`)
     } catch (error: any) {
       if (error.response?.status === 401) {
-        throw new Error('Debes iniciar sesión para eliminar favoritos.')
+        throw new Error('You must be logged in to remove favorites.')
       }
       if (error.response?.status === 404) {
         // Favorite not found - not really an error, it's already removed
         return
       }
       console.error('Error removing favorite:', error)
-      throw new Error('Error al eliminar favorito. Por favor, intenta de nuevo.')
+      throw new Error('Failed to remove favorite. Please try again.')
     }
   }
 

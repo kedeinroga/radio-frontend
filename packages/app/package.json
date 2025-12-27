@@ -11,16 +11,27 @@
   "scripts": {
     "lint": "eslint .",
     "type-check": "tsc --noEmit",
-    "clean": "rm -rf dist .turbo node_modules"
+    "clean": "rm -rf dist .turbo node_modules",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
+    "axios": "^1.6.0",
     "react": "^19.0.0",
     "zod": "^3.22.0",
-    "zustand": "^4.5.0",
-    "axios": "^1.6.0"
+    "zustand": "^4.5.0"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.1",
     "@types/react": "^19.0.0",
-    "typescript": "^5.3.0"
+    "@vitest/coverage-v8": "^4.0.16",
+    "@vitest/ui": "^4.0.16",
+    "happy-dom": "^20.0.11",
+    "jsdom": "^27.4.0",
+    "typescript": "^5.3.0",
+    "vitest": "^4.0.16"
   }
 }
