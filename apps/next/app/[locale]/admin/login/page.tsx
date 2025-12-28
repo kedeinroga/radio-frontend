@@ -1,106 +1,197 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import { useAuthStore, User, WebSecureStorage } from '@radio-app/app'
-import { AuthApiRepository } from '@radio-app/app'
-import { initializeApiClient } from '@radio-app/app'
-
-const authRepo = new AuthApiRepository()
-const storage = new WebSecureStorage()
+import { useRouter, usePathname } from 'next/navigation'
+import { useAuthStore, User, loginSchema, validateData, sanitizeErrorMessage, SecurityLog } from '@radio-app/app'
+import { useRateLimit } from '@/hooks/useRateLimit'
 
 export default function AdminLoginPage() {
   const router = useRouter()
+  const pathname = usePathname()
   const { user, setUser } = useAuthStore()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
+  const [validationErrors, setValidationErrors] = useState<Record<string, string[]>>({})
   const [isLoggingIn, setIsLoggingIn] = useState(false)
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true)
+  
+  // Rate limiting
+  const rateLimit = useRateLimit('admin-login', {
+    maxAttempts: 5,
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    blockDurationMs: 15 * 60 * 1000, // Block for 15 minutes
+  })
 
-  // Check on mount if tokens are invalid but user exists
+  // Check authentication and redirect if needed
   useEffect(() => {
-    const checkTokens = async () => {
-      const accessToken = await storage.getItem('access_token')
-      const refreshToken = await storage.getItem('refresh_token')
-      const hasTokens = accessToken && refreshToken
-      
-      if (user && !hasTokens) {
-        // User exists in store but no tokens - clear user
-        setUser(null)
-      } else if (user?.isAdmin && hasTokens) {
-        // User is admin with valid tokens - redirect to dashboard
-        router.push('/admin')
+    const checkAuth = async () => {
+      try {
+        // Get current user from store
+        const currentUser = useAuthStore.getState().user
+        
+        if (currentUser?.isAdmin) {
+          // User is admin - verify with backend
+          try {
+            const response = await fetch('/api/auth/me', {
+              credentials: 'include'
+            })
+            
+            if (response.ok) {
+              // Cookies are valid, redirect to dashboard
+              const locale = pathname?.split('/')[1] || 'es'
+              const targetPath = `/${locale}/admin`
+              router.push(targetPath)
+              // Keep isCheckingAuth true while redirecting
+              return
+            } else {
+              // Cookies invalid or expired - clear user
+              useAuthStore.getState().setUser(null)
+            }
+          } catch (error) {
+            console.error('Error verifying session:', error)
+            useAuthStore.getState().setUser(null)
+          }
+        }
+        
+        // No user or session invalid - show login form
+        setIsCheckingAuth(false)
+      } catch (error) {
+        console.error('Error checking auth:', error)
+        setIsCheckingAuth(false)
       }
     }
     
-    checkTokens()
-  }, [user, router, setUser])
+    checkAuth()
+  }, [router, pathname, user])
+
+  // Show loading while checking auth
+  if (isCheckingAuth) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-200 border-t-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600 dark:text-gray-400">Verificando acceso...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Show redirecting spinner if user is admin
+  if (user?.isAdmin) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-200 border-t-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600 dark:text-gray-400">Redirecting to admin panel...</p>
+        </div>
+      </div>
+    )
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError(null)
+    setValidationErrors({})
+
+    // Check if user is rate limited
+    if (rateLimit.isBlocked) {
+      setError(`Too many failed attempts. Please wait ${rateLimit.getFormattedBlockTime()} before trying again.`)
+      return
+    }
+
+    // Validate form data with Zod
+    const validation = validateData(loginSchema, { email, password })
+    if (!validation.success) {
+      setValidationErrors(validation.errors)
+      return
+    }
+
     setIsLoggingIn(true)
 
     try {
-      // Step 1: Login and get tokens
-      const tokens = await authRepo.login({ email, password })
-      
-      // Validate tokens
-      if (!tokens?.access_token || !tokens?.refresh_token) {
-        throw new Error('Invalid response from server. Missing authentication tokens.')
-      }
-      
-      // Step 2: Store tokens using WebSecureStorage (with @radio-app: prefix)
-      await storage.setItem('access_token', tokens.access_token)
-      await storage.setItem('refresh_token', tokens.refresh_token)
-
-      // Step 3: Initialize API client with tokens
-      initializeApiClient({
-        getAccessToken: () => storage.getItem('access_token'),
-        getRefreshToken: () => storage.getItem('refresh_token'),
-        setAccessToken: (token: string) => storage.setItem('access_token', token),
-        clearTokens: async () => {
-          await storage.removeItem('access_token')
-          await storage.removeItem('refresh_token')
-        },
+      // Step 1: Login via API Route (cookies are set automatically)
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(validation.data)
       })
 
-      // Step 4: Get user info
-      const userInfo = await authRepo.getCurrentUser()
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error?.message || 'Login failed')
+      }
+
+      const data = await response.json()
       
-      // Validate user info
-      if (!userInfo?.id || !userInfo?.email || !userInfo?.role) {
-        throw new Error('Invalid user information received from server.')
+      // Validate response
+      if (!data?.user) {
+        throw new Error('Invalid response from server. Missing user information.')
       }
       
-      // Step 5: Create User entity
+      // Step 2: Create User entity
       const loggedUser = new User(
-        userInfo.id,
-        userInfo.email,
-        userInfo.email.split('@')[0], // Use email prefix as name
-        userInfo.role as 'guest' | 'premium' | 'admin',
+        data.user.id,
+        data.user.email,
+        data.user.email.split('@')[0], // Use email prefix as name
+        data.user.role as 'guest' | 'premium' | 'admin',
         undefined,
         []
       )
 
-      // Step 6: Check if user is admin
+      // Step 3: Check if user is admin
       if (!loggedUser.isAdmin) {
         setError('Access denied. Admin privileges required.')
-        // Clear tokens
-        await storage.removeItem('access_token')
-        await storage.removeItem('refresh_token')
+        
+        // Log unauthorized access attempt
+        SecurityLog.unauthorizedAccess('/admin', loggedUser.id)
+        SecurityLog.loginFailed(validation.data.email, 'User is not an admin')
+        
+        // Logout to clear cookies
+        await fetch('/api/auth/logout', { 
+          method: 'POST',
+          credentials: 'include'
+        })
+        
         setIsLoggingIn(false)
+        
+        // Record failed attempt
+        rateLimit.recordAttempt()
         return
       }
 
-      // Step 7: Set user in store
+      // Step 4: Log successful admin login
+      SecurityLog.loginSuccess(loggedUser.id, loggedUser.email)
+      SecurityLog.adminAccess(loggedUser.id, loggedUser.email, 'Admin login successful')
+
+      // Step 5: Reset rate limit on successful login
+      rateLimit.reset()
+
+      // Step 6: Set user in store
       setUser(loggedUser)
       
-      // Step 8: Redirect to admin dashboard
-      router.push('/admin')
+      // Step 7: Redirect to admin dashboard with locale
+      const locale = pathname?.split('/')[1] || 'es'
+      router.push(`/${locale}/admin`)
     } catch (err: any) {
-      setError(err.message || 'Invalid email or password. Please try again.')
+      // Sanitize error message to prevent information leakage
+      const safeError = sanitizeErrorMessage(
+        err,
+        'Invalid email or password. Please try again.'
+      )
+      setError(safeError)
       setIsLoggingIn(false)
+      
+      // Log failed login attempt
+      SecurityLog.loginFailed(email, err.message || 'Unknown error')
+      
+      // Record failed attempt
+      const isNowBlocked = rateLimit.recordAttempt()
+      if (isNowBlocked) {
+        SecurityLog.rateLimitTriggered(email, rateLimit.attempts)
+        setError(`Too many failed attempts. Your account has been temporarily locked for ${rateLimit.getFormattedBlockTime()}.`)
+      }
     }
   }
 
@@ -137,6 +228,23 @@ export default function AdminLoginPage() {
         {/* Login Form */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 p-8">
           <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Rate Limit Warning */}
+            {rateLimit.isBlocked && (
+              <div className="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-lg p-4">
+                <div className="flex items-start gap-3">
+                  <span className="text-orange-600 dark:text-orange-400 text-xl">⏱️</span>
+                  <div>
+                    <h3 className="text-orange-800 dark:text-orange-200 font-semibold text-sm">
+                      Account Temporarily Locked
+                    </h3>
+                    <p className="text-orange-600 dark:text-orange-300 text-sm mt-1">
+                      Too many failed login attempts. Please wait {rateLimit.getFormattedBlockTime()} before trying again.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Error Message */}
             {error && (
               <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
@@ -167,10 +275,19 @@ export default function AdminLoginPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                className={`w-full px-4 py-3 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors ${
+                  validationErrors.email 
+                    ? 'border-red-500 dark:border-red-500' 
+                    : 'border-gray-300 dark:border-gray-600'
+                }`}
                 placeholder="admin@example.com"
-                disabled={isLoggingIn}
+                disabled={isLoggingIn || rateLimit.isBlocked}
               />
+              {validationErrors.email && (
+                <p className="text-red-600 dark:text-red-400 text-xs mt-1">
+                  {validationErrors.email}
+                </p>
+              )}
             </div>
 
             {/* Password Field */}
@@ -186,16 +303,25 @@ export default function AdminLoginPage() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                className={`w-full px-4 py-3 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors ${
+                  validationErrors.password 
+                    ? 'border-red-500 dark:border-red-500' 
+                    : 'border-gray-300 dark:border-gray-600'
+                }`}
                 placeholder="••••••••"
-                disabled={isLoggingIn}
+                disabled={isLoggingIn || rateLimit.isBlocked}
               />
+              {validationErrors.password && (
+                <p className="text-red-600 dark:text-red-400 text-xs mt-1">
+                  {validationErrors.password}
+                </p>
+              )}
             </div>
 
             {/* Submit Button */}
             <button
               type="submit"
-              disabled={isLoggingIn}
+              disabled={isLoggingIn || rateLimit.isBlocked}
               className="w-full flex justify-center items-center gap-2 py-3 px-4 border border-transparent rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoggingIn ? (
@@ -205,6 +331,10 @@ export default function AdminLoginPage() {
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
                   Signing in...
+                </>
+              ) : rateLimit.isBlocked ? (
+                <>
+                  🔒 Locked - Wait {rateLimit.getFormattedBlockTime()}
                 </>
               ) : (
                 <>

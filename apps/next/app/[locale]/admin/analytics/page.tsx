@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { adminApiRepository } from '@radio-app/app'
+import { clientAdminApi } from '@/lib/clientAdminApi'
 import { LoadingSpinner } from '@/components/LoadingSpinner'
 
 type TimeRange = 'hour' | 'day' | 'week' | 'month'
@@ -40,10 +40,10 @@ export default function AnalyticsPage() {
       setError(null)
 
       const [usersRes, guestRes, stationsRes, searchesRes] = await Promise.all([
-        adminApiRepository.getActiveUsers(),
-        adminApiRepository.getGuestUsers(),
-        adminApiRepository.getPopularStations(timeRange, 20),
-        adminApiRepository.getTrendingSearches(timeRange, 20),
+        clientAdminApi.getActiveUsers(),
+        clientAdminApi.getGuestUsers(),
+        clientAdminApi.getPopularStations(timeRange, 20),
+        clientAdminApi.getTrendingSearches(timeRange, 20),
       ])
 
       setActiveUsers(usersRes.data?.count || 0)

@@ -4,7 +4,7 @@ import { AdminGuard } from '@/components/AdminGuard'
 import { useInitializeApi } from '@/hooks/useInitializeApi'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { useAuthStore, WebSecureStorage } from '@radio-app/app'
+import { useAuthStore } from '@radio-app/app'
 
 const adminNavItems = [
   { href: '/admin', label: 'Dashboard', icon: '📊' },
@@ -12,8 +12,6 @@ const adminNavItems = [
   { href: '/admin/translations', label: 'Translations', icon: '🌍' },
   { href: '/admin/seo', label: 'SEO', icon: '🔍' },
 ]
-
-const storage = new WebSecureStorage()
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
@@ -24,19 +22,32 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   useInitializeApi()
 
   // Don't apply AdminGuard to login page
-  if (pathname === '/admin/login') {
+  // Check if the current path ends with /admin/login (ignoring locale prefix)
+  if (pathname?.endsWith('/admin/login')) {
     return <>{children}</>
   }
 
   const handleLogout = async () => {
-    // Clear tokens from localStorage (with @radio-app: prefix)
-    await storage.removeItem('access_token')
-    await storage.removeItem('refresh_token')
+    // Call API Route to logout (clears HttpOnly cookies)
+    try {
+      await fetch('/api/auth/logout', { 
+        method: 'POST',
+        credentials: 'include'
+      })
+    } catch (error) {
+      console.error('Logout error:', error)
+    }
+    
     // Clear user from store
     logout()
-    // Redirect to login
-    router.push('/admin/login')
+    
+    // Redirect to login with locale
+    const locale = pathname?.split('/')[1] || 'es'
+    router.push(`/${locale}/admin/login`)
   }
+
+  // Extract locale from pathname for navigation
+  const locale = pathname?.split('/')[1] || 'es'
 
   return (
     <AdminGuard>
@@ -46,7 +57,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
               <div className="flex items-center gap-8">
-                <Link href="/" className="text-xl font-bold text-gray-900 dark:text-white">
+                <Link href={`/${locale}`} className="text-xl font-bold text-gray-900 dark:text-white">
                   🎵 RadioApp
                 </Link>
                 <span className="text-sm font-medium text-gray-500 dark:text-gray-400 px-3 py-1 bg-red-100 dark:bg-red-900/20 rounded-full">
@@ -56,11 +67,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               
               <nav className="flex items-center gap-6">
                 {adminNavItems.map((item) => {
-                  const isActive = pathname === item.href
+                  const fullPath = `/${locale}${item.href}`
+                  const isActive = pathname === fullPath
                   return (
                     <Link
                       key={item.href}
-                      href={item.href}
+                      href={fullPath}
                       className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                         isActive
                           ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300'
@@ -76,7 +88,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
               <div className="flex items-center gap-3">
                 <Link
-                  href="/"
+                  href={`/${locale}`}
                   className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
                 >
                   Back to App →

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { adminApiRepository } from '@radio-app/app'
+import { clientAdminApi } from '@/lib/clientAdminApi'
 import { LoadingSpinner } from '@/components/LoadingSpinner'
 
 interface Translation {
@@ -39,7 +39,7 @@ export default function TranslationsPage() {
     try {
       setLoading(true)
       setError(null)
-      const response = await adminApiRepository.getStationTranslations(stationId.trim())
+      const response = await clientAdminApi.getStationTranslations(stationId.trim())
       setTranslations(response.data || [])
     } catch (err: any) {
       console.error('Error loading translations:', err)
@@ -57,7 +57,7 @@ export default function TranslationsPage() {
     }
 
     try {
-      await adminApiRepository.deleteTranslation(stationId, lang)
+      await clientAdminApi.deleteTranslation(stationId, lang)
       await loadTranslations()
     } catch (err: any) {
       console.error('Error deleting translation:', err)
@@ -306,10 +306,10 @@ function TranslationFormModal({
 
       if (translation) {
         // Update existing
-        await adminApiRepository.updateTranslation(stationId, translation.language_code, data)
+        await clientAdminApi.updateTranslation(stationId, translation.language_code, data)
       } else {
         // Create new
-        await adminApiRepository.createTranslation({
+        await clientAdminApi.createTranslation({
           station_id: stationId,
           language_code: formData.language_code,
           ...data,

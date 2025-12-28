@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { adminApiRepository } from '@radio-app/app'
+import { clientAdminApi } from '@/lib/clientAdminApi'
 
 export default function SEOPage() {
   const [loading, setLoading] = useState(false)
@@ -16,7 +16,7 @@ export default function SEOPage() {
       setSuccess(false)
       setResult(null)
 
-      const response = await adminApiRepository.refreshSEOStats()
+      const response = await clientAdminApi.refreshSEOStats()
       
       setSuccess(true)
       setResult(response)

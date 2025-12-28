@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { adminApiRepository } from '@radio-app/app'
+import { clientAdminApi } from '@/lib/clientAdminApi'
 import { LoadingSpinner } from '@/components/LoadingSpinner'
 import Link from 'next/link'
 
@@ -42,10 +42,10 @@ export default function AdminDashboard() {
       setError(null)
 
       const [activeUsersRes, guestUsersRes, popularStationsRes, trendingSearchesRes] = await Promise.all([
-        adminApiRepository.getActiveUsers(),
-        adminApiRepository.getGuestUsers(),
-        adminApiRepository.getPopularStations('day', 5),
-        adminApiRepository.getTrendingSearches('day', 5),
+        clientAdminApi.getActiveUsers(),
+        clientAdminApi.getGuestUsers(),
+        clientAdminApi.getPopularStations('day', 5),
+        clientAdminApi.getTrendingSearches('day', 5),
       ])
 
       setStats({

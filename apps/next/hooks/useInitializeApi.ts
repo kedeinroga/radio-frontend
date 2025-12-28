@@ -1,27 +1,23 @@
 'use client'
 
 import { useEffect } from 'react'
-import { initializeApiClient, WebSecureStorage } from '@radio-app/app'
+import { initializeApiClient } from '@radio-app/app'
 
 /**
- * Hook to initialize the API client with token storage
- * Should be called once at app startup or in protected route layouts
+ * Hook to initialize the API client
+ * Note: Tokens are now in HttpOnly cookies managed by API routes
+ * This provides an empty storage adapter for backward compatibility
  */
 export function useInitializeApi() {
   useEffect(() => {
-    const storage = new WebSecureStorage()
-    
-    // Create token storage adapter
-    const tokenStorage = {
-      getAccessToken: () => storage.getItem('access_token'),
-      getRefreshToken: () => storage.getItem('refresh_token'),
-      setAccessToken: (token: string) => storage.setItem('access_token', token),
-      clearTokens: async () => {
-        await storage.removeItem('access_token')
-        await storage.removeItem('refresh_token')
-      }
-    }
-    
-    initializeApiClient(tokenStorage)
+    // Initialize API client with empty token storage
+    // Tokens are in HttpOnly cookies and sent automatically with requests
+    // API routes will proxy requests to backend with proper authentication
+    initializeApiClient({
+      getAccessToken: async () => null,
+      getRefreshToken: async () => null,
+      setAccessToken: async () => {},
+      clearTokens: async () => {}
+    })
   }, [])
 }

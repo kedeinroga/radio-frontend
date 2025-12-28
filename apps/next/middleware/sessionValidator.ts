@@ -106,8 +106,6 @@ export async function validateSession(request: NextRequest): Promise<NextRespons
   const accessToken = request.cookies.get('@radio-app:access_token')?.value
   
   if (!accessToken) {
-    console.log('[Middleware] No access token found, redirecting to login')
-    
     // Detect locale from pathname or cookie
     const localeMatch = pathname.match(/^\/(es|en|fr|de)/)
     const locale = localeMatch ? localeMatch[1] : 'es'
@@ -118,8 +116,6 @@ export async function validateSession(request: NextRequest): Promise<NextRespons
   // Validate token format
   const payload = decodeJWTServer(accessToken)
   if (!payload) {
-    console.log('[Middleware] Invalid token format, redirecting to login')
-    
     const localeMatch = pathname.match(/^\/(es|en|fr|de)/)
     const locale = localeMatch ? localeMatch[1] : 'es'
     
@@ -128,8 +124,6 @@ export async function validateSession(request: NextRequest): Promise<NextRespons
 
   // Check if token is expired
   if (isTokenExpiredServer(accessToken)) {
-    console.log('[Middleware] Token expired, redirecting to login')
-    
     const localeMatch = pathname.match(/^\/(es|en|fr|de)/)
     const locale = localeMatch ? localeMatch[1] : 'es'
     

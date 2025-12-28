@@ -59,23 +59,22 @@ const nextConfig = {
             value: 'max-age=63072000; includeSubDomains; preload',
           },
           // Content Security Policy
-          // Note: Using report-only mode initially to avoid breaking functionality
-          // Switch to 'Content-Security-Policy' when ready for enforcement
+          // Using report-only mode to monitor violations without blocking
           {
             key: 'Content-Security-Policy-Report-Only',
             value: [
               "default-src 'self'",
               "script-src 'self' 'unsafe-eval' 'unsafe-inline'", // Next.js requires unsafe-eval and unsafe-inline
               "style-src 'self' 'unsafe-inline'", // Required for styled-components/emotion
-              "img-src 'self' data: https: blob:", // Allow images from any HTTPS source
+              "img-src 'self' data: https: http: blob:", // Allow images from any HTTPS/HTTP source
               "font-src 'self' data:",
-              "connect-src 'self' " + (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'),
-              "media-src 'self' https: blob:", // Allow audio streaming
+              "connect-src 'self' http://localhost:8080 http://localhost:8080/api/v1 ws://localhost:3000", // Allow API and WebSocket
+              "media-src 'self' https: http: blob:", // Allow audio streaming from HTTP/HTTPS
               "object-src 'none'",
               "frame-ancestors 'none'",
               "base-uri 'self'",
               "form-action 'self'",
-              "upgrade-insecure-requests",
+              "report-uri /api/csp-report", // CSP violation reporting endpoint
             ].join('; '),
           },
         ],
