@@ -1,6 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { rateLimit, RATE_LIMITS } from '@/lib/rateLimit'
 
 export async function POST(request: NextRequest) {
+  // Apply rate limiting
+  const rateLimitResult = rateLimit(request, RATE_LIMITS.REFRESH)
+  if (rateLimitResult) {
+    return rateLimitResult
+  }
+  
   const refreshToken = request.cookies.get('@radio-app:refresh_token')?.value
   
   if (!refreshToken) {

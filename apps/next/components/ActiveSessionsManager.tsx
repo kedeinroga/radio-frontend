@@ -1,242 +1,240 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { SessionValidator, SessionInfo, WebSecureStorage } from '@radio-app/app'
-import { Monitor, Smartphone, Tablet, MapPin, Calendar, X } from 'lucide-react'
+import { Monitor, Smartphone, Tablet, MapPin, Calendar, X, Loader2, Trash2 } from 'lucide-react'
 
-const storage = new WebSecureStorage()
+interface SessionInfo {
+  session_id: string
+  token_id: string
+  device_info?: {
+    browser?: string
+    os?: string
+    device_type?: string
+    user_agent?: string
+  }
+  location?: {
+    ip?: string
+    city?: string
+    country?: string
+  }
+  created_at: string
+  last_activity: string
+  expires_at: string
+  is_current: boolean
+}
 
-/**
- * Active Sessions Manager Component
- * Displays all active sessions for the current user
- * Allows users to revoke/delete sessions
- */
 export function ActiveSessionsManager() {
   const [sessions, setSessions] = useState<SessionInfo[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [deletingSession, setDeletingSession] = useState<string | null>(null)
 
-  /**
-   * Load sessions from backend
-   */
   const loadSessions = async () => {
     try {
       setLoading(true)
       setError(null)
-
-      const token = await storage.getItem('access_token')
-      if (!token) {
-        setError('No access token found')
-        return
+      const response = await fetch('/api/auth/sessions', {
+        credentials: 'include',
+        signal: AbortSignal.timeout(5000),
+      })
+      
+      if (!response.ok) {
+        throw new Error('Failed to load sessions')
       }
-
-      const sessionsData = await SessionValidator.getSessions(token)
-      setSessions(sessionsData)
-    } catch (err) {
-      console.error('Failed to load sessions:', err)
-      setError('Failed to load sessions')
+      
+      const data = await response.json()
+      setSessions(data.sessions || [])
+    } catch (err: any) {
+      setError(err.message)
     } finally {
       setLoading(false)
     }
   }
 
-  /**
-   * Delete a specific session
-   */
-  const handleDeleteSession = async (sessionId: string, isCurrent: boolean) => {
-    if (isCurrent) {
-      alert('Cannot delete current session')
-      return
-    }
-
-    if (!confirm('Are you sure you want to revoke this session?')) {
-      return
-    }
-
+  const handleDeleteSession = async (sessionId: string) => {
     try {
-      const token = await storage.getItem('access_token')
-      if (!token) {
-        setError('No access token found')
-        return
-      }
-
-      const success = await SessionValidator.deleteSession(token, sessionId)
+      setDeletingSession(sessionId)
+      const response = await fetch(`/api/auth/sessions/${sessionId}`, {
+        method: 'DELETE',
+        credentials: 'include',
+        signal: AbortSignal.timeout(5000),
+      })
       
-      if (success) {
-        // Remove from list
-        setSessions(prev => prev.filter(s => s.session_id !== sessionId))
-      } else {
-        alert('Failed to delete session')
+      if (!response.ok) {
+        throw new Error('Failed to revoke session')
       }
-    } catch (err) {
-      console.error('Failed to delete session:', err)
-      alert('Failed to delete session')
+      
+      await loadSessions()
+    } catch (err: any) {
+      setError(err.message)
+    } finally {
+      setDeletingSession(null)
     }
   }
 
-  /**
-   * Revoke all sessions except current
-   */
   const handleRevokeAll = async () => {
-    if (!confirm('This will log you out from all other devices. Continue?')) {
-      return
-    }
-
-    try {
-      const token = await storage.getItem('access_token')
-      if (!token) {
-        setError('No access token found')
-        return
-      }
-
-      const revokedCount = await SessionValidator.revokeAllSessions(token)
-      
-      if (revokedCount > 0) {
-        alert(`${revokedCount} sessions revoked successfully`)
-        await loadSessions()
-      } else {
-        alert('No sessions to revoke')
-      }
-    } catch (err) {
-      console.error('Failed to revoke sessions:', err)
-      alert('Failed to revoke sessions')
+    const otherSessions = sessions.filter(s => !s.is_current)
+    for (const session of otherSessions) {
+      await handleDeleteSession(session.session_id)
     }
   }
 
-  /**
-   * Get device icon based on device type
-   */
-  const getDeviceIcon = (deviceType: string) => {
-    switch (deviceType?.toLowerCase()) {
-      case 'mobile':
-        return <Smartphone className="w-5 h-5" />
-      case 'tablet':
-        return <Tablet className="w-5 h-5" />
-      default:
-        return <Monitor className="w-5 h-5" />
-    }
-  }
-
-  /**
-   * Format date
-   */
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString)
-    return date.toLocaleString()
-  }
-
-  /**
-   * Load sessions on mount
-   */
   useEffect(() => {
     loadSessions()
   }, [])
 
+  const getDeviceIcon = (deviceType?: string) => {
+    if (!deviceType) return <Monitor className="h-5 w-5" />
+    
+    switch (deviceType.toLowerCase()) {
+      case 'mobile':
+        return <Smartphone className="h-5 w-5" />
+      case 'tablet':
+        return <Tablet className="h-5 w-5" />
+      default:
+        return <Monitor className="h-5 w-5" />
+    }
+  }
+
+  const formatDate = (dateString: string) => {
+    try {
+      return new Date(dateString).toLocaleString()
+    } catch {
+      return dateString
+    }
+  }
+
   if (loading) {
     return (
       <div className="flex items-center justify-center p-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
       </div>
     )
   }
 
   if (error) {
     return (
-      <div className="p-4 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-lg">
-        {error}
+      <div className="p-4 bg-red-50 text-red-600 rounded-lg">
+        <p className="font-semibold">Error</p>
+        <p>{error}</p>
+        <button
+          onClick={loadSessions}
+          className="mt-2 text-sm underline hover:no-underline"
+        >
+          Try again
+        </button>
       </div>
     )
   }
 
   return (
     <div className="space-y-4">
-      {/* Header */}
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+        <h3 className="text-lg font-semibold">
           Active Sessions ({sessions.length})
         </h3>
         {sessions.length > 1 && (
           <button
             onClick={handleRevokeAll}
-            className="px-3 py-1 text-sm font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+            className="px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition-colors"
           >
+            <Trash2 className="h-4 w-4 inline mr-2" />
             Revoke All Others
           </button>
         )}
       </div>
 
-      {/* Sessions List */}
-      <div className="space-y-3">
+      {sessions.length === 0 && (
+        <div className="p-8 text-center text-gray-500">
+          No active sessions found
+        </div>
+      )}
+
+      <div className="grid gap-4">
         {sessions.map((session) => (
           <div
             key={session.session_id}
-            className={`p-4 rounded-lg border ${
+            className={`p-4 border rounded-lg ${
               session.is_current
-                ? 'border-blue-200 bg-blue-50 dark:border-blue-800 dark:bg-blue-900/20'
-                : 'border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800'
+                ? 'border-green-500 bg-green-50'
+                : 'border-gray-200 bg-white'
             }`}
           >
             <div className="flex items-start justify-between">
-              {/* Device Info */}
-              <div className="flex items-start gap-3 flex-1">
-                <div className="text-gray-600 dark:text-gray-400 mt-1">
-                  {getDeviceIcon(session.device_info.device_type)}
+              <div className="flex items-start space-x-3 flex-1">
+                <div className="mt-1 text-gray-600">
+                  {getDeviceIcon(session.device_info?.device_type)}
                 </div>
                 
                 <div className="flex-1 min-w-0">
-                  {/* Device Name */}
                   <div className="flex items-center gap-2">
-                    <h4 className="font-medium text-gray-900 dark:text-white">
-                      {session.device_info.browser} on {session.device_info.os}
+                    <h4 className="font-medium text-gray-900">
+                      {(() => {
+                        const browser = session.device_info?.browser
+                        const os = session.device_info?.os
+                        const userAgent = session.device_info?.user_agent
+                        
+                        // Check if browser and os are valid (not "Unknown" or empty)
+                        const validBrowser = browser && browser !== 'Unknown' && browser.trim() !== ''
+                        const validOs = os && os !== 'Unknown' && os.trim() !== ''
+                        
+                        if (validBrowser && validOs) {
+                          return `${browser} on ${os}`
+                        } else if (userAgent && userAgent !== 'node' && userAgent.trim() !== '') {
+                          return userAgent.length > 60 ? userAgent.substring(0, 60) + '...' : userAgent
+                        } else {
+                          return 'Web Browser'
+                        }
+                      })()}
                     </h4>
                     {session.is_current && (
-                      <span className="px-2 py-0.5 text-xs font-medium text-blue-600 bg-blue-100 dark:bg-blue-900/40 dark:text-blue-400 rounded">
+                      <span className="px-2 py-0.5 text-xs font-medium text-green-700 bg-green-100 rounded-full">
                         Current
                       </span>
                     )}
                   </div>
-
-                  {/* Location */}
-                  <div className="flex items-center gap-1 mt-1 text-sm text-gray-600 dark:text-gray-400">
-                    <MapPin className="w-4 h-4" />
-                    <span>
-                      {session.location.city}, {session.location.country} ({session.location.ip})
-                    </span>
-                  </div>
-
-                  {/* Dates */}
-                  <div className="flex items-center gap-4 mt-2 text-xs text-gray-500 dark:text-gray-500">
-                    <div className="flex items-center gap-1">
-                      <Calendar className="w-3 h-3" />
-                      <span>Created: {formatDate(session.created_at)}</span>
-                    </div>
-                    <div>
-                      Last active: {formatDate(session.last_activity)}
+                  
+                  <div className="mt-2 space-y-1 text-sm text-gray-600">
+                    {session.location && session.location.ip && (
+                      <div className="flex items-center gap-2">
+                        <MapPin className="h-4 w-4" />
+                        <span>
+                          {session.location.city && session.location.city.trim() !== '' && 
+                           session.location.country && session.location.country.trim() !== ''
+                            ? `${session.location.city}, ${session.location.country}`
+                            : session.location.ip === '::1' || session.location.ip === '127.0.0.1'
+                            ? 'Local Network (localhost)'
+                            : session.location.ip}
+                        </span>
+                      </div>
+                    )}
+                    
+                    <div className="flex items-center gap-2">
+                      <Calendar className="h-4 w-4" />
+                      <span>Last activity: {formatDate(session.last_activity)}</span>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Delete Button */}
               {!session.is_current && (
                 <button
-                  onClick={() => handleDeleteSession(session.session_id, session.is_current)}
-                  className="ml-2 p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
-                  title="Revoke session"
+                  onClick={() => handleDeleteSession(session.session_id)}
+                  disabled={deletingSession === session.session_id}
+                  className="ml-4 p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
+                  title="Revoke this session"
                 >
-                  <X className="w-4 h-4" />
+                  {deletingSession === session.session_id ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <X className="h-4 w-4" />
+                  )}
                 </button>
               )}
             </div>
           </div>
         ))}
       </div>
-
-      {sessions.length === 0 && (
-        <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-          No active sessions found
-        </div>
-      )}
     </div>
   )
 }

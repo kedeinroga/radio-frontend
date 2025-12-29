@@ -2,6 +2,7 @@
 
 import { AdminGuard } from '@/components/AdminGuard'
 import { useInitializeApi } from '@/hooks/useInitializeApi'
+import { useTokenRefresh } from '@/hooks/useTokenRefresh'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useAuthStore } from '@radio-app/app'
@@ -11,6 +12,8 @@ const adminNavItems = [
   { href: '/admin/analytics', label: 'Analytics', icon: '📈' },
   { href: '/admin/translations', label: 'Translations', icon: '🌍' },
   { href: '/admin/seo', label: 'SEO', icon: '🔍' },
+  { href: '/admin/sessions', label: 'Sessions', icon: '🔐' },
+  { href: '/admin/security', label: 'Security', icon: '🛡️' },
 ]
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -20,6 +23,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   
   // Initialize API client with token storage (must be before any early return)
   useInitializeApi()
+
+  // Enable automatic token refresh for admin pages
+  // Tokens will be refreshed every 10 minutes (they expire in 15 minutes)
+  useTokenRefresh({
+    refreshOnMount: false, // Don't refresh immediately, AdminGuard already validated
+    onRefreshError: (error) => {
+      console.error('Auto-refresh failed:', error.message)
+      // User will be redirected to login by the hook
+    }
+  })
 
   // Don't apply AdminGuard to login page
   // Check if the current path ends with /admin/login (ignoring locale prefix)
