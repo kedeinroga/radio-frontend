@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { cookies } from 'next/headers'
 import { rateLimit, RATE_LIMITS } from '@/lib/rateLimit'
 
 /**
@@ -14,7 +15,8 @@ export async function GET(request: NextRequest) {
     return rateLimitResult
   }
   
-  const accessToken = request.cookies.get('@radio-app:access_token')?.value
+  const cookieStore = await cookies()
+  const accessToken = cookieStore.get('@radio-app:access_token')?.value
   
   if (!accessToken) {
     return NextResponse.json(
@@ -29,33 +31,16 @@ export async function GET(request: NextRequest) {
     // Get query params (period, etc.)
     const { searchParams } = new URL(request.url)
     const period = searchParams.get('period') || '7d'
+    const backendUrl = `${BACKEND_URL}/admin/security/metrics?period=${period}`
     
-    const response = await fetch(`${BACKEND_URL}/admin/security/metrics?period=${period}`, {
+    const response = await fetch(backendUrl , {
       method: 'GET',
-      headers: { 
+      headers: {
         'Authorization': `Bearer ${accessToken}`,
         'Content-Type': 'application/json',
       },
       signal: AbortSignal.timeout(10000), // 10 second timeout
     })
-    
-    // TEMPORARY: Mock data if backend returns 404
-    if (response.status === 404) {
-      console.warn('⚠️ Backend endpoint not implemented yet, returning mock data')
-      const mockData = {
-        total_logins_today: Math.floor(Math.random() * 50) + 10,
-        total_logins_week: Math.floor(Math.random() * 300) + 100,
-        failed_attempts_today: Math.floor(Math.random() * 10),
-        failed_attempts_week: Math.floor(Math.random() * 50) + 5,
-        active_sessions: Math.floor(Math.random() * 15) + 1,
-        unique_locations_week: Math.floor(Math.random() * 8) + 1,
-        trends: {
-          logins_trend: (Math.random() * 40 - 10), // -10% to +30%
-          failed_attempts_trend: (Math.random() * 20 - 15), // -15% to +5%
-        }
-      }
-      return NextResponse.json(mockData)
-    }
     
     if (!response.ok) {
       const errorText = await response.text()

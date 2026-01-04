@@ -63,6 +63,10 @@ export function SecurityLogs() {
         signal: AbortSignal.timeout(10000),
       })
       
+      if (response.status === 403) {
+        throw new Error('Access denied. Admin permissions required.')
+      }
+      
       if (!response.ok) {
         throw new Error('Failed to load security logs')
       }
@@ -197,7 +201,11 @@ export function SecurityLogs() {
               </thead>
               <tbody className="divide-y divide-gray-200">
                 {logs.map((log) => {
-                  const config = EVENT_TYPE_CONFIG[log.event_type]
+                  const config = EVENT_TYPE_CONFIG[log.event_type] || {
+                    label: log.event_type || 'Unknown Event',
+                    icon: Info,
+                    color: 'text-gray-600 bg-gray-50'
+                  }
                   const Icon = config.icon
                   
                   return (

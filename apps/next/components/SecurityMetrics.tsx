@@ -74,6 +74,10 @@ export function SecurityMetrics() {
         signal: AbortSignal.timeout(10000),
       })
       
+      if (response.status === 403) {
+        throw new Error('Access denied. Admin permissions required.')
+      }
+      
       if (!response.ok) {
         throw new Error('Failed to load security metrics')
       }
