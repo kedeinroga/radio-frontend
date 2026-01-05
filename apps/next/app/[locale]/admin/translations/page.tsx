@@ -14,6 +14,14 @@ interface Translation {
   updated_at?: string
 }
 
+interface Station {
+  id: string
+  name: string
+  country?: string
+  tags?: string[]
+  image_url?: string
+}
+
 const LANGUAGES = [
   { code: 'es', name: 'Español', flag: '🇪🇸' },
   { code: 'en', name: 'English', flag: '🇺🇸' },
@@ -23,24 +31,115 @@ const LANGUAGES = [
 
 export default function TranslationsPage() {
   const [stationId, setStationId] = useState('')
+  const [stationName, setStationName] = useState('')
   const [translations, setTranslations] = useState<Translation[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [editingTranslation, setEditingTranslation] = useState<Translation | null>(null)
   const [showCreateForm, setShowCreateForm] = useState(false)
+  
+  // Station search
+  const [searchQuery, setSearchQuery] = useState('')
+  const [searchResults, setSearchResults] = useState<Station[]>([])
+  const [searchLoading, setSearchLoading] = useState(false)
+  const [showSearch, setShowSearch] = useState(true)
 
-  // Load translations for a station
-  const loadTranslations = async () => {
-    if (!stationId.trim()) {
-      setError('Please enter a Station ID')
+  // Search stations by name
+  const searchStations = async () => {
+    if (!searchQuery.trim()) {
+      setError('Please enter a search query')
       return
     }
 
     try {
+      setSearchLoading(true)
+      setError(null)
+      
+      // Call the Next.js API route that proxies to backend
+      const response = await fetch(`/api/stations/search?q=${encodeURIComponent(searchQuery)}&lang=es`)
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(errorData.error || `HTTP ${response.status}: ${response.statusText}`)
+      }
+      
+      const data = await response.json()
+      
+      // Extract stations from response
+      const stations = data?.data || []
+      setSearchResults(stations)
+      
+      if (stations.length === 0) {
+        setError('No stations found. Try a different search term or load popular stations.')
+      }
+    } catch (err: any) {
+      console.error('Error searching stations:', err)
+      setError(err.message || 'Failed to search stations. Make sure the backend is running.')
+      setSearchResults([])
+    } finally {
+      setSearchLoading(false)
+    }
+  }
+
+  // Load popular stations as an alternative
+  const loadPopularStations = async () => {
+    try {
+      setSearchLoading(true)
+      setError(null)
+      
+      const response = await fetch('/api/stations/popular?limit=50&lang=es')
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(errorData.error || `HTTP ${response.status}: ${response.statusText}`)
+      }
+      
+      const data = await response.json()
+      const stations = data?.data || []
+      setSearchResults(stations)
+      
+      if (stations.length === 0) {
+        setError('No popular stations found.')
+      }
+    } catch (err: any) {
+      console.error('Error loading popular stations:', err)
+      setError(err.message || 'Failed to load popular stations. Make sure the backend is running.')
+      setSearchResults([])
+    } finally {
+      setSearchLoading(false)
+    }
+  }
+
+  // Select a station from search results
+  const selectStation = (station: Station) => {
+    setStationId(station.id)
+    setStationName(station.name)
+    setShowSearch(false)
+    setSearchResults([])
+    setSearchQuery('')
+    // Automatically load translations for the selected station
+    loadTranslationsForStation(station.id)
+  }
+
+  // Load translations for a specific station ID
+  const loadTranslationsForStation = async (id: string) => {
+    try {
       setLoading(true)
       setError(null)
-      const response = await clientAdminApi.getStationTranslations(stationId.trim())
-      setTranslations(response.data || [])
+      const response = await clientAdminApi.getStationTranslations(id)
+      
+      // Handle different response structures
+      let translationsData = []
+      if (response.data) {
+        if (response.data.success && response.data.data) {
+          translationsData = Array.isArray(response.data.data) ? response.data.data : []
+        } else if (Array.isArray(response.data)) {
+          translationsData = response.data
+        } else if (response.data.translations) {
+          translationsData = response.data.translations
+        }
+      }
+      setTranslations(translationsData)
     } catch (err: any) {
       console.error('Error loading translations:', err)
       setError(err.response?.data?.message || err.message || 'Failed to load translations')
@@ -48,6 +147,15 @@ export default function TranslationsPage() {
     } finally {
       setLoading(false)
     }
+  }
+
+  // Load translations for a station
+  const loadTranslations = async () => {
+    if (!stationId.trim()) {
+      setError('Please enter a Station ID or search for a station')
+      return
+    }
+    loadTranslationsForStation(stationId.trim())
   }
 
   // Delete translation
@@ -75,6 +183,20 @@ export default function TranslationsPage() {
         </p>
       </div>
 
+      {/* Info Banner */}
+      <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+        <div className="flex items-start gap-3">
+          <span className="text-2xl">ℹ️</span>
+          <div className="flex-1">
+            <h3 className="text-blue-900 dark:text-blue-200 font-semibold mb-1">How to Create Translations</h3>
+            <p className="text-blue-700 dark:text-blue-300 text-sm">
+              To create a translation, you need the station's UUID. Use the search below to find stations by name,
+              or click "⭐ Popular" to browse the top 50 stations. You can also paste a UUID directly if you already have it.
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Error Display */}
       {error && (
         <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6">
@@ -94,10 +216,154 @@ export default function TranslationsPage() {
         </div>
       )}
 
-      {/* Search Station */}
+      {/* Station Search Section */}
+      {showSearch && (
+        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-lg shadow-sm border border-blue-200 dark:border-blue-800 p-6">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                🔍 Search Station
+              </h2>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                Find a station by name to get its UUID for creating translations
+              </p>
+            </div>
+            {stationId && (
+              <button
+                onClick={() => setShowSearch(false)}
+                className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+              >
+                Hide Search
+              </button>
+            )}
+          </div>
+          
+          <div className="flex gap-3 mb-4">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && searchStations()}
+              placeholder="Search by station name (e.g., Rock FM, BBC Radio)"
+              className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+            <button
+              onClick={searchStations}
+              disabled={searchLoading}
+              className="px-6 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+            >
+              {searchLoading ? 'Searching...' : 'Search'}
+            </button>
+            <button
+              onClick={loadPopularStations}
+              disabled={searchLoading}
+              className="px-6 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+              title="Load 50 most popular stations"
+            >
+              {searchLoading ? 'Loading...' : '⭐ Popular'}
+            </button>
+          </div>
+
+          {/* Search Results */}
+          {searchResults.length > 0 && (
+            <div className="space-y-2 max-h-96 overflow-y-auto">
+              <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Found {searchResults.length} station{searchResults.length !== 1 ? 's' : ''}:
+              </p>
+              {searchResults.map((station) => (
+                <button
+                  key={station.id}
+                  onClick={() => selectStation(station)}
+                  className="w-full text-left bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700 rounded-lg p-4 transition-colors group"
+                >
+                  <div className="flex items-center gap-4">
+                    {station.image_url && (
+                      <img
+                        src={station.image_url}
+                        alt={station.name}
+                        className="w-12 h-12 rounded-lg object-cover"
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none'
+                        }}
+                      />
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 truncate">
+                        {station.name}
+                      </h4>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 font-mono mt-1 truncate">
+                        UUID: {station.id}
+                      </p>
+                      {station.country && (
+                        <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                          📍 {station.country}
+                        </p>
+                      )}
+                    </div>
+                    <div className="text-blue-600 dark:text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity">
+                      →
+                    </div>
+                  </div>
+                  {station.tags && station.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mt-2">
+                      {station.tags.slice(0, 5).map((tag, idx) => (
+                        <span
+                          key={idx}
+                          className="px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs rounded"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                      {station.tags.length > 5 && (
+                        <span className="px-2 py-0.5 text-gray-500 dark:text-gray-400 text-xs">
+                          +{station.tags.length - 5} more
+                        </span>
+                      )}
+                    </div>
+                  )}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Manual UUID Input (Alternative Method) */}
+      {!showSearch && stationId && (
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                Selected Station
+              </h2>
+              <p className="text-sm text-gray-500 dark:text-gray-400 font-mono mt-1">
+                {stationId}
+              </p>
+              {stationName && (
+                <p className="text-sm text-gray-700 dark:text-gray-300 mt-1">
+                  {stationName}
+                </p>
+              )}
+            </div>
+            <button
+              onClick={() => {
+                setShowSearch(true)
+                setStationId('')
+                setStationName('')
+                setTranslations([])
+              }}
+              className="px-4 py-2 text-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+            >
+              Search Another Station
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Direct UUID Input Section */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
         <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-          Search Station by ID
+          Or Enter Station UUID Directly
         </h2>
         <div className="flex gap-3">
           <input
@@ -113,7 +379,7 @@ export default function TranslationsPage() {
             disabled={loading}
             className="px-6 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {loading ? 'Loading...' : 'Search'}
+            {loading ? 'Loading...' : 'Load Translations'}
           </button>
         </div>
       </div>

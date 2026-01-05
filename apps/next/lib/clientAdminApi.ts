@@ -94,6 +94,22 @@ export class ClientAdminApiRepository {
   // ========== SEO ==========
   
   /**
+   * Get current SEO statistics
+   */
+  async getSEOStats(): Promise<ApiResponse> {
+    const response = await fetch(`${ADMIN_BASE}/seo/stats`, {
+      credentials: 'include',
+    })
+    
+    if (!response.ok) {
+      throw new Error(`Failed to get SEO stats: ${response.statusText}`)
+    }
+    
+    const data = await response.json()
+    return { data, status: response.status }
+  }
+
+  /**
    * Refresh SEO statistics
    */
   async refreshSEOStats(): Promise<ApiResponse> {
@@ -242,6 +258,218 @@ export class ClientAdminApiRepository {
     
     const result = await response.json()
     return { data: result, status: response.status }
+  }
+
+  // ========== MAINTENANCE ==========
+
+  /**
+   * Get partition status with details
+   */
+  async getPartitionStatus(): Promise<ApiResponse> {
+    const response = await fetch(`${ADMIN_BASE}/maintenance/partition-status`, {
+      credentials: 'include',
+    })
+    
+    if (!response.ok) {
+      throw new Error(`Failed to get partition status: ${response.statusText}`)
+    }
+    
+    const data = await response.json()
+    return { data, status: response.status }
+  }
+
+  /**
+   * Get maintenance recommendations
+   */
+  async getMaintenanceRecommendations(): Promise<ApiResponse> {
+    const response = await fetch(`${ADMIN_BASE}/maintenance/recommendations`, {
+      credentials: 'include',
+    })
+    
+    if (!response.ok) {
+      throw new Error(`Failed to get recommendations: ${response.statusText}`)
+    }
+    
+    const data = await response.json()
+    return { data, status: response.status }
+  }
+
+  /**
+   * Get refresh statistics for materialized views
+   */
+  async getRefreshStats(limit?: number): Promise<ApiResponse> {
+    const url = limit 
+      ? `${ADMIN_BASE}/maintenance/refresh-stats?limit=${limit}`
+      : `${ADMIN_BASE}/maintenance/refresh-stats`
+    
+    const response = await fetch(url, {
+      credentials: 'include',
+    })
+    
+    if (!response.ok) {
+      throw new Error(`Failed to get refresh stats: ${response.statusText}`)
+    }
+    
+    const data = await response.json()
+    return { data, status: response.status }
+  }
+
+  /**
+   * Refresh materialized views
+   */
+  async refreshViews(viewType?: 'seo' | 'analytics' | 'all'): Promise<ApiResponse> {
+    const body = viewType ? { view_type: viewType } : {}
+    
+    const response = await fetch(`${ADMIN_BASE}/maintenance/refresh-views`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    })
+    
+    if (!response.ok) {
+      throw new Error(`Failed to refresh views: ${response.statusText}`)
+    }
+    
+    const data = await response.json()
+    return { data, status: response.status }
+  }
+
+  /**
+   * Check if future partitions exist
+   */
+  async checkPartitions(): Promise<ApiResponse> {
+    const response = await fetch(`${ADMIN_BASE}/maintenance/check-partitions`, {
+      credentials: 'include',
+    })
+    
+    if (!response.ok) {
+      throw new Error(`Failed to check partitions: ${response.statusText}`)
+    }
+    
+    const data = await response.json()
+    return { data, status: response.status }
+  }
+
+  /**
+   * Cleanup old partitions
+   */
+  async cleanupPartitions(retentionMonths: number): Promise<ApiResponse> {
+    const response = await fetch(`${ADMIN_BASE}/maintenance/cleanup-partitions`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ retention_months: retentionMonths }),
+    })
+    
+    if (!response.ok) {
+      throw new Error(`Failed to cleanup partitions: ${response.statusText}`)
+    }
+    
+    const data = await response.json()
+    return { data, status: response.status }
+  }
+
+  /**
+   * Perform full maintenance routine
+   */
+  async performFullMaintenance(): Promise<ApiResponse> {
+    const response = await fetch(`${ADMIN_BASE}/maintenance/full`, {
+      method: 'POST',
+      credentials: 'include',
+    })
+    
+    if (!response.ok) {
+      throw new Error(`Failed to perform full maintenance: ${response.statusText}`)
+    }
+    
+    const data = await response.json()
+    return { data, status: response.status }
+  }
+
+  // ========== MONITORING ==========
+
+  /**
+   * Get comprehensive system health metrics
+   */
+  async getHealthMetrics(): Promise<ApiResponse> {
+    const response = await fetch(`${ADMIN_BASE}/monitoring/health`, {
+      credentials: 'include',
+    })
+    
+    if (!response.ok) {
+      throw new Error(`Failed to get health metrics: ${response.statusText}`)
+    }
+    
+    const data = await response.json()
+    return { data, status: response.status }
+  }
+
+  /**
+   * Get system alerts
+   */
+  async getAlerts(): Promise<ApiResponse> {
+    const response = await fetch(`${ADMIN_BASE}/monitoring/alerts`, {
+      credentials: 'include',
+    })
+    
+    if (!response.ok) {
+      throw new Error(`Failed to get alerts: ${response.statusText}`)
+    }
+    
+    const data = await response.json()
+    return { data, status: response.status }
+  }
+
+  /**
+   * Get security logs with pagination and filtering
+   */
+  async getSecurityLogs(params?: {
+    page?: number
+    limit?: number
+    event_type?: string
+    search?: string
+  }): Promise<ApiResponse> {
+    const queryParams = new URLSearchParams()
+    if (params?.page) queryParams.append('page', params.page.toString())
+    if (params?.limit) queryParams.append('limit', params.limit.toString())
+    if (params?.event_type) queryParams.append('event_type', params.event_type)
+    if (params?.search) queryParams.append('search', params.search)
+
+    const url = queryParams.toString()
+      ? `${ADMIN_BASE}/security/logs?${queryParams.toString()}`
+      : `${ADMIN_BASE}/security/logs`
+
+    const response = await fetch(url, {
+      credentials: 'include',
+    })
+
+    if (!response.ok) {
+      throw new Error(`Failed to get security logs: ${response.statusText}`)
+    }
+
+    const data = await response.json()
+    return { data, status: response.status }
+  }
+
+  /**
+   * Get security metrics
+   */
+  async getSecurityMetrics(): Promise<ApiResponse> {
+    const response = await fetch(`${ADMIN_BASE}/security/metrics`, {
+      credentials: 'include',
+    })
+
+    if (!response.ok) {
+      throw new Error(`Failed to get security metrics: ${response.statusText}`)
+    }
+
+    const data = await response.json()
+    return { data, status: response.status }
   }
 }
 

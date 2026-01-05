@@ -111,8 +111,6 @@ export function useSessionValidation(options?: {
       
       // Store new tokens
       await storage.setItem('access_token', data.access_token)
-      
-      console.log('[Session] Token refreshed successfully')
       return true
     } catch (error) {
       console.error('[Session] Refresh error:', error)
@@ -146,7 +144,6 @@ export function useSessionValidation(options?: {
     if (refreshIn > 0) {
       // Schedule refresh
       refreshTimerRef.current = setTimeout(async () => {
-        console.log('[Session] Auto-refreshing token...')
         const success = await refreshToken()
         
         if (success) {
@@ -171,7 +168,6 @@ export function useSessionValidation(options?: {
 
     // Validate periodically
     validationTimerRef.current = setInterval(async () => {
-      console.log('[Session] Periodic validation...')
       await validateSession()
     }, validateInterval * 60 * 1000)
   }, [isAuthenticated, validateInterval, validateSession])

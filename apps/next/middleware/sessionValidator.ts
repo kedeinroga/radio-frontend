@@ -135,8 +135,6 @@ export async function validateSession(request: NextRequest): Promise<NextRespons
     const userRole = payload.role
     
     if (userRole !== 'admin') {
-      console.log('[Middleware] User is not admin, access denied')
-      
       const localeMatch = pathname.match(/^\/(es|en|fr|de)/)
       const locale = localeMatch ? localeMatch[1] : 'es'
       

@@ -7,6 +7,49 @@ export { PopularTag } from './domain/entities/PopularTag'
 export { SitemapData } from './domain/entities/SitemapData'
 export { Translation } from './domain/entities/Translation'
 
+// Domain Entities - Maintenance
+export type {
+  PartitionInfo,
+  PartitionStatusResponse,
+  MaintenanceRecommendation,
+  RecommendationsResponse,
+  RefreshStatsResponse,
+  RefreshViewsRequest,
+  RefreshViewsResponse,
+  CleanupPartitionsRequest,
+  CleanupPartitionsResponse,
+  CheckPartitionsResponse,
+  FullMaintenanceResponse,
+} from './domain/entities/Maintenance'
+
+// Domain Entities - Monitoring
+export type {
+  Alert,
+  DatabaseHealth,
+  RedisHealth,
+  ExternalAPIHealth,
+  PartitionHealth,
+  MaterializedViewHealth,
+  PerformanceMetrics,
+  HealthMetrics,
+  HealthResponse,
+  AlertsResponse,
+} from './domain/entities/Monitoring'
+
+// Domain Entities - Session
+export type {
+  DeviceInfo,
+  Location,
+  SessionInfo as SessionInfoEntity,
+  GetSessionsResponse,
+  RevokeTokenRequest,
+  RevokeTokenResponse,
+  SessionMetadata as SessionMetadataEntity,
+  ValidateTokenRequest,
+  ValidateTokenResponse,
+  LogoutResponse,
+} from './domain/entities/Session'
+
 // Domain Value Objects
 export { Locale } from './domain/valueObjects/Locale'
 export type { LocaleCode } from './domain/valueObjects/Locale'
@@ -31,6 +74,8 @@ export { FavoritesApiRepository } from './infrastructure/api/FavoritesApiReposit
 export { AnalyticsApiRepository } from './infrastructure/api/AnalyticsApiRepository'
 export { AuthApiRepository } from './infrastructure/api/AuthApiRepository'
 export { AdminApiRepository, adminApiRepository } from './infrastructure/api/AdminApiRepository'
+export { MaintenanceApiRepository, maintenanceApiRepository } from './infrastructure/api/MaintenanceApiRepository'
+export { MonitoringApiRepository, monitoringApiRepository } from './infrastructure/api/MonitoringApiRepository'
 export type { TrendingSearch, PopularStation, ActiveUsersCount, TimeRange } from './infrastructure/api/AnalyticsApiRepository'
 export type { LoginRequest, RegisterRequest, RefreshRequest, AuthTokens, UserInfo } from './infrastructure/api/AuthApiRepository'
 export { ConsoleLogger } from './infrastructure/logging/ConsoleLogger'

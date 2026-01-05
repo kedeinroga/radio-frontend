@@ -1,4 +1,12 @@
 import apiClient from './apiClient'
+import type {
+  GetSessionsResponse,
+  RevokeTokenRequest,
+  RevokeTokenResponse,
+  ValidateTokenRequest,
+  ValidateTokenResponse,
+  LogoutResponse,
+} from '../../domain/entities/Session'
 
 /**
  * Authentication API Repository
@@ -130,6 +138,91 @@ export class AuthApiRepository {
         throw new Error('Not authenticated. Please log in.')
       }
       throw new Error(error.message || 'Failed to fetch user information. Please try again.')
+    }
+  }
+
+  /**
+   * Logout current user
+   * Blacklists the current JWT token
+   */
+  async logout(): Promise<LogoutResponse> {
+    try {
+      const response = await apiClient.post('/auth/logout')
+      return response.data
+    } catch (error: any) {
+      if (error.response?.status === 401) {
+        throw new Error('Not authenticated.')
+      }
+      throw new Error(error.response?.data?.error?.message || 'Failed to logout. Please try again.')
+    }
+  }
+
+  /**
+   * Validate a JWT token
+   * Checks if token is valid, not expired, and not revoked
+   * @param request - Optional flag to include session metadata
+   */
+  async validateToken(request?: ValidateTokenRequest): Promise<ValidateTokenResponse> {
+    try {
+      const response = await apiClient.post('/auth/validate', request || {})
+      return response.data
+    } catch (error: any) {
+      throw new Error(error.response?.data?.error?.message || 'Failed to validate token.')
+    }
+  }
+
+  /**
+   * Revoke tokens
+   * Can revoke specific token, session, or all user tokens
+   * @param request - Token revocation configuration
+   */
+  async revokeToken(request: RevokeTokenRequest): Promise<RevokeTokenResponse> {
+    try {
+      const response = await apiClient.post('/auth/revoke', request)
+      return response.data
+    } catch (error: any) {
+      if (error.response?.status === 401) {
+        throw new Error('Not authenticated.')
+      }
+      throw new Error(error.response?.data?.error?.message || 'Failed to revoke token.')
+    }
+  }
+
+  /**
+   * Get all active sessions for authenticated user
+   * Returns list of sessions with device info, location, and activity
+   */
+  async getSessions(): Promise<GetSessionsResponse> {
+    try {
+      const response = await apiClient.get('/auth/sessions')
+      return response.data
+    } catch (error: any) {
+      if (error.response?.status === 401) {
+        throw new Error('Not authenticated.')
+      }
+      throw new Error(error.response?.data?.error?.message || 'Failed to get sessions.')
+    }
+  }
+
+  /**
+   * Delete a specific session
+   * Terminates session and revokes all associated tokens
+   * @param sessionId - ID of the session to delete
+   */
+  async deleteSession(sessionId: string): Promise<void> {
+    try {
+      await apiClient.delete(`/auth/sessions/${sessionId}`)
+    } catch (error: any) {
+      if (error.response?.status === 401) {
+        throw new Error('Not authenticated.')
+      }
+      if (error.response?.status === 400) {
+        throw new Error('Cannot delete current session.')
+      }
+      if (error.response?.status === 404) {
+        throw new Error('Session not found.')
+      }
+      throw new Error(error.response?.data?.error?.message || 'Failed to delete session.')
     }
   }
 }

@@ -128,47 +128,47 @@ export function ActiveSessionsManager() {
   }
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold">
+    <div className="space-y-4 sm:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
+        <h3 className="text-base sm:text-lg font-semibold">
           Active Sessions ({sessions.length})
         </h3>
         {sessions.length > 1 && (
           <button
             onClick={handleRevokeAll}
-            className="px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+            className="w-full sm:w-auto px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors flex items-center justify-center gap-2"
           >
-            <Trash2 className="h-4 w-4 inline mr-2" />
+            <Trash2 className="h-4 w-4" />
             Revoke All Others
           </button>
         )}
       </div>
 
       {sessions.length === 0 && (
-        <div className="p-8 text-center text-gray-500">
+        <div className="p-8 text-center text-sm text-gray-500 dark:text-gray-400">
           No active sessions found
         </div>
       )}
 
-      <div className="grid gap-4">
+      <div className="grid gap-3 sm:gap-4">
         {sessions.map((session) => (
           <div
             key={session.session_id}
             className={`p-4 border rounded-lg ${
               session.is_current
-                ? 'border-green-500 bg-green-50'
-                : 'border-gray-200 bg-white'
+                ? 'border-green-500 bg-green-50 dark:bg-green-900/20'
+                : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800'
             }`}
           >
-            <div className="flex items-start justify-between">
-              <div className="flex items-start space-x-3 flex-1">
-                <div className="mt-1 text-gray-600">
+            <div className="flex items-start justify-between gap-2 sm:gap-3">
+              <div className="flex items-start space-x-2 sm:space-x-3 flex-1 min-w-0">
+                <div className="mt-1 text-gray-600 dark:text-gray-400 flex-shrink-0">
                   {getDeviceIcon(session.device_info?.device_type)}
                 </div>
                 
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <h4 className="font-medium text-gray-900">
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                    <h4 className="text-sm sm:text-base font-medium text-gray-900 dark:text-white break-words">
                       {(() => {
                         const browser = session.device_info?.browser
                         const os = session.device_info?.os
@@ -188,17 +188,17 @@ export function ActiveSessionsManager() {
                       })()}
                     </h4>
                     {session.is_current && (
-                      <span className="px-2 py-0.5 text-xs font-medium text-green-700 bg-green-100 rounded-full">
+                      <span className="px-2 py-0.5 text-xs font-medium text-green-700 dark:text-green-300 bg-green-100 dark:bg-green-900/40 rounded-full inline-block">
                         Current
                       </span>
                     )}
                   </div>
                   
-                  <div className="mt-2 space-y-1 text-sm text-gray-600">
+                  <div className="mt-2 space-y-1 text-xs sm:text-sm text-gray-600 dark:text-gray-400">
                     {session.location && session.location.ip && (
                       <div className="flex items-center gap-2">
-                        <MapPin className="h-4 w-4" />
-                        <span>
+                        <MapPin className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
+                        <span className="break-all">
                           {session.location.city && session.location.city.trim() !== '' && 
                            session.location.country && session.location.country.trim() !== ''
                             ? `${session.location.city}, ${session.location.country}`
@@ -210,7 +210,7 @@ export function ActiveSessionsManager() {
                     )}
                     
                     <div className="flex items-center gap-2">
-                      <Calendar className="h-4 w-4" />
+                      <Calendar className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
                       <span>Last activity: {formatDate(session.last_activity)}</span>
                     </div>
                   </div>
@@ -221,7 +221,7 @@ export function ActiveSessionsManager() {
                 <button
                   onClick={() => handleDeleteSession(session.session_id)}
                   disabled={deletingSession === session.session_id}
-                  className="ml-4 p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
+                  className="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors disabled:opacity-50 flex-shrink-0"
                   title="Revoke this session"
                 >
                   {deletingSession === session.session_id ? (

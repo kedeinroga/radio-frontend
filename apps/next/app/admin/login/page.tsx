@@ -29,43 +29,30 @@ export default function AdminLoginPage() {
 
   // Check authentication status on mount
   useEffect(() => {
-    console.log('🚀 AdminLoginPage mounted')
-    console.log('� Initial state - isCheckingAuth:', true, 'user:', user?.email || 'none')
     
     const checkAuth = async () => {
-      console.log('🔍 Starting auth check...')
       
       try {
         const accessToken = await storage.getItem('access_token')
         const refreshToken = await storage.getItem('refresh_token')
         const hasTokens = !!(accessToken && refreshToken)
         
-        console.log('🔑 Has tokens:', hasTokens)
-        console.log('👤 User from hook:', user?.email || 'none', 'isAdmin:', user?.isAdmin)
-        
         // Get current user from store
         const currentUser = useAuthStore.getState().user
-        console.log('👤 User from store:', currentUser?.email || 'none', 'isAdmin:', currentUser?.isAdmin)
-        
         if (currentUser && !hasTokens) {
           // User exists in store but no tokens - clear user
-          console.log('⚠️ Clearing user from store (no tokens)')
           useAuthStore.getState().setUser(null)
-          console.log('📝 Setting isCheckingAuth to false (case 1)')
           setIsCheckingAuth(false)
         } else if (currentUser?.isAdmin && hasTokens) {
           // User is admin with valid tokens - redirect to dashboard
-          console.log('✅ Redirecting to admin dashboard')
           router.push('/admin')
           // Keep loading state while redirecting
         } else {
           // Show login form
-          console.log('📝 Setting isCheckingAuth to false (case 2)')
           setIsCheckingAuth(false)
         }
       } catch (error) {
         console.error('❌ Error checking authentication:', error)
-        console.log('📝 Setting isCheckingAuth to false (error case)')
         setIsCheckingAuth(false)
       }
     }
@@ -191,12 +178,8 @@ export default function AdminLoginPage() {
     }
   }
 
-  // Debug logs for render
-  console.log('🎨 RENDER - isCheckingAuth:', isCheckingAuth, 'user:', user?.email || 'none', 'isAdmin:', user?.isAdmin)
-
   // Show loading spinner while checking authentication
   if (isCheckingAuth) {
-    console.log('🔄 Rendering: Checking auth spinner')
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
         <div className="text-center">
@@ -209,7 +192,6 @@ export default function AdminLoginPage() {
 
   // Don't show login form if already admin (after checking auth)
   if (user?.isAdmin) {
-    console.log('🔄 Rendering: Redirecting spinner')
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
         <div className="text-center">
@@ -220,7 +202,6 @@ export default function AdminLoginPage() {
     )
   }
 
-  console.log('📝 Rendering: Login form')
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900 px-4">
       <div className="max-w-md w-full space-y-8">

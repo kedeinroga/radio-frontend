@@ -67,23 +67,23 @@ export default function AnalyticsPage() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Analytics</h1>
-          <p className="mt-2 text-gray-600 dark:text-gray-400">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Analytics</h1>
+          <p className="mt-2 text-sm sm:text-base text-gray-600 dark:text-gray-400">
             Detailed statistics and user behavior insights
           </p>
         </div>
 
         {/* Time Range Selector */}
-        <div className="flex bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-1">
+        <div className="flex bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-1 overflow-x-auto">
           {(['hour', 'day', 'week', 'month'] as TimeRange[]).map((range) => (
             <button
               key={range}
               onClick={() => setTimeRange(range)}
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+              className={`px-3 sm:px-4 py-2 rounded-md text-xs sm:text-sm font-medium transition-colors whitespace-nowrap ${
                 timeRange === range
                   ? 'bg-blue-600 text-white'
                   : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
@@ -97,12 +97,12 @@ export default function AnalyticsPage() {
 
       {/* Error Display */}
       {error && (
-        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6">
+        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 sm:p-6">
           <h3 className="text-red-800 dark:text-red-200 font-semibold mb-2">Error Loading Analytics</h3>
-          <p className="text-red-600 dark:text-red-300">{error}</p>
+          <p className="text-sm text-red-600 dark:text-red-300">{error}</p>
           <button
             onClick={loadAnalytics}
-            className="mt-4 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+            className="mt-4 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm"
           >
             Retry
           </button>
@@ -110,7 +110,7 @@ export default function AnalyticsPage() {
       )}
 
       {/* Stats Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         <StatCard
           title="Active Users"
           value={activeUsers}
@@ -142,12 +142,12 @@ export default function AnalyticsPage() {
       </div>
 
       {/* Popular Stations Table */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-        <div className="p-6 border-b border-gray-200 dark:border-gray-700">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <div className="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700">
+          <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">
             Popular Stations
           </h2>
-          <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+          <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1">
             Most played stations in the selected time range
           </p>
         </div>
@@ -155,16 +155,16 @@ export default function AnalyticsPage() {
           <table className="w-full">
             <thead className="bg-gray-50 dark:bg-gray-700">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  Rank
+                <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  #
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                   Station
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                   Plays
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                <th className="hidden md:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                   Station ID
                 </th>
               </tr>
@@ -173,39 +173,48 @@ export default function AnalyticsPage() {
               {popularStations.length > 0 ? (
                 popularStations.map((station, index) => (
                   <tr key={station.station_id || index} className="hover:bg-gray-50 dark:hover:bg-gray-700">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="text-lg font-bold text-gray-400 dark:text-gray-500">
-                        #{index + 1}
+                    <td className="px-3 sm:px-6 py-4 whitespace-nowrap">
+                      <span className="text-sm sm:text-lg font-bold text-gray-400 dark:text-gray-500">
+                        {index + 1}
                       </span>
                     </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-3">
+                    <td className="px-3 sm:px-6 py-4">
+                      <div className="flex items-center gap-2 sm:gap-3">
                         {station.favicon && (
                           <img
                             src={station.favicon}
                             alt={station.name}
-                            className="w-8 h-8 rounded object-cover"
+                            className="w-6 h-6 sm:w-8 sm:h-8 rounded object-cover flex-shrink-0"
                             onError={(e) => {
                               e.currentTarget.style.display = 'none'
                             }}
                           />
                         )}
-                        <div>
-                          <div className="text-sm font-medium text-gray-900 dark:text-white">
+                        <div className="min-w-0 flex-1">
+                          <div className="text-xs sm:text-sm font-medium text-gray-900 dark:text-white truncate">
                             {station.name || 'Unknown Station'}
                           </div>
-                          <div className="text-xs text-gray-500 dark:text-gray-400">
+                          <div className="text-xs text-gray-500 dark:text-gray-400 truncate">
                             {station.country}
                           </div>
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900 dark:text-white font-semibold">
-                        {station.plays || 0}
+                    <td className="px-3 sm:px-6 py-4 whitespace-nowrap">
+                      <div className="text-xs sm:text-sm text-gray-900 dark:text-white font-semibold">
+                        {(station.plays || 0).toLocaleString()}
+                      </div>
+                      {/* Progress bar for visual representation */}
+                      <div className="w-16 sm:w-24 bg-gray-200 dark:bg-gray-700 rounded-full h-1 mt-1">
+                        <div 
+                          className="bg-green-600 dark:bg-green-500 h-1 rounded-full transition-all"
+                          style={{ 
+                            width: `${Math.min(100, ((station.plays || 0) / (popularStations[0]?.plays || 1)) * 100)}%` 
+                          }}
+                        ></div>
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="hidden md:table-cell px-3 sm:px-6 py-4 whitespace-nowrap">
                       <div className="text-xs text-gray-500 dark:text-gray-400 font-mono">
                         {station.station_id}
                       </div>
@@ -214,7 +223,7 @@ export default function AnalyticsPage() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={4} className="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
+                  <td colSpan={4} className="px-3 sm:px-6 py-8 text-center text-sm text-gray-500 dark:text-gray-400">
                     No data available for the selected time range
                   </td>
                 </tr>
@@ -225,12 +234,12 @@ export default function AnalyticsPage() {
       </div>
 
       {/* Trending Searches Table */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-        <div className="p-6 border-b border-gray-200 dark:border-gray-700">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <div className="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700">
+          <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">
             Trending Searches
           </h2>
-          <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+          <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1">
             Most frequent search queries in the selected time range
           </p>
         </div>
@@ -238,13 +247,13 @@ export default function AnalyticsPage() {
           <table className="w-full">
             <thead className="bg-gray-50 dark:bg-gray-700">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  Rank
+                <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  #
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                   Search Query
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                   Count
                 </th>
               </tr>
@@ -253,31 +262,40 @@ export default function AnalyticsPage() {
               {trendingSearches.length > 0 ? (
                 trendingSearches.map((search, index) => (
                   <tr key={search.search_term || index} className="hover:bg-gray-50 dark:hover:bg-gray-700">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="text-lg font-bold text-gray-400 dark:text-gray-500">
-                        #{index + 1}
+                    <td className="px-3 sm:px-6 py-4 whitespace-nowrap">
+                      <span className="text-sm sm:text-lg font-bold text-gray-400 dark:text-gray-500">
+                        {index + 1}
                       </span>
                     </td>
-                    <td className="px-6 py-4">
-                      <div className="text-sm font-medium text-gray-900 dark:text-white">
+                    <td className="px-3 sm:px-6 py-4">
+                      <div className="text-xs sm:text-sm font-medium text-gray-900 dark:text-white">
                         {search.search_term || 'Unknown'}
                       </div>
                       {search.percentage !== undefined && (
                         <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                          {search.percentage.toFixed(1)}% of total searches
+                          {search.percentage.toFixed(1)}% of total
                         </div>
                       )}
+                      {/* Visual bar */}
+                      <div className="w-full max-w-xs bg-gray-200 dark:bg-gray-700 rounded-full h-1 mt-2">
+                        <div 
+                          className="bg-purple-600 dark:bg-purple-500 h-1 rounded-full transition-all"
+                          style={{ 
+                            width: `${Math.min(100, ((search.count || 0) / (trendingSearches[0]?.count || 1)) * 100)}%` 
+                          }}
+                        ></div>
+                      </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900 dark:text-white font-semibold">
-                        {search.count || 0}
+                    <td className="px-3 sm:px-6 py-4 whitespace-nowrap">
+                      <div className="text-xs sm:text-sm text-gray-900 dark:text-white font-semibold">
+                        {(search.count || 0).toLocaleString()}
                       </div>
                     </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan={3} className="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
+                  <td colSpan={3} className="px-3 sm:px-6 py-8 text-center text-sm text-gray-500 dark:text-gray-400">
                     No data available for the selected time range
                   </td>
                 </tr>
@@ -311,14 +329,16 @@ function StatCard({
   }
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-      <div className="flex items-center gap-4">
-        <div className={`w-12 h-12 ${colorClasses[color]} rounded-lg flex items-center justify-center text-2xl`}>
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 sm:p-6">
+      <div className="flex items-center gap-3 sm:gap-4">
+        <div className={`w-10 h-10 sm:w-12 sm:h-12 ${colorClasses[color]} rounded-lg flex items-center justify-center text-xl sm:text-2xl flex-shrink-0`}>
           {icon}
         </div>
-        <div>
-          <p className="text-sm text-gray-600 dark:text-gray-400">{title}</p>
-          <p className="text-3xl font-bold text-gray-900 dark:text-white">{value}</p>
+        <div className="min-w-0 flex-1">
+          <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">{title}</p>
+          <p className="text-xl sm:text-3xl font-bold text-gray-900 dark:text-white">
+            {(value || 0).toLocaleString()}
+          </p>
           {subtitle && (
             <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{subtitle}</p>
           )}

@@ -26,12 +26,12 @@ interface SecurityLogsResponse {
 }
 
 const EVENT_TYPE_CONFIG = {
-  login_success: { label: 'Login Success', icon: CheckCircle, color: 'text-green-600 bg-green-50' },
-  login_failed: { label: 'Login Failed', icon: XCircle, color: 'text-red-600 bg-red-50' },
-  logout: { label: 'Logout', icon: Info, color: 'text-blue-600 bg-blue-50' },
-  session_revoked: { label: 'Session Revoked', icon: AlertCircle, color: 'text-orange-600 bg-orange-50' },
-  token_refresh: { label: 'Token Refresh', icon: CheckCircle, color: 'text-gray-600 bg-gray-50' },
-  password_change: { label: 'Password Change', icon: AlertCircle, color: 'text-purple-600 bg-purple-50' },
+  login_success: { label: 'Login Success', icon: CheckCircle, color: 'text-green-600 bg-green-50 dark:text-green-400 dark:bg-green-900/30' },
+  login_failed: { label: 'Login Failed', icon: XCircle, color: 'text-red-600 bg-red-50 dark:text-red-400 dark:bg-red-900/30' },
+  logout: { label: 'Logout', icon: Info, color: 'text-blue-600 bg-blue-50 dark:text-blue-400 dark:bg-blue-900/30' },
+  session_revoked: { label: 'Session Revoked', icon: AlertCircle, color: 'text-orange-600 bg-orange-50 dark:text-orange-400 dark:bg-orange-900/30' },
+  token_refresh: { label: 'Token Refresh', icon: CheckCircle, color: 'text-gray-600 bg-gray-50 dark:text-gray-400 dark:bg-gray-700' },
+  password_change: { label: 'Password Change', icon: AlertCircle, color: 'text-purple-600 bg-purple-50 dark:text-purple-400 dark:bg-purple-900/30' },
 }
 
 export function SecurityLogs() {
@@ -129,30 +129,30 @@ export function SecurityLogs() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-gray-900">Security Activity Log</h2>
-        <p className="text-sm text-gray-600">{total} total events</p>
+    <div className="space-y-4 sm:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Security Activity Log</h2>
+        <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">{total} total events</p>
       </div>
 
       {/* Filters */}
-      <div className="flex flex-col sm:flex-row gap-4">
+      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
         <div className="flex-1 relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
           <input
             type="text"
             placeholder="Search by username, IP, or details..."
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full pl-9 sm:pl-10 pr-4 py-2 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
         </div>
         
         <select
           value={eventType}
           onChange={(e) => handleEventTypeChange(e.target.value)}
-          className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="px-3 sm:px-4 py-2 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         >
           <option value="">All Events</option>
           <option value="login_success">Login Success</option>
@@ -165,79 +165,82 @@ export function SecurityLogs() {
         
         <button
           onClick={handleSearch}
-          className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          className="px-4 sm:px-6 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
         >
           Search
         </button>
       </div>
 
       {/* Logs Table */}
-      <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+      <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
         {logs.length === 0 ? (
-          <div className="p-8 text-center text-gray-500">
+          <div className="p-8 text-center text-sm text-gray-500 dark:text-gray-400">
             No security events found
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-gray-50 border-b border-gray-200">
+              <thead className="bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Event
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     User
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="hidden md:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Location
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Time
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="hidden lg:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Details
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                 {logs.map((log) => {
                   const config = EVENT_TYPE_CONFIG[log.event_type] || {
                     label: log.event_type || 'Unknown Event',
                     icon: Info,
-                    color: 'text-gray-600 bg-gray-50'
+                    color: 'text-gray-600 bg-gray-50 dark:text-gray-400 dark:bg-gray-700'
                   }
                   const Icon = config.icon
                   
                   return (
-                    <tr key={log.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center gap-2">
-                          <div className={`p-2 rounded-lg ${config.color}`}>
-                            <Icon className="h-4 w-4" />
+                    <tr key={log.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                      <td className="px-3 sm:px-6 py-4 whitespace-nowrap">
+                        <div className="flex items-center gap-1 sm:gap-2">
+                          <div className={`p-1.5 sm:p-2 rounded-lg ${config.color}`}>
+                            <Icon className="h-3 w-3 sm:h-4 sm:w-4" />
                           </div>
-                          <span className="text-sm font-medium text-gray-900">
+                          <span className="text-xs sm:text-sm font-medium text-gray-900 dark:text-white">
                             {config.label}
                           </span>
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900">{log.username}</div>
-                        <div className="text-xs text-gray-500">{log.user_id.substring(0, 8)}...</div>
+                      <td className="px-3 sm:px-6 py-4 whitespace-nowrap">
+                        <div className="text-xs sm:text-sm text-gray-900 dark:text-white truncate max-w-[120px] sm:max-w-none">
+                          {log.username}
+                        </div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400">{log.user_id.substring(0, 8)}...</div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900">
+                      <td className="hidden md:table-cell px-3 sm:px-6 py-4 whitespace-nowrap">
+                        <div className="text-xs sm:text-sm text-gray-900 dark:text-white">
                           {log.location?.city && log.location?.country
                             ? `${log.location.city}, ${log.location.country}`
                             : log.ip_address}
                         </div>
                         {log.location?.city && (
-                          <div className="text-xs text-gray-500">{log.ip_address}</div>
+                          <div className="text-xs text-gray-500 dark:text-gray-400">{log.ip_address}</div>
                         )}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {formatDate(log.timestamp)}
+                      <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-500 dark:text-gray-400">
+                        <div className="hidden sm:block">{formatDate(log.timestamp)}</div>
+                        <div className="sm:hidden">{new Date(log.timestamp).toLocaleDateString()}</div>
                       </td>
-                      <td className="px-6 py-4 text-sm text-gray-500">
+                      <td className="hidden lg:table-cell px-3 sm:px-6 py-4 text-xs sm:text-sm text-gray-500 dark:text-gray-400">
                         <div className="max-w-xs truncate" title={log.details || log.user_agent}>
                           {log.details || log.user_agent || '-'}
                         </div>
@@ -253,22 +256,22 @@ export function SecurityLogs() {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-between">
-          <p className="text-sm text-gray-600">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-0">
+          <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
             Page {page} of {totalPages} ({total} total events)
           </p>
-          <div className="flex gap-2">
+          <div className="flex gap-2 w-full sm:w-auto">
             <button
               onClick={() => setPage(p => Math.max(1, p - 1))}
               disabled={page === 1}
-              className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 sm:flex-none px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               Previous
             </button>
             <button
               onClick={() => setPage(p => Math.min(totalPages, p + 1))}
               disabled={page === totalPages}
-              className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 sm:flex-none px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               Next
             </button>
