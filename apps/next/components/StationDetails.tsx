@@ -1,9 +1,13 @@
 'use client'
 
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import type { StationDTO } from '@radio-app/app'
+import { Station } from '@radio-app/app'
 import { StationImage } from './StationImage'
 import { PlayStationButton } from './PlayStationButton'
 import { useAppTranslation } from '@/hooks/useAppTranslation'
+import { useFavorites } from '@/hooks/useFavorites'
 
 interface StationDetailsProps {
   station: StationDTO
@@ -11,9 +15,96 @@ interface StationDetailsProps {
 
 export function StationDetails({ station }: StationDetailsProps) {
   const { t } = useAppTranslation()
+  const router = useRouter()
+  const { isFavorite, toggleFavorite } = useFavorites()
+  const [isFav, setIsFav] = useState(false)
+  const [isClient, setIsClient] = useState(false)
+
+  // Sincronizar el estado de favorito después de la hidratación
+  useEffect(() => {
+    setIsClient(true)
+    setIsFav(isFavorite(station.id))
+  }, [station.id, isFavorite])
+
+  const handleToggleFavorite = () => {
+    const stationEntity = new Station(
+      station.id,
+      station.name,
+      station.streamUrl,
+      station.slug,
+      station.tags,
+      station.seoMetadata,
+      station.imageUrl,
+      station.country,
+      station.primaryGenre,
+      false,
+      station.seoMetadata?.description,
+      station.bitrate,
+      station.votes
+    )
+    toggleFavorite(stationEntity)
+    setIsFav(!isFav)
+  }
+
+  const handleBack = () => {
+    router.back()
+  }
 
   return (
     <>
+      {/* Back and Favorite Buttons */}
+      <div className="flex justify-between items-center mb-6">
+        <button
+          onClick={handleBack}
+          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+          aria-label={t('common.back')}
+        >
+          <svg
+            className="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M15 19l-7-7 7-7"
+            />
+          </svg>
+          {t('common.back')}
+        </button>
+
+        {isClient && (
+          <button
+            onClick={handleToggleFavorite}
+            className={`inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+              isFav
+                ? 'text-red-700 dark:text-red-400 bg-red-50 dark:bg-red-900/20 border border-red-300 dark:border-red-800 hover:bg-red-100 dark:hover:bg-red-900/30'
+                : 'text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'
+            }`}
+            aria-label={isFav ? t('favorites.removeFromFavorites') : t('favorites.addToFavorites')}
+          >
+            <svg
+              className="w-5 h-5"
+              fill={isFav ? 'currentColor' : 'none'}
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+              />
+            </svg>
+            {isFav ? t('favorites.removeFromFavorites') : t('favorites.addToFavorites')}
+          </button>
+        )}
+      </div>
+
       {/* Station Hero Section */}
       <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-6 md:p-8 mb-8">
         <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
