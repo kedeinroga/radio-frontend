@@ -19,7 +19,7 @@ function StationImage({ src, alt }: { src: string | null | undefined, alt: strin
   
   return (
     <img
-      src={imgError || !src ? '/default-radio.png' : src}
+      src={imgError || !src ? '/default-radio.svg' : src}
       alt={alt}
       className="w-16 h-16 rounded-lg object-cover"
       loading="lazy"
@@ -53,12 +53,10 @@ export function RelatedStations({
             className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow hover:shadow-lg transition-shadow border border-gray-200 dark:border-gray-700"
           >
             <div className="flex items-center gap-3">
-              {station.imageUrl && (
-                <StationImage 
-                  src={station.imageUrl}
-                  alt={station.name}
-                />
-              )}
+              <StationImage 
+                src={station.imageUrl}
+                alt={station.name}
+              />
               <div className="flex-1 min-w-0">
                 <h3 className="font-semibold text-gray-900 dark:text-white truncate">
                   {station.name}

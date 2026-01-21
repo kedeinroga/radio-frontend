@@ -10,8 +10,10 @@ import { rateLimit, RATE_LIMITS } from '@/lib/rateLimit'
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { stationId: string; lang: string } }
+  { params }: { params: Promise<{ stationId: string; lang: string }> }
 ) {
+  const { stationId, lang } = await params
+  
   // Apply rate limiting
   const rateLimitResult = rateLimit(request, RATE_LIMITS.ADMIN)
   if (rateLimitResult) {
@@ -30,7 +32,6 @@ export async function GET(
   
   try {
     const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api/v1'
-    const { stationId, lang } = params
     
     const response = await fetch(`${BACKEND_URL}/admin/translations/${stationId}/${lang}`, {
       method: 'GET',
@@ -69,8 +70,10 @@ export async function GET(
  */
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { stationId: string; lang: string } }
+  { params }: { params: Promise<{ stationId: string; lang: string }> }
 ) {
+  const { stationId, lang } = await params
+  
   // Apply rate limiting
   const rateLimitResult = rateLimit(request, RATE_LIMITS.ADMIN)
   if (rateLimitResult) {
@@ -89,7 +92,6 @@ export async function PUT(
   
   try {
     const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api/v1'
-    const { stationId, lang } = params
     const body = await request.json()
     
     const response = await fetch(`${BACKEND_URL}/admin/translations/${stationId}/${lang}`, {
@@ -130,8 +132,10 @@ export async function PUT(
  */
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { stationId: string; lang: string } }
+  { params }: { params: Promise<{ stationId: string; lang: string }> }
 ) {
+  const { stationId, lang } = await params
+  
   // Apply rate limiting
   const rateLimitResult = rateLimit(request, RATE_LIMITS.ADMIN)
   if (rateLimitResult) {
@@ -150,7 +154,6 @@ export async function DELETE(
   
   try {
     const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api/v1'
-    const { stationId, lang } = params
     
     const response = await fetch(`${BACKEND_URL}/admin/translations/${stationId}/${lang}`, {
       method: 'DELETE',

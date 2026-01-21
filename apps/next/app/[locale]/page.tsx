@@ -10,6 +10,7 @@ import { LanguageSelector } from '@/components/LanguageSelector'
 import { usePlayer } from '@/hooks/usePlayer'
 import { useFavorites } from '@/hooks/useFavorites'
 import { useAppTranslation } from '@/hooks/useAppTranslation'
+// import { PremiumBanner } from '@/components/premium/PremiumBanner' // Premium: Commented for ads-only phase
 
 const stationRepo = new StationApiRepository()
 
@@ -57,6 +58,12 @@ export default function HomePage() {
             <LanguageSelector />
           </div>
         </header>
+
+        {/* Premium Banner - Commented for ads-only phase
+        <div className="mb-8">
+          <PremiumBanner placement="home" dismissible />
+        </div>
+        */}
 
         {/* Popular Stations Section */}
         <section>

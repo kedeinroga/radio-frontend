@@ -7,6 +7,95 @@ export { PopularTag } from './domain/entities/PopularTag'
 export { SitemapData } from './domain/entities/SitemapData'
 export { Translation } from './domain/entities/Translation'
 
+// Domain Entities - Advertisements
+export type { Advertisement } from './domain/entities/Advertisement'
+export {
+  isAdvertisementActive,
+  calculateAdvertisementCTR,
+  calculateAdvertisementECPM,
+  doesAdvertisementMatchContext,
+  createAdvertisement,
+} from './domain/entities/Advertisement'
+
+export type { AdCampaign } from './domain/entities/AdCampaign'
+export {
+  isAdCampaignActive,
+  getAdCampaignRemainingBudget,
+  getAdCampaignBudgetUsagePercentage,
+  hasAdCampaignReachedDailyBudget,
+  createAdCampaign,
+} from './domain/entities/AdCampaign'
+
+export type { UserAdProfile } from './domain/entities/UserAdProfile'
+export {
+  hasActivePremiumSubscription,
+  hasUserReachedHourlyAdLimit,
+  hasUserReachedDailyAdLimit,
+  incrementUserAdCounters,
+  resetUserHourlyAdCounter,
+  resetUserDailyAdCounter,
+  createUserAdProfile,
+} from './domain/entities/UserAdProfile'
+
+// Domain Entities - Subscriptions
+export type { Subscription, SubscriptionStatus, BillingInterval, CreateSubscriptionFromStripeDTO } from './domain/entities/Subscription'
+export {
+  createSubscription,
+  isSubscriptionActive,
+  isSubscriptionInTrial,
+  isSubscriptionCanceled,
+  getDaysRemainingInPeriod,
+  formatSubscriptionPrice,
+  getBillingIntervalText,
+  createSubscriptionFromStripeWebhook,
+} from './domain/entities/Subscription'
+
+// Domain Entities - Audio Ads
+export type {
+  AudioAd,
+  AudioAdPlacement,
+  AudioAdFormat,
+  AudioAdPlaybackState,
+  AudioAdQueue,
+  AudioAdMidRoll,
+  AudioAdConfig,
+  VASTResponse,
+  VASTAd,
+  VASTInLine,
+  VASTWrapper,
+  VASTCreative,
+  VASTLinear,
+  VASTNonLinear,
+  VASTCompanionAd,
+  VASTTrackingEvent,
+  VASTTrackingEventType,
+  VASTVideoClicks,
+  VASTMediaFile,
+  VASTIcon,
+} from './domain/entities/AudioAd'
+export {
+  createAudioAdFromVAST,
+  shouldPlayAudioAd,
+  calculateAdProgress,
+  formatAdDuration,
+  createAudioAdQueue,
+} from './domain/entities/AudioAd'
+
+export type { SubscriptionPlan, PlanType, PlanFeatures } from './domain/entities/SubscriptionPlan'
+export {
+  createSubscriptionPlan,
+  DEFAULT_PLANS,
+  getPlanById,
+  getPlanByType,
+  calculateYearlySavings,
+  formatPlanPrice,
+  hasFeature,
+  comparePlans,
+  getActivePlans,
+  getPopularPlan,
+  getFeaturedPlan,
+} from './domain/entities/SubscriptionPlan'
+
 // Domain Entities - Maintenance
 export type {
   PartitionInfo,
@@ -54,6 +143,26 @@ export type {
 export { Locale } from './domain/valueObjects/Locale'
 export type { LocaleCode } from './domain/valueObjects/Locale'
 
+// Domain Value Objects - Advertisements
+export type { AdPlacement } from './domain/valueObjects/AdPlacement'
+export {
+  AD_FREQUENCY_CAPPING,
+  AD_PLACEMENT_PRIORITY,
+  isValidAdPlacement,
+  getAdFormatForPlacement,
+  canShowAdInPlacement,
+  getNextAvailableAdTime,
+  getPlacementsByPriority,
+} from './domain/valueObjects/AdPlacement'
+
+export type { AdFormat } from './domain/valueObjects/AdFormat'
+export {
+  AD_BANNER_SIZES,
+  AUDIO_AD_DURATION,
+  getRecommendedBannerSize,
+  getRecommendedAudioDuration,
+} from './domain/valueObjects/AdFormat'
+
 // Domain Errors
 export * from './domain/errors/DomainErrors'
 
@@ -62,6 +171,15 @@ export type { IStationRepository } from './domain/repositories/IStationRepositor
 export type { IUserRepository } from './domain/repositories/IUserRepository'
 export type { IPlayerRepository, PlayerState } from './domain/repositories/IPlayerRepository'
 export type { ISEORepository } from './domain/repositories/ISEORepository'
+
+// Domain Repositories - Advertisements
+export type {
+  IAdvertisementRepository,
+  AdContext,
+  ImpressionMetadata,
+  ClickMetadata,
+  FetchAdResult,
+} from './domain/repositories/IAdvertisementRepository'
 
 // Application Ports
 export type { ITranslator, TranslationOptions } from './application/ports/ITranslator'
@@ -76,6 +194,7 @@ export { AuthApiRepository } from './infrastructure/api/AuthApiRepository'
 export { AdminApiRepository, adminApiRepository } from './infrastructure/api/AdminApiRepository'
 export { MaintenanceApiRepository, maintenanceApiRepository } from './infrastructure/api/MaintenanceApiRepository'
 export { MonitoringApiRepository, monitoringApiRepository } from './infrastructure/api/MonitoringApiRepository'
+export { AdvertisementApiRepository } from './infrastructure/api/AdvertisementApiRepository'
 export type { TrendingSearch, PopularStation, ActiveUsersCount, TimeRange } from './infrastructure/api/AnalyticsApiRepository'
 export type { LoginRequest, RegisterRequest, RefreshRequest, AuthTokens, UserInfo } from './infrastructure/api/AuthApiRepository'
 export { ConsoleLogger } from './infrastructure/logging/ConsoleLogger'
@@ -100,6 +219,37 @@ export {
   validatePasswordStrength,
   generateSecureToken
 } from './infrastructure/utils/securityHelpers'
+
+// Infrastructure - Ad Sanitization
+export {
+  sanitizeAdUrl,
+  validateAdMedia,
+  sanitizeAdText,
+  sanitizeAdvertisement,
+  validateAdvertisementSafety,
+  sanitizeAdHTML,
+} from './infrastructure/utils/adSanitization'
+
+// Infrastructure - Ad Fraud Detection
+export {
+  FraudDetectionService,
+  getFraudDetectionService,
+  resetFraudDetectionService,
+} from './infrastructure/ads/FraudDetection'
+export type {
+  FraudValidationResult,
+  FraudDetectionConfig,
+} from './infrastructure/ads/FraudDetection'
+
+export {
+  ImpressionCache,
+  getImpressionCache,
+  resetImpressionCache,
+} from './infrastructure/ads/ImpressionCache'
+export type {
+  CachedImpression,
+  CachedClick,
+} from './infrastructure/ads/ImpressionCache'
 
 // Infrastructure - Crypto Helpers
 export {
@@ -165,6 +315,59 @@ export { GetRelatedStations } from './application/useCases/stations/GetRelatedSt
 export { GetPopularCountries } from './application/useCases/seo/GetPopularCountries'
 export { GetPopularTags } from './application/useCases/seo/GetPopularTags'
 export { GetSitemapData } from './application/useCases/seo/GetSitemapData'
+
+// Use Cases - Advertisements
+export { FetchAdForPlacement } from './application/useCases/ads/FetchAdForPlacement'
+export type {
+  FetchAdForPlacementInput,
+  FetchAdForPlacementOutput,
+} from './application/useCases/ads/FetchAdForPlacement'
+
+export { TrackAdImpression } from './application/useCases/ads/TrackAdImpression'
+export type {
+  TrackImpressionInput,
+  TrackImpressionOutput,
+} from './application/useCases/ads/TrackAdImpression'
+
+export { TrackAdClick } from './application/useCases/ads/TrackAdClick'
+export type {
+  TrackClickInput,
+  TrackClickOutput,
+} from './application/useCases/ads/TrackAdClick'
+
+// Use Cases - Subscriptions
+export { CreateCheckoutSession } from './application/useCases/subscription/CreateCheckoutSession'
+export type {
+  CreateCheckoutSessionRequest,
+  CreateCheckoutSessionResponse,
+} from './application/useCases/subscription/CreateCheckoutSession'
+
+export { CancelSubscription } from './application/useCases/subscription/CancelSubscription'
+export type {
+  CancelSubscriptionRequest,
+  CancelSubscriptionResponse,
+} from './application/useCases/subscription/CancelSubscription'
+
+export { GetUserSubscription } from './application/useCases/subscription/GetUserSubscription'
+export type {
+  GetUserSubscriptionRequest,
+  GetUserSubscriptionResponse,
+} from './application/useCases/subscription/GetUserSubscription'
+
+export { CheckPremiumStatus } from './application/useCases/subscription/CheckPremiumStatus'
+export type {
+  CheckPremiumStatusRequest,
+  CheckPremiumStatusResponse,
+} from './application/useCases/subscription/CheckPremiumStatus'
+
+export { ResumeSubscription } from './application/useCases/subscription/ResumeSubscription'
+export type {
+  ResumeSubscriptionRequest,
+  ResumeSubscriptionResponse,
+} from './application/useCases/subscription/ResumeSubscription'
+
+// Infrastructure - Repositories
+export { SubscriptionApiRepository } from './infrastructure/api/SubscriptionApiRepository'
 
 // Use Cases - i18n
 export { ChangeLocaleUseCase } from './application/useCases/i18n/ChangeLocale'

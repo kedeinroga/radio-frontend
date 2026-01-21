@@ -8,6 +8,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: '**',
       },
+      {
+        protocol: 'http',
+        hostname: '**',
+      },
     ],
     // TODO: Restrict to specific domains once image sources are catalogued
     // Recommended: Add specific hostnames like:

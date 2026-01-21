@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { validateSession } from './middleware/sessionValidator'
+import { generateNonce, getSecurityHeaders } from './lib/csp'
 
 /**
  * Supported locales for the application
@@ -122,6 +123,12 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
+  // Generate CSP nonce for this request
+  const nonce = generateNonce()
+  
+  // Get security headers including CSP
+  const securityHeaders = getSecurityHeaders(nonce)
+
   // 1. FIRST: Validate session for protected routes
   const sessionValidationResult = await validateSession(request)
   if (sessionValidationResult) {
@@ -138,6 +145,12 @@ export async function middleware(request: NextRequest) {
     const response = NextResponse.next()
     // Add locale to response headers for server components
     response.headers.set('x-locale', localeInPath)
+    // Add CSP nonce to response headers
+    response.headers.set('x-nonce', nonce)
+    // Add security headers
+    Object.entries(securityHeaders).forEach(([key, value]) => {
+      response.headers.set(key, value)
+    })
     return response
   }
 
@@ -165,6 +178,14 @@ export async function middleware(request: NextRequest) {
     maxAge: 60 * 60 * 24 * 365, // 1 year
     path: '/',
     sameSite: 'lax',
+  })
+  
+  // Add CSP nonce to response headers
+  response.headers.set('x-nonce', nonce)
+  
+  // Add security headers
+  Object.entries(securityHeaders).forEach(([key, value]) => {
+    response.headers.set(key, value)
   })
   
   return response
