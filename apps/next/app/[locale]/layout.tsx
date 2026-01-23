@@ -33,14 +33,11 @@ export const dynamicParams = true
 
 /**
  * Generate static params for all supported locales
- * Disabled during build to prevent "Collecting page data" hang
+ * DISABLED: Causing build worker crash in Vercel
  */
 export function generateStaticParams() {
-  // Return empty array during build to skip static generation
-  if (process.env.VERCEL_ENV === 'production' || process.env.NODE_ENV === 'production') {
-    return []
-  }
-  return generateLocaleParams()
+  // Always return empty to force dynamic rendering
+  return []
 }
 
 /**

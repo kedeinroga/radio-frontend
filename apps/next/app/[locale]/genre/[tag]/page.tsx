@@ -27,33 +27,10 @@ export const dynamicParams = true
 export const revalidate = 3600
 
 // 🔥 GENERATE STATIC PATHS FOR TOP GENRES
+// DISABLED: Causing build worker crash in Vercel
 export async function generateStaticParams() {
-  // During build time, skip API calls if no API URL is configured
-  if (!process.env.NEXT_PUBLIC_API_URL) {
-    console.log('[Build] Skipping generateStaticParams for genres - no API URL configured')
-    return []
-  }
-
-  const seoRepository = new SEOApiRepository()
-  const getPopularTags = new GetPopularTags(seoRepository)
-  
-  try {
-    const tags = await getPopularTags.execute(100)
-    const locales = ['es', 'en', 'fr', 'de']
-    
-    // Generate params for all locale + genre combinations
-    return tags.flatMap(tag => 
-      locales.map(locale => ({
-        tag: tag.urlSlug,
-        locale
-      }))
-    )
-  } catch (error) {
-    console.error('[Build] Error generating static params for genres:', error)
-    // Return empty array to allow build to continue
-    // Pages will be generated on-demand instead
-    return []
-  }
+  // Always return empty to force dynamic rendering
+  return []
 }
 
 // Helper to get translated text based on locale

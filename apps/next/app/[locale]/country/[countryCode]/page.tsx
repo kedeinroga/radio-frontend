@@ -26,33 +26,10 @@ export const dynamicParams = true
 export const revalidate = 3600
 
 // 🔥 GENERATE STATIC PATHS FOR TOP COUNTRIES
+// DISABLED: Causing build worker crash in Vercel
 export async function generateStaticParams() {
-  // During build time, skip API calls if no API URL is configured
-  if (!process.env.NEXT_PUBLIC_API_URL) {
-    console.log('[Build] Skipping generateStaticParams for countries - no API URL configured')
-    return []
-  }
-
-  const seoRepository = new SEOApiRepository()
-  const getPopularCountries = new GetPopularCountries(seoRepository)
-  
-  try {
-    const countries = await getPopularCountries.execute(50)
-    const locales = ['es', 'en', 'fr', 'de']
-    
-    // Generate params for all locale + country combinations
-    return countries.flatMap(country => 
-      locales.map(locale => ({
-        countryCode: country.urlSlug,
-        locale
-      }))
-    )
-  } catch (error) {
-    console.error('[Build] Error generating static params for countries:', error)
-    // Return empty array to allow build to continue
-    // Pages will be generated on-demand instead
-    return []
-  }
+  // Always return empty to force dynamic rendering
+  return []
 }
 
 // Helper to get translated text based on locale
