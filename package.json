@@ -9,6 +9,7 @@
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build",
+    "start": "turbo run start",
     "lint": "turbo run lint",
     "test": "turbo run test",
     "type-check": "turbo run type-check",
@@ -16,7 +17,11 @@
     "security:audit": "npm audit --audit-level=moderate",
     "security:audit:fix": "npm audit fix",
     "security:check": "npm run security:audit && npm outdated",
-    "security:update": "npm update && npm run security:audit"
+    "security:update": "npm update && npm run security:audit",
+    "vercel:build": "npm run build",
+    "vercel:dev": "npm run dev",
+    "vercel:check": "node scripts/vercel-check.js",
+    "analyze": "npm run build && node scripts/analyze-bundle.js"
   },
   "devDependencies": {
     "eslint": "^8.56.0",

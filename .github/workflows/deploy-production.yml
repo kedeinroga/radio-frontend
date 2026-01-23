@@ -1,0 +1,192 @@
+name: Deploy Production
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Reason for manual deployment'
+        required: false
+        default: 'Manual deployment'
+
+# Prevent concurrent production deployments
+concurrency:
+  group: production-deployment
+  cancel-in-progress: false
+
+jobs:
+  # Run CI checks first
+  ci-checks:
+    name: Pre-deployment CI Checks
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Type check
+        run: npm run type-check
+
+      - name: Run tests
+        run: npm run test
+
+      - name: Build
+        run: npm run build
+        env:
+          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
+          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+          STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
+          NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY }}
+          STRIPE_PRICE_ID_MONTHLY: ${{ secrets.STRIPE_PRICE_ID_MONTHLY }}
+          STRIPE_PRICE_ID_YEARLY: ${{ secrets.STRIPE_PRICE_ID_YEARLY }}
+          NEXT_PUBLIC_APP_URL: ${{ secrets.NEXT_PUBLIC_APP_URL }}
+          NODE_ENV: production
+
+  deploy-production:
+    name: Deploy to Vercel Production
+    runs-on: ubuntu-latest
+    needs: ci-checks
+    environment:
+      name: production
+      url: ${{ secrets.NEXT_PUBLIC_APP_URL }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+
+      - name: Pull Vercel Environment Information
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+      - name: Build Project Artifacts
+        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+      - name: Deploy to Vercel Production
+        id: deploy
+        run: |
+          url=$(vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }})
+          echo "production-url=$url" >> $GITHUB_OUTPUT
+          echo "🚀 Production deployed to: $url"
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+      - name: Create deployment summary
+        run: |
+          echo "## 🚀 Production Deployment Successful!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**URL**: ${{ steps.deploy.outputs.production-url }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit**: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch**: ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Actor**: ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "**Reason**: ${{ github.event.inputs.reason }}" >> $GITHUB_STEP_SUMMARY
+          fi
+
+  # Post-deployment checks
+  post-deploy-checks:
+    name: Post-deployment Health Checks
+    runs-on: ubuntu-latest
+    needs: deploy-production
+    
+    steps:
+      - name: Wait for deployment to propagate
+        run: sleep 30
+
+      - name: Check homepage
+        run: |
+          status=$(curl -s -o /dev/null -w "%{http_code}" ${{ secrets.NEXT_PUBLIC_APP_URL }})
+          if [ $status -eq 200 ]; then
+            echo "✅ Homepage is up (HTTP $status)"
+          else
+            echo "❌ Homepage returned HTTP $status"
+            exit 1
+          fi
+
+      - name: Check sitemap
+        run: |
+          status=$(curl -s -o /dev/null -w "%{http_code}" ${{ secrets.NEXT_PUBLIC_APP_URL }}/sitemap.xml)
+          if [ $status -eq 200 ]; then
+            echo "✅ Sitemap is accessible (HTTP $status)"
+          else
+            echo "⚠️ Sitemap returned HTTP $status"
+          fi
+
+      - name: Check robots.txt
+        run: |
+          status=$(curl -s -o /dev/null -w "%{http_code}" ${{ secrets.NEXT_PUBLIC_APP_URL }}/robots.txt)
+          if [ $status -eq 200 ]; then
+            echo "✅ Robots.txt is accessible (HTTP $status)"
+          else
+            echo "⚠️ Robots.txt returned HTTP $status"
+          fi
+
+      - name: Verify security headers
+        run: |
+          echo "Checking security headers..."
+          headers=$(curl -s -I ${{ secrets.NEXT_PUBLIC_APP_URL }})
+          
+          if echo "$headers" | grep -i "x-frame-options"; then
+            echo "✅ X-Frame-Options present"
+          else
+            echo "⚠️ X-Frame-Options missing"
+          fi
+          
+          if echo "$headers" | grep -i "x-content-type-options"; then
+            echo "✅ X-Content-Type-Options present"
+          else
+            echo "⚠️ X-Content-Type-Options missing"
+          fi
+          
+          if echo "$headers" | grep -i "strict-transport-security"; then
+            echo "✅ Strict-Transport-Security present"
+          else
+            echo "⚠️ Strict-Transport-Security missing"
+          fi
+
+  # Notify on failure
+  notify-failure:
+    name: Notify Deployment Failure
+    runs-on: ubuntu-latest
+    needs: [ci-checks, deploy-production, post-deploy-checks]
+    if: failure()
+    
+    steps:
+      - name: Create failure summary
+        run: |
+          echo "## ❌ Production Deployment Failed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit**: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch**: ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Actor**: ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Please check the logs for details." >> $GITHUB_STEP_SUMMARY

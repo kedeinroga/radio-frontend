@@ -2,6 +2,20 @@
 const nextConfig = {
   transpilePackages: ['@radio-app/app'],
   reactStrictMode: true,
+  
+  // Performance optimizations for Vercel free tier
+  compress: true, // Enable gzip compression
+  poweredByHeader: false, // Remove X-Powered-By header
+  
+  // Optimize production builds
+  swcMinify: true,
+  
+  // Production optimizations
+  productionBrowserSourceMaps: false, // Disable source maps in production to save space
+  
+  // Output configuration
+  output: 'standalone', // Optimize for serverless
+  
   images: {
     remotePatterns: [
       {
@@ -13,11 +27,11 @@ const nextConfig = {
         hostname: '**',
       },
     ],
-    // TODO: Restrict to specific domains once image sources are catalogued
-    // Recommended: Add specific hostnames like:
-    // { protocol: 'https', hostname: 'api.radio-browser.info' },
-    // { protocol: 'https', hostname: '*.radio-browser.info' },
-    // For now, keeping '**' but adding security headers to mitigate risks
+    // Optimize for Vercel free tier
+    formats: ['image/avif', 'image/webp'],
+    minimumCacheTTL: 60,
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256],
     dangerouslyAllowSVG: false, // Disable SVG to prevent XSS
     contentDispositionType: 'attachment', // Force download for unsafe files
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
@@ -72,7 +86,7 @@ const nextConfig = {
               "style-src 'self' 'unsafe-inline'", // Required for styled-components/emotion
               "img-src 'self' data: https: http: blob:", // Allow images from any HTTPS/HTTP source
               "font-src 'self' data:",
-              "connect-src 'self' http://localhost:8080 http://localhost:8080/api/v1 ws://localhost:3000", // Allow API and WebSocket
+              "connect-src 'self' https://radio-backend-296736956418.us-central1.run.app https://radio-backend-296736956418.us-central1.run.app/api/v1 http://localhost:8080 http://localhost:8080/api/v1 ws://localhost:3000", // Allow API and WebSocket
               "media-src 'self' https: http: blob:", // Allow audio streaming from HTTP/HTTPS
               "object-src 'none'",
               "frame-ancestors 'none'",
