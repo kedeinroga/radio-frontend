@@ -74,6 +74,7 @@ function shouldExcludePath(pathname: string): boolean {
     '/favicon.ico',
     '/robots.txt',
     '/sitemap.xml',
+    '/ads.txt',        // ads.txt must be served from root without locale prefix
     '/manifest.json',
     '/sw.js',
   ]

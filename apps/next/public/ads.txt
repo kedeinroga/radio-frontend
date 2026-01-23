@@ -1,0 +1,75 @@
+# ==============================================
+# Authorized Digital Sellers (ads.txt) for radio.app
+# Last updated: 2026-01-21
+# Version: 1.0
+# ==============================================
+
+# Self-hosted advertising system
+# Format: domain, publisher_id, relationship, [certification_authority_id]
+radio.app, direct-inventory, DIRECT, 00000000000000000000000000000000
+
+# Note: The certification_authority_id (TAG ID) above is a placeholder.
+# TAG (Trustworthy Accountability Group) IDs are used by certified ad networks.
+# For self-hosted ad systems:
+# - Using a placeholder like above eliminates validation warnings
+# - You can apply for TAG certification at https://www.tagtoday.net/ if needed
+# - When integrating with real ad networks (Google, etc.), replace with their actual TAG ID
+
+# Contact information (required)
+contact=ads@radio.app
+
+# Variables (optional)
+# subdomain=ads
+# managerdomain=ads.radio.app
+
+# ==============================================
+# Third-party ad networks
+# ==============================================
+# Uncomment and add your actual publisher IDs when you integrate with ad networks
+
+# Google AdSense (example - replace with your actual pub-id)
+# google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
+
+# Google Ad Manager / DFP (example)
+# google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
+
+# AppNexus (example)
+# appnexus.com, XXXXX, RESELLER, f5ab79cb980f11d1
+
+# Rubicon Project (example)
+# rubiconproject.com, XXXXX, RESELLER, 0bfd66d529a55807
+
+# Index Exchange (example)
+# indexexchange.com, XXXXX, RESELLER, 50b1c356f2c5c8fc
+
+# OpenX (example)
+# openx.com, XXXXX, RESELLER, 6a698e2ec38604c6
+
+# PubMatic (example)
+# pubmatic.com, XXXXX, RESELLER, 5d62403b186f2ace
+
+# Criteo (example)
+# criteo.com, XXXXX, RESELLER
+
+# ==============================================
+# Instructions:
+# ==============================================
+# 1. Replace "radio.app" with your actual domain
+# 2. Add your actual publisher IDs for any ad networks you use
+# 3. Remove the "#" to uncomment lines for networks you've integrated
+# 4. Use DIRECT for relationships where you sell inventory directly
+# 5. Use RESELLER for relationships where inventory is sold through intermediaries
+# 6. Certification Authority ID (last field) is optional but recommended
+#    - For Google: f08c47fec0942fa0
+#    - Check with each network for their TAG ID
+# 
+# Validation tools:
+# - https://adstxt.guru/
+# - https://www.adstxtvalidator.com/
+# - Google Search Console (if using Google Ads)
+#
+# This file must be accessible at: https://yourdomain.com/ads.txt
+# It should return HTTP 200 with Content-Type: text/plain
+# ==============================================
+
+# End of ads.txt
