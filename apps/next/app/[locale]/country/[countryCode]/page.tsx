@@ -15,6 +15,9 @@ interface PageProps {
   params: Promise<{ countryCode: string; locale: string }>
 }
 
+// Allow dynamic params to be generated on-demand
+export const dynamicParams = true
+
 // 🔥 ISR - Regenerate every hour (3600 seconds)
 export const revalidate = 3600
 
