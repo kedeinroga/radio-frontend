@@ -140,7 +140,6 @@ export function addCSRFHeader(headers: HeadersInit = {}): HeadersInit {
   const token = getCSRFCookie()
   
   if (!token) {
-    console.warn('CSRF token not found. Request may fail.')
     return headers
   }
   

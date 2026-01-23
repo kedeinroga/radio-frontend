@@ -51,7 +51,7 @@ function verifyWebhookSignature(
 
     return event
   } catch (error) {
-    console.error('[Stripe Webhook] Signature verification failed:', error)
+
     return null
   }
 }
@@ -102,9 +102,8 @@ async function handleSubscriptionCreated(
       throw new Error(`Backend error: ${response.status}`)
     }
 
-    console.log('[Stripe Webhook] Subscription created successfully')
   } catch (error) {
-    console.error('[Stripe Webhook] Failed to create subscription:', error)
+
     throw error
   }
 }
@@ -145,9 +144,8 @@ async function handleSubscriptionUpdated(
       throw new Error(`Backend error: ${response.status}`)
     }
 
-    console.log('[Stripe Webhook] Subscription updated successfully')
   } catch (error) {
-    console.error('[Stripe Webhook] Failed to update subscription:', error)
+
     throw error
   }
 }
@@ -177,9 +175,8 @@ async function handleSubscriptionDeleted(
       throw new Error(`Backend error: ${response.status}`)
     }
 
-    console.log('[Stripe Webhook] Subscription deleted successfully')
   } catch (error) {
-    console.error('[Stripe Webhook] Failed to delete subscription:', error)
+
     throw error
   }
 }
@@ -196,7 +193,7 @@ async function handleTrialWillEnd(
   })
 
   // TODO: Enviar email al usuario notificando que el trial está por terminar
-  console.log('[Stripe Webhook] Trial will end soon - TODO: Send email')
+
 }
 
 /**
@@ -213,7 +210,7 @@ async function handlePaymentSucceeded(invoice: Stripe.Invoice): Promise<void> {
 
   // TODO: Actualizar estado de pago en la base de datos
   // Extender período de suscripción si es necesario
-  console.log('[Stripe Webhook] Payment succeeded - TODO: Update payment status')
+
 }
 
 /**
@@ -230,7 +227,7 @@ async function handlePaymentFailed(invoice: Stripe.Invoice): Promise<void> {
 
   // TODO: Notificar al usuario del pago fallido
   // Actualizar estado de la suscripción a past_due
-  console.log('[Stripe Webhook] Payment failed - TODO: Notify user')
+
 }
 
 /**
@@ -247,7 +244,7 @@ async function handleCheckoutCompleted(
 
   // TODO: Confirmar creación de suscripción después del checkout
   // Enviar email de bienvenida
-  console.log('[Stripe Webhook] Checkout completed - TODO: Send welcome email')
+
 }
 
 /**
@@ -285,7 +282,7 @@ async function handleWebhookEvent(event: Stripe.Event): Promise<void> {
       break
 
     default:
-      console.log(`[Stripe Webhook] Unhandled event type: ${event.type}`)
+
   }
 }
 
@@ -319,7 +316,7 @@ export async function POST(request: NextRequest) {
 
     // 3. Verificar que sea un evento relevante
     if (!isRelevantWebhookEvent(event.type)) {
-      console.log(`[Stripe Webhook] Ignoring irrelevant event: ${event.type}`)
+
       return NextResponse.json({ received: true })
     }
 
@@ -330,7 +327,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ received: true })
 
   } catch (error) {
-    console.error('[Stripe Webhook] Error processing webhook:', error)
 
     return NextResponse.json(
       {

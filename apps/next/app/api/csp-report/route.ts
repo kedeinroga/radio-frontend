@@ -69,19 +69,14 @@ export async function POST(request: NextRequest) {
     
     // Log in development
     if (process.env.NODE_ENV === 'development') {
-      console.error('\n🚨 CSP Violation Report:')
-      console.error('━'.repeat(60))
-      console.error('📄 Document:', violationInfo.documentUri)
-      console.error('🚫 Violated:', violationInfo.violatedDirective)
-      console.error('🔗 Blocked:', violationInfo.blockedUri)
+
       if (violationInfo.sourceFile) {
-        console.error('📁 Source:', violationInfo.sourceFile)
-        console.error('📍 Line:', violationInfo.lineNumber, 'Column:', violationInfo.columnNumber)
+
       }
       if (violationInfo.scriptSample) {
-        console.error('💻 Sample:', violationInfo.scriptSample)
+
       }
-      console.error('━'.repeat(60) + '\n')
+
     }
     
     // In production, you would send this to your logging service
@@ -95,23 +90,22 @@ export async function POST(request: NextRequest) {
       // await sendToLoggingService(violationInfo)
       
       // For now, just log to console (will appear in server logs)
-      console.error('CSP Violation:', JSON.stringify(violationInfo))
+
     }
     
     // Check for common issues and provide hints
     const hints = analyzeViolation(cspReport)
     if (hints.length > 0 && process.env.NODE_ENV === 'development') {
-      console.log('💡 Hints:')
-      hints.forEach(hint => console.log(`  - ${hint}`))
-      console.log('')
+
+      hints.forEach(hint =>)
+
     }
     
     // Always return 204 No Content to browsers
     return new NextResponse(null, { status: 204 })
     
   } catch (error) {
-    console.error('Error processing CSP report:', error)
-    
+
     // Still return 204 to not reveal internal errors
     return new NextResponse(null, { status: 204 })
   }

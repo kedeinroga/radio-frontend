@@ -45,7 +45,7 @@ export default function PricingPageExample() {
       window.location.href = data.checkoutUrl
 
     } catch (error) {
-      console.error('Subscription error:', error)
+
       alert('Failed to start subscription. Please try again.')
       setSubscribing(false)
     }

@@ -112,7 +112,7 @@ export class SessionValidator {
       SecurityLog.sessionRevoked('unknown', tokenId, 'manual')
       return true
     } catch (error) {
-      console.error('Failed to revoke token:', error)
+
       return false
     }
   }
@@ -135,7 +135,7 @@ export class SessionValidator {
       SecurityLog.sessionRevoked('unknown', sessionId, 'manual')
       return true
     } catch (error) {
-      console.error('Failed to revoke session:', error)
+
       return false
     }
   }
@@ -159,7 +159,7 @@ export class SessionValidator {
       
       return revokedCount
     } catch (error) {
-      console.error('Failed to revoke all sessions:', error)
+
       return 0
     }
   }
@@ -178,7 +178,7 @@ export class SessionValidator {
 
       return response.data.sessions || []
     } catch (error) {
-      console.error('Failed to get sessions:', error)
+
       return []
     }
   }
@@ -199,7 +199,7 @@ export class SessionValidator {
       SecurityLog.sessionRevoked('unknown', sessionId, 'manual')
       return true
     } catch (error) {
-      console.error('Failed to delete session:', error)
+
       return false
     }
   }

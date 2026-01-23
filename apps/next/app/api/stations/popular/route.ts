@@ -29,8 +29,7 @@ export async function GET(request: NextRequest) {
 
     if (!response.ok) {
       const errorText = await response.text()
-      console.error('[Stations Popular] Backend error:', response.status, errorText)
-      
+
       return NextResponse.json(
         { error: 'Failed to get popular stations', details: errorText },
         { status: response.status }
@@ -41,7 +40,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(data, { status: 200 })
   } catch (error: any) {
-    console.error('[Stations Popular] Error:', error)
+
     return NextResponse.json(
       { error: 'Internal server error', message: error.message },
       { status: 500 }

@@ -106,7 +106,7 @@ export default function MonitoringPage() {
 
       setLastUpdate(new Date())
     } catch (err) {
-      console.error('Load data error:', err)
+
       setError(err instanceof Error ? err.message : 'Failed to load monitoring data')
     } finally {
       setLoading(false)

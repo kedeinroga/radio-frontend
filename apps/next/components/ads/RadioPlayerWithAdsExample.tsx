@@ -24,22 +24,22 @@ export default function RadioPlayerWithAdsExample() {
     maxPostRoll: 1,
     minMidRollInterval: 300, // 5 minutes
     onAdStart: (ad) => {
-      console.log('Ad started:', ad.title)
+
       // Pause radio stream
       setIsPlaying(false)
     },
     onAdComplete: (ad) => {
-      console.log('Ad completed:', ad.title)
+
       // Resume radio stream
       setIsPlaying(true)
     },
     onAdSkip: (ad) => {
-      console.log('Ad skipped:', ad.title)
+
       // Resume radio stream
       setIsPlaying(true)
     },
     onAdError: (ad, error) => {
-      console.error('Ad error:', ad.title, error)
+
       // Resume radio stream
       setIsPlaying(true)
     },

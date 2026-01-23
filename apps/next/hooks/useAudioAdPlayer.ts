@@ -88,14 +88,12 @@ export function useAudioAdPlayer(options: UseAudioAdPlayerOptions = {}) {
       })
       
       if (!response.ok) {
-        console.error('Failed to fetch ads:', response.statusText)
         return []
       }
       
       const data = await response.json()
       return data.ads || []
     } catch (error) {
-      console.error('Error fetching ads:', error)
       return []
     }
   }, [])

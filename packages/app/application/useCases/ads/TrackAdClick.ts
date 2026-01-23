@@ -50,13 +50,6 @@ export class TrackAdClick {
 
       // Block if fraud score is too high
       if (!fraudCheck.isValid) {
-        console.warn('[TrackAdClick] Blocked fraudulent click:', {
-          adId: input.adId,
-          impressionId: input.metadata.impressionId,
-          riskScore: fraudCheck.riskScore,
-          flags: fraudCheck.flags,
-          reason: fraudCheck.reason,
-        })
 
         return {
           success: false,
@@ -92,7 +85,7 @@ export class TrackAdClick {
         },
       }
     } catch (error) {
-      console.error('[TrackAdClick] Error:', error)
+
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',

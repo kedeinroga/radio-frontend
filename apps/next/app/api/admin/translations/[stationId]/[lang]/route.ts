@@ -49,7 +49,7 @@ export async function GET(
     
     return NextResponse.json(data, { status: 200 })
   } catch (error: any) {
-    console.error('Error getting translation:', error)
+
     return NextResponse.json(
       { 
         error: { 
@@ -111,7 +111,7 @@ export async function PUT(
     
     return NextResponse.json(data, { status: 200 })
   } catch (error: any) {
-    console.error('Error updating translation:', error)
+
     return NextResponse.json(
       { 
         error: { 
@@ -171,7 +171,7 @@ export async function DELETE(
     
     return NextResponse.json(data, { status: 200 })
   } catch (error: any) {
-    console.error('Error deleting translation:', error)
+
     return NextResponse.json(
       { 
         error: { 

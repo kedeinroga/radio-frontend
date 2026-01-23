@@ -55,7 +55,7 @@ export default function AdminDashboard() {
         trendingSearches: trendingSearchesRes.data || [],
       })
     } catch (err: any) {
-      console.error('Error loading dashboard:', err)
+
       setError(err.message || 'Failed to load dashboard data')
     } finally {
       setLoading(false)

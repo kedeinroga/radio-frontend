@@ -51,7 +51,7 @@ export default function SearchPage() {
         setStations(results)
         setHasSearched(true)
       } catch (error: any) {
-        console.error('Search error:', error)
+
         setStations([])
         setHasSearched(true)
         // Set user-friendly error message

@@ -59,14 +59,14 @@ export function NativeAd({
    */
   const handleClick = useCallback(() => {
     if (!ad.clickUrl || ad.clickUrl === '#') {
-      console.warn('[NativeAd] Invalid click URL, click blocked')
+
       return
     }
 
     // Double-check URL safety before opening
     const safeUrl = sanitizeAdUrl(ad.clickUrl)
     if (safeUrl === '#') {
-      console.warn('[NativeAd] Unsafe URL detected, click blocked')
+
       return
     }
 

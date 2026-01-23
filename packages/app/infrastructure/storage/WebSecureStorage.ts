@@ -17,7 +17,7 @@ export class WebSecureStorage implements ISecureStorage {
 
   constructor() {
     if (!this.useEncryption) {
-      console.warn('Web Crypto API not available. Data will be stored without encryption.')
+
     }
   }
 
@@ -33,7 +33,7 @@ export class WebSecureStorage implements ISecureStorage {
       
       return encrypted
     } catch (error) {
-      console.error('Error getting item from storage:', error)
+
       return null
     }
   }
@@ -47,7 +47,7 @@ export class WebSecureStorage implements ISecureStorage {
       
       localStorage.setItem(this.prefix + key, dataToStore)
     } catch (error) {
-      console.error('Error setting item in storage:', error)
+
     }
   }
 
@@ -55,7 +55,7 @@ export class WebSecureStorage implements ISecureStorage {
     try {
       localStorage.removeItem(this.prefix + key)
     } catch (error) {
-      console.error('Error removing item from storage:', error)
+
     }
   }
 
@@ -68,7 +68,7 @@ export class WebSecureStorage implements ISecureStorage {
         }
       })
     } catch (error) {
-      console.error('Error clearing storage:', error)
+
     }
   }
 }

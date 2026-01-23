@@ -83,8 +83,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     return sitemapEntries
   } catch (error) {
-    console.error('Error generating sitemap:', error)
-    
+
     // Return minimal sitemap on error - with all locales
     const minimalSitemap: MetadataRoute.Sitemap = []
     

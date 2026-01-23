@@ -79,7 +79,7 @@ export function useRateLimit(
         }
       }
     } catch (error) {
-      console.error('Error reading rate limit state:', error)
+      // Silent fail
     }
 
     return {
@@ -105,7 +105,7 @@ export function useRateLimit(
         })
       )
     } catch (error) {
-      console.error('Error saving rate limit state:', error)
+      // Silent fail
     }
   }, [state, storageKey])
 
@@ -176,7 +176,7 @@ export function useRateLimit(
       try {
         localStorage.removeItem(storageKey)
       } catch (error) {
-        console.error('Error clearing rate limit state:', error)
+        // Silent fail
       }
     }
   }, [storageKey, finalConfig.maxAttempts])

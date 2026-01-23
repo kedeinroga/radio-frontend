@@ -51,7 +51,7 @@ export default function AnalyticsPage() {
       setPopularStations(stationsRes.data || [])
       setTrendingSearches(searchesRes.data || [])
     } catch (err: any) {
-      console.error('Error loading analytics:', err)
+
       setError(err.response?.data?.message || err.message || 'Failed to load analytics')
     } finally {
       setLoading(false)

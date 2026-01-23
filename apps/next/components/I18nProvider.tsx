@@ -90,7 +90,7 @@ export function I18nProvider({ children, initialLocaleCode, initialTranslations 
       
       setIsLoading(false)
     } catch (error) {
-      console.error('Failed to load translations:', error)
+
       setIsLoading(false)
     }
   }, [translator])
@@ -115,7 +115,7 @@ export function I18nProvider({ children, initialLocaleCode, initialTranslations 
     if (locale && locale.code) {
       loadTranslations(locale)
     } else {
-      console.warn('Locale is invalid on mount, using default')
+
       const fallbackLocale = Locale.fromString('es')
       setLocale(fallbackLocale)
       loadTranslations(fallbackLocale)

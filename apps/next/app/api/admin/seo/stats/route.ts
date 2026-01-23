@@ -43,7 +43,7 @@ export async function GET(request: NextRequest) {
     const data = await backendResponse.json()
     return NextResponse.json(data)
   } catch (error: any) {
-    console.error('Error fetching SEO stats:', error)
+
     return NextResponse.json(
       { error: error.message || 'Internal server error' },
       { status: 500 }

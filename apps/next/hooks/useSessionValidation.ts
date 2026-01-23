@@ -54,14 +54,12 @@ export function useSessionValidation(options?: {
 
       // Check if token is expired locally first
       if (isTokenExpired(token)) {
-        console.warn('[Session] Token expired locally')
         logout()
         return false
       }
 
       // Validate device fingerprint
       if (!SessionValidator.validateDeviceFingerprint()) {
-        console.error('[Session] Device fingerprint mismatch - possible session hijacking')
         logout()
         return false
       }
@@ -70,14 +68,12 @@ export function useSessionValidation(options?: {
       const result = await SessionValidator.validateToken(token, true)
       
       if (!result.valid) {
-        console.warn('[Session] Token validation failed:', result.reason)
         logout()
         return false
       }
 
       return true
     } catch (error) {
-      console.error('[Session] Validation error:', error)
       return false
     }
   }, [isAuthenticated, logout])
@@ -102,7 +98,6 @@ export function useSessionValidation(options?: {
       })
 
       if (!response.ok) {
-        console.error('[Session] Token refresh failed')
         logout()
         return false
       }
@@ -113,7 +108,6 @@ export function useSessionValidation(options?: {
       await storage.setItem('access_token', data.access_token)
       return true
     } catch (error) {
-      console.error('[Session] Refresh error:', error)
       logout()
       return false
     }

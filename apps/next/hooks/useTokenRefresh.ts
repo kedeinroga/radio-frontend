@@ -89,8 +89,6 @@ export function useTokenRefresh(options: UseTokenRefreshOptions = {}) {
         jti: data.jti,
       }
     } catch (error: any) {
-      console.error('Token refresh error:', error)
-
       // Clear user state
       setUser(null)
 

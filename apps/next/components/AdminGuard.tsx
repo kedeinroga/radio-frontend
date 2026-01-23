@@ -111,8 +111,7 @@ export function AdminGuard({ children }: { children: React.ReactNode }) {
         
         setIsChecking(false)
       } catch (error: any) {
-        console.error('AdminGuard - Session verification error:', error.message)
-        
+
         // On error, redirect to login
         const locale = pathname?.split('/')[1] || 'es'
         setUser(null)

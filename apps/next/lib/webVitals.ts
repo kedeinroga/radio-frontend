@@ -110,7 +110,7 @@ export class WebVitalsReporter {
       })
     }
 
-    console.log('📊 [WebVitals] Monitoring initialized')
+    // WebVitals monitoring initialized
   }
 
   /**
@@ -153,14 +153,8 @@ export class WebVitalsReporter {
   /**
    * Log metric to console (development only)
    */
-  private static logMetric(metric: EnhancedMetric) {
-    const emoji = metric.rating === 'good' ? '✅' : metric.rating === 'needs-improvement' ? '⚠️' : '❌'
-    const color = metric.rating === 'good' ? 'color: green' : metric.rating === 'needs-improvement' ? 'color: orange' : 'color: red'
-    
-    console.log(
-      `%c${emoji} [WebVitals] ${metric.name}: ${metric.value.toFixed(2)}${metric.name === 'CLS' ? '' : 'ms'} (${metric.rating})`,
-      color
-    )
+  private static logMetric(_metric: EnhancedMetric) {
+    // Metric logging silenced
   }
 
   /**
@@ -212,7 +206,7 @@ export class WebVitalsReporter {
           keepalive: true, // Important for beforeunload
         })
       } catch (error) {
-        console.error('[WebVitals] Failed to send metric:', error)
+        // Failed to send metric
       }
     }
   }
@@ -229,8 +223,6 @@ export class WebVitalsReporter {
     metricsToSend.forEach((metric) => {
       this.sendToAnalytics(metric)
     })
-
-    console.log(`📊 [WebVitals] Flushed ${metricsToSend.length} metrics`)
   }
 
   /**
@@ -267,20 +259,7 @@ export class WebVitalsReporter {
    * Log summary to console
    */
   static logSummary() {
-    const summary = this.getSummary()
-    
-    console.log('📊 [WebVitals] Summary:')
-    console.table(
-      Object.entries(summary).map(([name, stats]) => ({
-        Metric: name,
-        Count: stats.count,
-        'Avg (ms)': stats.avg.toFixed(2),
-        'Min (ms)': stats.min.toFixed(2),
-        'Max (ms)': stats.max.toFixed(2),
-        'Good %': ((stats.good / stats.count) * 100).toFixed(1),
-        'Poor %': ((stats.poor / stats.count) * 100).toFixed(1),
-      }))
-    )
+    // Summary logging silenced
   }
 
   /**

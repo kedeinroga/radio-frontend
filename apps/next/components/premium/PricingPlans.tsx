@@ -119,7 +119,7 @@ export function PricingPlans() {
         throw new Error('No checkout URL returned')
       }
     } catch (error) {
-      console.error('Error creating checkout session:', error)
+
       alert(t('common.error'))
     } finally {
       setIsLoading(null)

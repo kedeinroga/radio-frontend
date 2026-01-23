@@ -35,8 +35,7 @@ export async function getNonce(): Promise<string> {
  * export function ClientComponent({ nonce }: { nonce: string }) {
  *   return (
  *     <script nonce={nonce}>
- *       console.log('This inline script is CSP-compliant')
- *     </script>
+ **     </script>
  *   )
  * }
  * ```
@@ -52,7 +51,7 @@ export async function getNonce(): Promise<string> {
  * export default async function Page() {
  *   return (
  *     <ScriptWithNonce>
- *       {`console.log('This script has a nonce')`}
+ *       {``}
  *     </ScriptWithNonce>
  *   )
  * }

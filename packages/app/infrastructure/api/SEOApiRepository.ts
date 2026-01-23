@@ -24,7 +24,7 @@ export class SEOApiRepository implements ISEORepository {
         )
       )
     } catch (error: any) {
-      console.error('Error fetching popular countries:', error)
+
       // Return empty array instead of throwing to prevent sitemap generation failure
       return []
     }
@@ -47,7 +47,7 @@ export class SEOApiRepository implements ISEORepository {
           )
         )
     } catch (error: any) {
-      console.error('Error fetching popular tags:', error)
+
       return []
     }
   }
@@ -72,7 +72,7 @@ export class SEOApiRepository implements ISEORepository {
         data.last_updated || new Date().toISOString()
       )
     } catch (error: any) {
-      console.error('Error fetching sitemap data:', error)
+
       // Return minimal sitemap data to prevent complete failure
       return new SitemapData([], [], 0, new Date().toISOString())
     }

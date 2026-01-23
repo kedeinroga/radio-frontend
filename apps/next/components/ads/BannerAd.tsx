@@ -57,14 +57,14 @@ export function BannerAd({
    */
   const handleClick = useCallback(() => {
     if (!ad.clickUrl || ad.clickUrl === '#') {
-      console.warn('[BannerAd] Invalid click URL, click blocked')
+
       return
     }
 
     // Double-check URL safety before opening
     const safeUrl = sanitizeAdUrl(ad.clickUrl)
     if (safeUrl === '#') {
-      console.warn('[BannerAd] Unsafe URL detected, click blocked')
+
       return
     }
 

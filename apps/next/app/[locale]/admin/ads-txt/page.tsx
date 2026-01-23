@@ -48,7 +48,7 @@ export default function AdsTxtDashboard() {
       const validationData = await validationResponse.json()
       setValidation(validationData)
     } catch (err) {
-      console.error('Failed to load ads.txt status:', err)
+
     } finally {
       setIsLoading(false)
     }

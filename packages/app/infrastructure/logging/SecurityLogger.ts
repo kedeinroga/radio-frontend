@@ -180,16 +180,6 @@ class SecurityLogger {
       critical: '🔴',
     }[event.severity]
 
-    console.log(
-      `${emoji} [SECURITY] ${event.type}`,
-      {
-        timestamp: event.timestamp,
-        userId: event.userId,
-        email: event.email,
-        severity: event.severity,
-        ...event.details,
-      }
-    )
   }
 
   /**
@@ -201,7 +191,7 @@ class SecurityLogger {
     try {
       localStorage.setItem(this.storageKey, JSON.stringify(this.events))
     } catch (error) {
-      console.error('Failed to store security logs:', error)
+
     }
   }
 
@@ -217,7 +207,7 @@ class SecurityLogger {
         this.events = JSON.parse(stored)
       }
     } catch (error) {
-      console.error('Failed to load security logs:', error)
+
       this.events = []
     }
   }
@@ -240,10 +230,10 @@ class SecurityLogger {
       
       // For now, just log that we would send it
       if (process.env.NODE_ENV === 'development') {
-        console.log('[SECURITY] Would send to backend:', event)
+
       }
     } catch (error) {
-      console.error('Failed to send security event to backend:', error)
+
     }
   }
 }

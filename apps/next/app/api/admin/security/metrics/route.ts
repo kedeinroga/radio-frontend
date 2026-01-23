@@ -53,7 +53,7 @@ export async function GET(request: NextRequest) {
     const data = await response.json()
     return NextResponse.json(data)
   } catch (error: any) {
-    console.error('Security metrics fetch error:', error)
+
     return NextResponse.json(
       { error: { code: 'server_error', message: 'Internal server error', details: error.message } },
       { status: 500 }

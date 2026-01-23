@@ -73,7 +73,7 @@ export function AudioAdPlayer({
     try {
       await fetch(url, { method: 'GET', mode: 'no-cors' })
     } catch (error) {
-      console.error('Failed to fire tracking pixel:', error)
+
     }
   }, [])
   
@@ -261,7 +261,7 @@ export function AudioAdPlayer({
     // Auto play
     if (autoPlay) {
       audio.play().catch(error => {
-        console.error('Autoplay failed:', error)
+
         setState(prev => ({ ...prev, status: 'error', error: 'Autoplay failed' }))
       })
     }

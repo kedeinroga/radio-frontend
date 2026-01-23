@@ -83,8 +83,6 @@ export function usePremiumStatus() {
       })
 
     } catch (error) {
-      console.error('[usePremiumStatus] Error fetching status:', error)
-      
       setState({
         isPremium: false,
         isLoading: false,

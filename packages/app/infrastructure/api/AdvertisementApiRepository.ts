@@ -104,7 +104,7 @@ export class AdvertisementApiRepository implements IAdvertisementRepository {
       )
 
       if (!response.ok) {
-        console.error('[AdvertisementApi] Failed to fetch ad:', response.statusText)
+
         return { ad: null, reason: 'no_eligible_ads' }
       }
 
@@ -151,13 +151,13 @@ export class AdvertisementApiRepository implements IAdvertisementRepository {
       // **CRITICAL: Validate ad safety**
       const safetyCheck = validateAdvertisementSafety(sanitizedAd)
       if (!safetyCheck.valid) {
-        console.error('[AdvertisementApi] Ad failed safety validation:', safetyCheck.errors)
+
         return { ad: null, reason: 'no_eligible_ads' }
       }
 
       return { ad: sanitizedAd }
     } catch (error) {
-      console.error('[AdvertisementApi] Error fetching ad:', error)
+
       return { ad: null, reason: 'no_eligible_ads' }
     }
   }
@@ -189,14 +189,14 @@ export class AdvertisementApiRepository implements IAdvertisementRepository {
       })
 
       if (!response.ok) {
-        console.error('[AdvertisementApi] Failed to track impression:', response.statusText)
+
         return ''
       }
 
       const data: ApiTrackImpressionResponse = await response.json()
       return data.impression_id
     } catch (error) {
-      console.error('[AdvertisementApi] Error tracking impression:', error)
+
       return ''
     }
   }
@@ -225,13 +225,13 @@ export class AdvertisementApiRepository implements IAdvertisementRepository {
       })
 
       if (!response.ok) {
-        console.error('[AdvertisementApi] Failed to track click:', response.statusText)
+
         return false
       }
 
       return true
     } catch (error) {
-      console.error('[AdvertisementApi] Error tracking click:', error)
+
       return false
     }
   }
@@ -257,7 +257,7 @@ export class AdvertisementApiRepository implements IAdvertisementRepository {
       )
 
       if (!response.ok) {
-        console.error('[AdvertisementApi] Failed to fetch user profile:', response.statusText)
+
         return null
       }
 
@@ -270,7 +270,7 @@ export class AdvertisementApiRepository implements IAdvertisementRepository {
         premiumUntil: data.premium_until ? new Date(data.premium_until) : undefined,
       }
     } catch (error) {
-      console.error('[AdvertisementApi] Error fetching user profile:', error)
+
       return null
     }
   }

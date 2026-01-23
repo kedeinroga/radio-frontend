@@ -28,7 +28,7 @@ export class StationApiRepository implements IStationRepository {
       if (error.response?.status === 503) {
         throw new Error('The stations service is temporarily unavailable. Please try again later.')
       }
-      console.error('Error fetching station by ID:', error)
+
       throw new Error('Failed to fetch station. Please try again.')
     }
   }
@@ -50,10 +50,10 @@ export class StationApiRepository implements IStationRepository {
       }
       // Handle timeout errors
       if (error.code === 'ECONNABORTED' || error.message?.includes('timeout')) {
-        console.error('Search timeout - backend is taking too long:', error)
+
         throw new Error('The search is taking longer than expected. Please try with more specific terms.')
       }
-      console.error('Error searching stations:', error)
+
       throw new Error('Failed to search stations. Please try again.')
     }
   }
@@ -71,7 +71,7 @@ export class StationApiRepository implements IStationRepository {
       if (error.response?.status === 503) {
         throw new Error('The stations service is temporarily unavailable. Please try again later.')
       }
-      console.error('Error fetching popular stations:', error)
+
       throw new Error('Failed to fetch popular stations. Please try again.')
     }
   }
@@ -129,7 +129,7 @@ export class StationApiRepository implements IStationRepository {
 
       return null
     } catch (error) {
-      console.error('Error finding station by slug:', error)
+
       return null
     }
   }

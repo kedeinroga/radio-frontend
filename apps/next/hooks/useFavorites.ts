@@ -29,7 +29,6 @@ export const useFavorites = () => {
         )
       )
     } catch (error) {
-      console.error('Error loading favorites:', error)
       return []
     }
   }
@@ -50,7 +49,7 @@ export const useFavorites = () => {
     try {
       localStorage.setItem(FAVORITES_KEY, JSON.stringify(updated))
     } catch (error) {
-      console.error('Error saving favorite:', error)
+      // Silent fail
     }
   }
 
@@ -61,7 +60,7 @@ export const useFavorites = () => {
     try {
       localStorage.setItem(FAVORITES_KEY, JSON.stringify(updated))
     } catch (error) {
-      console.error('Error removing favorite:', error)
+      // Silent fail
     }
   }
 

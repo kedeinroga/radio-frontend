@@ -73,7 +73,7 @@ export default function TranslationsPage() {
         setError('No stations found. Try a different search term or load popular stations.')
       }
     } catch (err: any) {
-      console.error('Error searching stations:', err)
+
       setError(err.message || 'Failed to search stations. Make sure the backend is running.')
       setSearchResults([])
     } finally {
@@ -102,7 +102,7 @@ export default function TranslationsPage() {
         setError('No popular stations found.')
       }
     } catch (err: any) {
-      console.error('Error loading popular stations:', err)
+
       setError(err.message || 'Failed to load popular stations. Make sure the backend is running.')
       setSearchResults([])
     } finally {
@@ -141,7 +141,7 @@ export default function TranslationsPage() {
       }
       setTranslations(translationsData)
     } catch (err: any) {
-      console.error('Error loading translations:', err)
+
       setError(err.response?.data?.message || err.message || 'Failed to load translations')
       setTranslations([])
     } finally {
@@ -168,7 +168,7 @@ export default function TranslationsPage() {
       await clientAdminApi.deleteTranslation(stationId, lang)
       await loadTranslations()
     } catch (err: any) {
-      console.error('Error deleting translation:', err)
+
       setError(err.response?.data?.message || 'Failed to delete translation')
     }
   }
@@ -584,7 +584,7 @@ function TranslationFormModal({
 
       onSuccess()
     } catch (err: any) {
-      console.error('Error saving translation:', err)
+
       setError(err.response?.data?.message || err.message || 'Failed to save translation')
     } finally {
       setLoading(false)

@@ -36,7 +36,7 @@ export async function generateStaticParams() {
       }))
     )
   } catch (error) {
-    console.error('Error generating genre params:', error)
+
     return []
   }
 }
@@ -117,7 +117,7 @@ export default async function GenrePage({ params }: PageProps) {
   try {
     stations = await repository.search(genreName, 50)
   } catch (error) {
-    console.error('Error fetching stations:', error)
+
   }
 
   const breadcrumbs = [

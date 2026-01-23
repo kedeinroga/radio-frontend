@@ -62,9 +62,7 @@ export class Translation {
     // Warn if there are unresolved placeholders
     const unresolvedPlaceholders = result.match(/\{[^}]+\}/g)
     if (unresolvedPlaceholders) {
-      console.warn(
-        `Unresolved placeholders in translation "${this.fullKey}": ${unresolvedPlaceholders.join(', ')}`
-      )
+
     }
 
     return result

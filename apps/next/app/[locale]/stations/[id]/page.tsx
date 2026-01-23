@@ -41,7 +41,7 @@ export default function StationDetailPage() {
           setError(true)
         }
       } catch (err) {
-        console.error('Error loading station:', err)
+
         setError(true)
       } finally {
         setIsLoading(false)

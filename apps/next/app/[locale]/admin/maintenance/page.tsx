@@ -60,7 +60,7 @@ export default function MaintenancePage() {
         setRecommendations(Array.isArray(recData) ? recData : [])
       }
     } catch (err) {
-      console.error('Load data error:', err)
+
       setError(err instanceof Error ? err.message : 'Failed to load data')
     } finally {
       setLoading(false)

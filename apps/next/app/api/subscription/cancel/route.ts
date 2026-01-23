@@ -76,7 +76,6 @@ export async function POST(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('[Cancel Subscription API] Error:', error)
 
     const statusCode = error instanceof Error && error.message.includes('not found') 
       ? 404 

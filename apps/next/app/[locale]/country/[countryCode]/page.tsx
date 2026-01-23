@@ -35,7 +35,7 @@ export async function generateStaticParams() {
       }))
     )
   } catch (error) {
-    console.error('Error generating country params:', error)
+
     return []
   }
 }
@@ -114,7 +114,7 @@ export default async function CountryPage({ params }: PageProps) {
   try {
     stations = await repository.getByCountry(countryCode, 50)
   } catch (error) {
-    console.error('Error fetching stations:', error)
+
   }
 
   const breadcrumbs = [

@@ -19,8 +19,8 @@
  * <AdClickHandler
  *   ad={advertisement}
  *   impressionId="imp-123"
- *   onClickTracked={(result) => console.log('Click tracked', result)}
- *   onError={(error) => console.error('Click failed', error)}
+ *   onClickTracked={(result) =>}
+ *   onError={(error) =>}
  * >
  *   {(handleClick, isTracking) => (
  *     <button onClick={handleClick} disabled={isTracking}>
@@ -124,14 +124,14 @@ export function AdClickHandler({
     // Validación de requisitos
     if (!impressionId) {
       const error = 'Cannot track click without impressionId'
-      console.error('[AdClickHandler]', error)
+
       onError?.(error)
       return
     }
 
     if (!csrfToken) {
       const error = 'CSRF token not available. Cannot track click.'
-      console.error('[AdClickHandler]', error)
+
       onError?.(error)
       return
     }
@@ -140,7 +140,7 @@ export function AdClickHandler({
     const sanitizedUrl = sanitizeAdUrl(ad.clickUrl)
     if (!sanitizedUrl) {
       const error = 'Invalid or unsafe ad URL'
-      console.error('[AdClickHandler]', error, { url: ad.clickUrl })
+
       onError?.(error)
       return
     }
@@ -184,12 +184,6 @@ export function AdClickHandler({
         fraudScore: result.fraudDetection?.riskScore,
       }
 
-      console.log('[AdClickHandler] Click tracked successfully', {
-        clickId: result.clickId,
-        fraudScore: result.fraudDetection?.riskScore,
-        flags: result.fraudDetection?.flags,
-      })
-
       onClickTracked?.(trackingResult)
 
       // Abrir el link si está configurado
@@ -203,12 +197,6 @@ export function AdClickHandler({
 
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error'
-      
-      console.error('[AdClickHandler] Failed to track click:', {
-        error: errorMessage,
-        adId: ad.id,
-        impressionId,
-      })
 
       const trackingResult: ClickTrackingResult = {
         success: false,
@@ -221,7 +209,7 @@ export function AdClickHandler({
       // En caso de error, aún podemos permitir la navegación si el usuario
       // realmente quería ir al link (pero sin tracking)
       if (openAfterTracking && sanitizedUrl) {
-        console.warn('[AdClickHandler] Opening link without tracking due to error')
+
         window.open(sanitizedUrl, linkTarget, 'noopener,noreferrer')
       }
 
@@ -251,8 +239,7 @@ export function AdClickHandler({
  * const { handleClick, isTracking } = useAdClickHandler({
  *   ad: advertisement,
  *   impressionId: 'imp-123',
- *   onClickTracked: (result) => console.log('Tracked', result)
- * })
+ *   onClickTracked: (result) =>* })
  * 
  * return <button onClick={handleClick} disabled={isTracking}>Click</button>
  * ```
@@ -278,14 +265,14 @@ export function useAdClickHandler({
 
     if (!impressionId) {
       const error = 'Cannot track click without impressionId'
-      console.error('[useAdClickHandler]', error)
+
       onError?.(error)
       return
     }
 
     if (!csrfToken) {
       const error = 'CSRF token not available'
-      console.error('[useAdClickHandler]', error)
+
       onError?.(error)
       return
     }
@@ -293,7 +280,7 @@ export function useAdClickHandler({
     const sanitizedUrl = sanitizeAdUrl(ad.clickUrl)
     if (!sanitizedUrl) {
       const error = 'Invalid or unsafe ad URL'
-      console.error('[useAdClickHandler]', error)
+
       onError?.(error)
       return
     }
@@ -334,7 +321,6 @@ export function useAdClickHandler({
         fraudScore: result.fraudDetection?.riskScore,
       }
 
-      console.log('[useAdClickHandler] Click tracked', trackingResult)
       onClickTracked?.(trackingResult)
 
       if (openAfterTracking && sanitizedUrl) {
@@ -344,7 +330,6 @@ export function useAdClickHandler({
 
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error'
-      console.error('[useAdClickHandler] Failed:', errorMessage)
 
       onClickTracked?.({ success: false, error: errorMessage })
       onError?.(errorMessage)

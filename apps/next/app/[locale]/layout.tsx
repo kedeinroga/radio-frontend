@@ -18,7 +18,7 @@ async function loadServerTranslations(locale: string) {
     const translationsContent = fs.readFileSync(translationsPath, 'utf-8')
     return JSON.parse(translationsContent)
   } catch (error) {
-    console.error(`Failed to load translations for locale ${locale}:`, error)
+
     // Fallback to Spanish if locale file doesn't exist
     if (locale !== 'es') {
       return loadServerTranslations('es')

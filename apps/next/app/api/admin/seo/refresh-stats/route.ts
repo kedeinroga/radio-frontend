@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
         try {
           data = JSON.parse(text)
         } catch (e) {
-          console.error('Failed to parse JSON response:', text)
+
           data = { message: 'Invalid JSON response from backend' }
         }
       } else {
@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
     
     return NextResponse.json(data, { status: 200 })
   } catch (error: any) {
-    console.error('Error refreshing SEO stats:', error)
+
     return NextResponse.json(
       { 
         error: { 

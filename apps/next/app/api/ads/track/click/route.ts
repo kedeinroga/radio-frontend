@@ -77,7 +77,7 @@ export async function POST(request: NextRequest) {
     // 1. Validar CSRF token
     const csrfError = validateCSRF(request)
     if (csrfError) {
-      console.warn('[CSRF Validation Failed]', csrfError)
+
       return NextResponse.json(
         { error: 'CSRF validation failed', details: csrfError },
         { status: 403 }
@@ -135,13 +135,6 @@ export async function POST(request: NextRequest) {
     const result = await backendResponse.json()
 
     // 7. Log para monitoring
-    console.log('[Ad Click Tracked]', {
-      clickId: result.clickId,
-      advertisementId,
-      impressionId,
-      fraudScore: result.fraudDetection?.riskScore,
-      userIp,
-    })
 
     // 8. Retornar resultado
     return NextResponse.json({
@@ -153,7 +146,6 @@ export async function POST(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('[Ad Click Tracking Error]', error)
 
     return NextResponse.json(
       {

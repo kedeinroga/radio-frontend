@@ -48,7 +48,7 @@ const getTokenFromStorage = (key: string): string | null => {
   try {
     return localStorage.getItem(`@radio-app:${key}`)
   } catch (error) {
-    console.error('Error reading token from storage:', error)
+
     return null
   }
 }
@@ -61,7 +61,7 @@ const setTokenInStorage = (key: string, value: string): void => {
   try {
     localStorage.setItem(`@radio-app:${key}`, value)
   } catch (error) {
-    console.error('Error writing token to storage:', error)
+
   }
 }
 
@@ -73,7 +73,7 @@ const removeTokenFromStorage = (key: string): void => {
   try {
     localStorage.removeItem(`@radio-app:${key}`)
   } catch (error) {
-    console.error('Error removing token from storage:', error)
+
   }
 }
 

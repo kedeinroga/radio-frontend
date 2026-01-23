@@ -78,7 +78,6 @@ export async function verifyJWT(token: string): Promise<any | null> {
     }
     return null
   } catch (error) {
-    console.error('JWT validation error:', error)
     // On error, consider token invalid
     return null
   }

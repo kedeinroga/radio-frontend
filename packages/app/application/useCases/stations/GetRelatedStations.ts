@@ -43,7 +43,7 @@ export class GetRelatedStations {
       // Return up to limit stations
       return Array.from(uniqueStations.values()).slice(0, limit)
     } catch (error) {
-      console.error('Error fetching related stations:', error)
+
       return []
     }
   }

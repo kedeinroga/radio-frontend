@@ -36,7 +36,7 @@ export function sanitizeAdUrl(url: string): string {
   
   for (const protocol of dangerousProtocols) {
     if (lowerUrl.startsWith(protocol)) {
-      console.warn(`[Security] Blocked dangerous URL protocol: ${protocol}`)
+
       return '#'
     }
   }
@@ -47,20 +47,20 @@ export function sanitizeAdUrl(url: string): string {
     
     // Solo permitir http y https
     if (!['http:', 'https:'].includes(parsed.protocol)) {
-      console.warn(`[Security] Blocked non-http(s) protocol: ${parsed.protocol}`)
+
       return '#'
     }
     
     // Verificar que no tenga caracteres sospechosos
     if (trimmedUrl.includes('<') || trimmedUrl.includes('>')) {
-      console.warn('[Security] Blocked URL with HTML characters')
+
       return '#'
     }
     
     return trimmedUrl
   } catch (error) {
     // URL inválida
-    console.warn('[Security] Invalid URL format:', trimmedUrl)
+
     return '#'
   }
 }
@@ -273,8 +273,6 @@ export function sanitizeAdHTML(html: string): string {
   
   // Remover javascript: en hrefs
   sanitized = sanitized.replace(/href\s*=\s*["']javascript:[^"']*["']/gi, 'href="#"')
-  
-  console.warn('[Security] HTML ad sanitization is basic. Use DOMPurify for production.')
-  
+
   return sanitized
 }

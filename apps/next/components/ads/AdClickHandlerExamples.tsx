@@ -37,16 +37,14 @@ const mockAd: Advertisement = {
 export function Example1_RenderProp() {
   const handleClickTracked = (result: ClickTrackingResult) => {
     if (result.success) {
-      console.log('✅ Click tracked successfully!')
-      console.log('Click ID:', result.clickId)
-      console.log('Fraud Score:', result.fraudScore)
+
     } else {
-      console.error('❌ Click tracking failed:', result.error)
+
     }
   }
 
   const handleError = (error: string) => {
-    console.error('Error handling click:', error)
+
     // Aquí podrías mostrar un toast o notificación al usuario
   }
 
@@ -80,10 +78,10 @@ export function Example2_Hook() {
     ad: mockAd,
     impressionId: 'imp-790',
     onClickTracked: (result) => {
-      console.log('Click tracked:', result)
+
     },
     onError: (error) => {
-      console.error('Click error:', error)
+
     },
   })
 
@@ -112,9 +110,9 @@ export function Example3_ClickableBanner() {
     onClickTracked: (result) => {
       if (result.success && result.fraudScore !== undefined) {
         if (result.fraudScore > 70) {
-          console.warn('⚠️ High fraud risk detected:', result.fraudScore)
+
         } else {
-          console.log('✅ Clean click, fraud score:', result.fraudScore)
+
         }
       }
     },
@@ -162,7 +160,7 @@ export function Example4_NativeAdCard() {
       ad={mockAd}
       impressionId="imp-792"
       onClickTracked={(result) => {
-        console.log('Native ad clicked:', result)
+
       }}
     >
       {(handleClick, isTracking) => (
@@ -216,8 +214,7 @@ export function Example5_CustomNavigation() {
     onClickTracked: (result) => {
       if (result.success) {
         // Lógica personalizada después del tracking
-        console.log('Click tracked, now do custom action')
-        
+
         // Podrías mostrar un modal, hacer analytics extra, etc.
         // Y LUEGO abrir el link manualmente:
         window.open(mockAd.clickUrl, '_blank', 'noopener,noreferrer')

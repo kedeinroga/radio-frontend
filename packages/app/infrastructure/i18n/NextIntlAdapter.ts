@@ -43,7 +43,7 @@ export class NextIntlAdapter implements ITranslator {
   async loadTranslations(locale: Locale): Promise<void> {
     // Validate locale
     if (!locale || !locale.code) {
-      console.error('Invalid locale provided to loadTranslations:', locale)
+
       throw new Error('Invalid locale: locale or locale.code is undefined')
     }
 
@@ -58,7 +58,7 @@ export class NextIntlAdapter implements ITranslator {
       const messages = await import(`../../../../apps/next/i18n/locales/${locale.code}.json`)
       this.translations.set(locale.code, messages.default || messages)
     } catch (error) {
-      console.error(`Failed to load translations for locale ${locale.code}:`, error)
+
       throw new Error(`Could not load translations for locale: ${locale.code}`)
     }
   }
@@ -71,7 +71,7 @@ export class NextIntlAdapter implements ITranslator {
     const messages = this.translations.get(locale.code)
 
     if (!messages) {
-      console.warn(`No translations loaded for locale: ${locale.code}`)
+
       return options?.defaultValue || key
     }
 
@@ -79,12 +79,12 @@ export class NextIntlAdapter implements ITranslator {
     const value = this.getNestedValue(messages, key)
 
     if (value === undefined || value === null) {
-      console.warn(`Translation key not found: ${key} (locale: ${locale.code})`)
+
       return options?.defaultValue || key
     }
 
     if (typeof value !== 'string') {
-      console.warn(`Translation value is not a string: ${key} (locale: ${locale.code})`)
+
       return options?.defaultValue || key
     }
 
@@ -196,7 +196,7 @@ export class NextIntlAdapter implements ITranslator {
     // Warn about unresolved placeholders (both double and single braces)
     const unresolvedPlaceholders = result.match(/\{\{?[^}]+\}\}?/g)
     if (unresolvedPlaceholders) {
-      console.warn(`Unresolved placeholders: ${unresolvedPlaceholders.join(', ')}`)
+
     }
 
     return result

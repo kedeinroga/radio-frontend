@@ -22,7 +22,6 @@ function validateStripeConfig() {
     .map(([key]) => key)
 
   if (missing.length > 0) {
-    console.error('[Stripe] Missing required environment variables:', missing)
     throw new Error(
       `Missing Stripe configuration. Please set: ${missing.join(', ')}`
     )
@@ -234,13 +233,8 @@ export function isStripeTestMode(): boolean {
 /**
  * Log helper para desarrollo
  */
-export function logStripeEvent(eventType: string, data: any) {
-  if (process.env.NODE_ENV === 'development') {
-    console.log(`[Stripe Event] ${eventType}`, {
-      timestamp: new Date().toISOString(),
-      data,
-    })
-  }
+export function logStripeEvent(_eventType: string, _data: any) {
+  // Stripe event logging silenced
 }
 
 export default getStripeServerClient

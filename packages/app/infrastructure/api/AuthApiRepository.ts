@@ -54,7 +54,7 @@ export class AuthApiRepository {
       if (error.response?.status === 400) {
         throw new Error('Invalid registration data. Check your email and password.')
       }
-      console.error('Error registering user:', error)
+
       throw new Error('Failed to register user. Please try again.')
     }
   }
@@ -104,7 +104,7 @@ export class AuthApiRepository {
       if (error.response?.status === 401) {
         throw new Error('Refresh token expired or invalid. Please log in again.')
       }
-      console.error('Error refreshing token:', error)
+
       throw new Error('Failed to refresh token. Please try again.')
     }
   }

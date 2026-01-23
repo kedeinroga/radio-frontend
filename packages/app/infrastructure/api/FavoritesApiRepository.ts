@@ -17,7 +17,7 @@ export class FavoritesApiRepository {
       if (error.response?.status === 401) {
         throw new Error('You must be logged in to view your favorites.')
       }
-      console.error('Error fetching favorites:', error)
+
       throw new Error('Failed to fetch favorites. Please try again.')
     }
   }
@@ -42,7 +42,7 @@ export class FavoritesApiRepository {
         // Station already in favorites - not really an error
         return
       }
-      console.error('Error adding favorite:', error)
+
       throw new Error('Failed to add favorite. Please try again.')
     }
   }
@@ -61,7 +61,7 @@ export class FavoritesApiRepository {
         // Favorite not found - not really an error, it's already removed
         return
       }
-      console.error('Error removing favorite:', error)
+
       throw new Error('Failed to remove favorite. Please try again.')
     }
   }

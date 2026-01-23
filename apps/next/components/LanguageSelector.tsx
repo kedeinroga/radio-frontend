@@ -80,7 +80,7 @@ export function LanguageSelector() {
       // Close dropdown
       setIsOpen(false)
     } catch (error) {
-      console.error('Failed to change language:', error)
+
     }
   }
 

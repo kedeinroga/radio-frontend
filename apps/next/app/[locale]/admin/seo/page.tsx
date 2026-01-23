@@ -69,7 +69,7 @@ export default function SEOPage() {
         setSuccess(false)
       }, 5000)
     } catch (err: any) {
-      console.error('Error refreshing SEO stats:', err)
+
       setError(err.response?.data?.message || err.message || 'Failed to refresh SEO statistics')
     } finally {
       setRefreshing(false)

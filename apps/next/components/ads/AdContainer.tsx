@@ -110,14 +110,10 @@ export function AdContainer({
 
       // Log fraud detection result if present
       if (result.fraudDetection && result.fraudDetection.riskScore > 0) {
-        console.log('[AdContainer] Impression tracked with risk score:', {
-          adId: impressionData.adId,
-          riskScore: result.fraudDetection.riskScore,
-          flags: result.fraudDetection.flags,
-        })
+
       }
     } catch (err) {
-      console.error('[AdContainer] Failed to track impression:', err)
+
     }
   }
 
@@ -126,7 +122,7 @@ export function AdContainer({
    */
   const handleClick = async (adId: string) => {
     if (!impressionId) {
-      console.warn('[AdContainer] Cannot track click without impressionId')
+
       return
     }
 
@@ -138,18 +134,14 @@ export function AdContainer({
 
       // Log fraud detection result if present
       if (result.fraudDetection && result.fraudDetection.riskScore > 0) {
-        console.log('[AdContainer] Click tracked with risk score:', {
-          adId,
-          riskScore: result.fraudDetection.riskScore,
-          flags: result.fraudDetection.flags,
-        })
+
       }
 
       if (!result.success) {
-        console.error('[AdContainer] Click tracking failed:', result.error)
+
       }
     } catch (err) {
-      console.error('[AdContainer] Failed to track click:', err)
+
     }
   }
 

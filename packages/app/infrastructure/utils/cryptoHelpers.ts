@@ -86,7 +86,7 @@ export async function encrypt(plaintext: string): Promise<string> {
     // Convert to base64
     return arrayBufferToBase64(combined)
   } catch (error) {
-    console.error('Encryption error:', error)
+
     // In case of error, return plaintext (fallback)
     // In production, you might want to handle this differently
     return plaintext
@@ -129,7 +129,7 @@ export async function decrypt(ciphertext: string): Promise<string> {
     const decoder = new TextDecoder()
     return decoder.decode(decrypted)
   } catch (error) {
-    console.error('Decryption error:', error)
+
     // If decryption fails, might be unencrypted data (backward compatibility)
     return ciphertext
   }

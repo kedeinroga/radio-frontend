@@ -88,25 +88,11 @@ export function validateEnv(): Env {
   try {
     const parsed = envSchema.parse(process.env)
     
-    console.log('✅ Environment variables validated successfully')
-    
-    // Log de variables públicas (nunca logear secrets!)
-    console.log('🔧 Configuration:')
-    console.log(`  - Environment: ${parsed.NODE_ENV}`)
-    console.log(`  - API URL: ${parsed.NEXT_PUBLIC_API_URL}`)
-    console.log(`  - App URL: ${parsed.NEXT_PUBLIC_APP_URL}`)
-    console.log(`  - Stripe Mode: ${parsed.STRIPE_SECRET_KEY.startsWith('sk_test_') ? 'TEST' : 'LIVE'}`)
-    
     return parsed
   } catch (error) {
     if (error instanceof z.ZodError) {
-      console.error('❌ Invalid environment variables:')
-      error.issues.forEach((issue) => {
-        console.error(`  - ${issue.path.join('.')}: ${issue.message}`)
-      })
-      console.error('\n💡 Tip: Copy .env.example to .env.local and fill in the values')
-    } else {
-      console.error('❌ Error validating environment variables:', error)
+      // Environment validation failed
+      // In production, fail immediately
     }
     
     // En producción, fallar de inmediato

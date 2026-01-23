@@ -138,7 +138,6 @@ export class CreateCheckoutSession {
 
       if (existingCustomers.data.length > 0) {
         const customer = existingCustomers.data[0]
-        console.log('[CreateCheckoutSession] Customer found:', customer.id)
         return customer.id
       }
 
@@ -150,11 +149,9 @@ export class CreateCheckoutSession {
         },
       })
 
-      console.log('[CreateCheckoutSession] Customer created:', newCustomer.id)
       return newCustomer.id
 
     } catch (error) {
-      console.error('[CreateCheckoutSession] Error managing customer:', error)
       throw new Error('Failed to create or retrieve customer')
     }
   }
@@ -195,11 +192,9 @@ export class CreateCheckoutSession {
         },
       })
 
-      console.log('[CreateCheckoutSession] Session created:', session.id)
       return session
 
     } catch (error) {
-      console.error('[CreateCheckoutSession] Error creating session:', error)
       throw new Error('Failed to create checkout session')
     }
   }

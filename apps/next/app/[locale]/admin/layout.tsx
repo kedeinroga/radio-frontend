@@ -33,7 +33,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   useTokenRefresh({
     refreshOnMount: false, // Don't refresh immediately, AdminGuard already validated
     onRefreshError: (error) => {
-      console.error('Auto-refresh failed:', error.message)
+
       // User will be redirected to login by the hook
     }
   })
@@ -52,7 +52,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         credentials: 'include'
       })
     } catch (error) {
-      console.error('Logout error:', error)
+
     }
     
     // Clear user from store

@@ -54,7 +54,7 @@ export default function SubscriptionManagementExample() {
       refresh()
 
     } catch (error) {
-      console.error('Cancel error:', error)
+
       alert('Failed to cancel subscription. Please try again.')
     } finally {
       setActionLoading(false)
@@ -91,7 +91,7 @@ export default function SubscriptionManagementExample() {
       refresh()
 
     } catch (error) {
-      console.error('Resume error:', error)
+
       alert('Failed to resume subscription. Please try again.')
     } finally {
       setActionLoading(false)

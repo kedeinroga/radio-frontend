@@ -42,7 +42,7 @@ export class AnalyticsApiRepository {
       if (error.response?.status === 403) {
         throw new Error('This feature is only available for Premium users.')
       }
-      console.error('Error fetching trending searches:', error)
+
       throw new Error('Failed to fetch trending searches. Please try again.')
     }
   }
@@ -65,7 +65,7 @@ export class AnalyticsApiRepository {
       if (error.response?.status === 403) {
         throw new Error('This feature is only available for Premium users.')
       }
-      console.error('Error fetching popular stations:', error)
+
       throw new Error('Failed to fetch popular stations. Please try again.')
     }
   }
@@ -84,7 +84,7 @@ export class AnalyticsApiRepository {
       if (error.response?.status === 403) {
         throw new Error('This feature is only available for Premium users.')
       }
-      console.error('Error fetching active users:', error)
+
       throw new Error('Failed to fetch active users. Please try again.')
     }
   }

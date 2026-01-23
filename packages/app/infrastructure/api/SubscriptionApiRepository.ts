@@ -27,7 +27,7 @@ export class SubscriptionApiRepository implements ISubscriptionRepository {
       const data = await response.json()
       return this.mapToSubscription(data)
     } catch (error) {
-      console.error('[SubscriptionApiRepository] getById error:', error)
+
       throw error
     }
   }
@@ -51,7 +51,7 @@ export class SubscriptionApiRepository implements ISubscriptionRepository {
       const data = await response.json()
       return this.mapToSubscription(data)
     } catch (error) {
-      console.error('[SubscriptionApiRepository] getByStripeSubscriptionId error:', error)
+
       throw error
     }
   }
@@ -73,7 +73,7 @@ export class SubscriptionApiRepository implements ISubscriptionRepository {
       const data = await response.json()
       return this.mapToSubscription(data)
     } catch (error) {
-      console.error('[SubscriptionApiRepository] getByUserId error:', error)
+
       throw error
     }
   }
@@ -91,7 +91,7 @@ export class SubscriptionApiRepository implements ISubscriptionRepository {
       const data = await response.json()
       return data.map((item: any) => this.mapToSubscription(item))
     } catch (error) {
-      console.error('[SubscriptionApiRepository] getAllByUserId error:', error)
+
       throw error
     }
   }
@@ -115,7 +115,7 @@ export class SubscriptionApiRepository implements ISubscriptionRepository {
       const data = await response.json()
       return this.mapToSubscription(data)
     } catch (error) {
-      console.error('[SubscriptionApiRepository] getByStripeCustomerId error:', error)
+
       throw error
     }
   }
@@ -137,7 +137,7 @@ export class SubscriptionApiRepository implements ISubscriptionRepository {
       const data = await response.json()
       return this.mapToSubscription(data)
     } catch (error) {
-      console.error('[SubscriptionApiRepository] create error:', error)
+
       throw error
     }
   }
@@ -162,7 +162,7 @@ export class SubscriptionApiRepository implements ISubscriptionRepository {
       const data = await response.json()
       return this.mapToSubscription(data)
     } catch (error) {
-      console.error('[SubscriptionApiRepository] update error:', error)
+
       throw error
     }
   }
@@ -191,7 +191,7 @@ export class SubscriptionApiRepository implements ISubscriptionRepository {
       const data = await response.json()
       return this.mapToSubscription(data)
     } catch (error) {
-      console.error('[SubscriptionApiRepository] cancel error:', error)
+
       throw error
     }
   }
@@ -206,7 +206,7 @@ export class SubscriptionApiRepository implements ISubscriptionRepository {
         throw new Error(`API error: ${response.status}`)
       }
     } catch (error) {
-      console.error('[SubscriptionApiRepository] delete error:', error)
+
       throw error
     }
   }
@@ -224,7 +224,7 @@ export class SubscriptionApiRepository implements ISubscriptionRepository {
       const data = await response.json()
       return data.map((item: any) => this.mapToSubscription(item))
     } catch (error) {
-      console.error('[SubscriptionApiRepository] getExpiringSoon error:', error)
+
       throw error
     }
   }
@@ -240,7 +240,7 @@ export class SubscriptionApiRepository implements ISubscriptionRepository {
       const data = await response.json()
       return data.map((item: any) => this.mapToSubscription(item))
     } catch (error) {
-      console.error('[SubscriptionApiRepository] getPastDue error:', error)
+
       throw error
     }
   }
@@ -250,7 +250,7 @@ export class SubscriptionApiRepository implements ISubscriptionRepository {
       const subscription = await this.getByUserId(userId)
       return subscription !== null
     } catch (error) {
-      console.error('[SubscriptionApiRepository] hasActiveSubscription error:', error)
+
       return false
     }
   }

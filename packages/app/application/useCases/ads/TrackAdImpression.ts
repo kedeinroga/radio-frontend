@@ -44,12 +44,6 @@ export class TrackAdImpression {
 
       // Block if fraud score is too high
       if (!fraudCheck.isValid) {
-        console.warn('[TrackAdImpression] Blocked fraudulent impression:', {
-          adId: input.adId,
-          riskScore: fraudCheck.riskScore,
-          flags: fraudCheck.flags,
-          reason: fraudCheck.reason,
-        })
 
         return {
           impressionId: '',
@@ -89,7 +83,7 @@ export class TrackAdImpression {
         },
       }
     } catch (error) {
-      console.error('[TrackAdImpression] Error:', error)
+
       return {
         impressionId: '',
         success: false,

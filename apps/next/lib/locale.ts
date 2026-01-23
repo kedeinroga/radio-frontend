@@ -34,7 +34,7 @@ export async function getServerLocale(): Promise<Locale> {
     try {
       return Locale.fromString(localeHeader)
     } catch (error) {
-      console.warn(`Invalid locale from header: ${localeHeader}`, error)
+      // Invalid locale, use default
     }
   }
   
@@ -64,7 +64,7 @@ export function getLocaleFromParams(params: { locale?: string }): Locale {
     try {
       return Locale.fromString(params.locale)
     } catch (error) {
-      console.warn(`Invalid locale from params: ${params.locale}`, error)
+      // Invalid locale, use default
     }
   }
   

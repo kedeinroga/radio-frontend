@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
     
     return NextResponse.json(data, { status: 200 })
   } catch (error: any) {
-    console.error('Error cleaning up partitions:', error)
+
     return NextResponse.json(
       { 
         error: { 

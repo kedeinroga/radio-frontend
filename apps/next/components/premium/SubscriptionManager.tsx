@@ -44,7 +44,7 @@ export function SubscriptionManager() {
       const data = await response.json()
       setSubscription(data.subscription)
     } catch (error) {
-      console.error('Error fetching subscription:', error)
+
     } finally {
       setIsLoading(false)
     }
@@ -68,7 +68,7 @@ export function SubscriptionManager() {
         throw new Error('Failed to cancel subscription')
       }
     } catch (error) {
-      console.error('Error canceling subscription:', error)
+
       alert(t('common.error'))
     } finally {
       setIsCanceling(false)
@@ -88,7 +88,7 @@ export function SubscriptionManager() {
         throw new Error('Failed to reactivate subscription')
       }
     } catch (error) {
-      console.error('Error reactivating subscription:', error)
+
       alert(t('common.error'))
     }
   }

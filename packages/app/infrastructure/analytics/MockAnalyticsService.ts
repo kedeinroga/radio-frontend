@@ -6,35 +6,24 @@ import { IAnalyticsService } from '../../application/ports/IAnalyticsService'
  * Will be replaced with Mixpanel in production
  */
 export class MockAnalyticsService implements IAnalyticsService {
-  private isDevelopment = process.env.NODE_ENV === 'development'
 
-  async track(event: string, properties?: Record<string, any>): Promise<void> {
-    if (this.isDevelopment) {
-      console.log(`[Analytics] Track: ${event}`, properties)
-    }
+  async track(_event: string, _properties?: Record<string, any>): Promise<void> {
+    // Analytics tracking silenced in production
   }
 
-  async identify(userId: string, traits?: Record<string, any>): Promise<void> {
-    if (this.isDevelopment) {
-      console.log(`[Analytics] Identify: ${userId}`, traits)
-    }
+  async identify(_userId: string, _traits?: Record<string, any>): Promise<void> {
+    // Analytics identify silenced in production
   }
 
-  async trackPageView(pageName: string, properties?: Record<string, any>): Promise<void> {
-    if (this.isDevelopment) {
-      console.log(`[Analytics] Page View: ${pageName}`, properties)
-    }
+  async trackPageView(_pageName: string, _properties?: Record<string, any>): Promise<void> {
+    // Analytics page view silenced in production
   }
 
-  async trackScreenView(screenName: string, properties?: Record<string, any>): Promise<void> {
-    if (this.isDevelopment) {
-      console.log(`[Analytics] Screen View: ${screenName}`, properties)
-    }
+  async trackScreenView(_screenName: string, _properties?: Record<string, any>): Promise<void> {
+    // Analytics screen view silenced in production
   }
 
   async reset(): Promise<void> {
-    if (this.isDevelopment) {
-      console.log('[Analytics] Reset')
-    }
+    // Analytics reset silenced in production
   }
 }

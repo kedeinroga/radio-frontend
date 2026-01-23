@@ -52,7 +52,7 @@ export default function AdminLoginPage() {
           setIsCheckingAuth(false)
         }
       } catch (error) {
-        console.error('❌ Error checking authentication:', error)
+
         setIsCheckingAuth(false)
       }
     }

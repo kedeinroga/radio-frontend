@@ -31,7 +31,7 @@ export async function parseVASTResponse(xml: string): Promise<VASTResponse | nul
     // Check for parse errors
     const parserError = doc.querySelector('parsererror')
     if (parserError) {
-      console.error('VAST XML parse error:', parserError.textContent)
+
       return null
     }
     
@@ -46,7 +46,7 @@ export async function parseVASTResponse(xml: string): Promise<VASTResponse | nul
       ads,
     }
   } catch (error) {
-    console.error('Error parsing VAST:', error)
+
     return null
   }
 }
@@ -402,14 +402,14 @@ export async function fetchVAST(vastUrl: string): Promise<VASTResponse | null> {
   try {
     const response = await fetch(vastUrl)
     if (!response.ok) {
-      console.error('Failed to fetch VAST:', response.statusText)
+
       return null
     }
     
     const xml = await response.text()
     return parseVASTResponse(xml)
   } catch (error) {
-    console.error('Error fetching VAST:', error)
+
     return null
   }
 }

@@ -64,7 +64,6 @@ export class ResumeSubscription {
         }
       )
     } catch (error) {
-      console.error('[ResumeSubscription] Stripe error:', error)
       throw new Error('Failed to resume subscription in Stripe')
     }
 
@@ -74,12 +73,7 @@ export class ResumeSubscription {
       status: 'active',
     })
 
-    // 7. Log
-    console.log('[ResumeSubscription] Subscription resumed:', {
-      subscriptionId: request.subscriptionId,
-      userId: request.userId,
-    })
-
+    // 7. Return result
     return {
       success: true,
       subscriptionId: request.subscriptionId,

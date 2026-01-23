@@ -116,7 +116,6 @@ export function useAdForPlacement(placement: AdPlacement, context: AdContext) {
         }
       }
     } catch (err) {
-      console.error('[useAdForPlacement] Error fetching ad:', err)
       setError('Failed to fetch ad')
       setAd(null)
     } finally {
@@ -173,7 +172,6 @@ export function useTrackImpression() {
 
         return null
       } catch (error) {
-        console.error('[useTrackImpression] Error:', error)
         return null
       } finally {
         setIsTracking(false)
@@ -215,7 +213,6 @@ export function useTrackClick() {
 
         return result.success
       } catch (error) {
-        console.error('[useTrackClick] Error:', error)
         return false
       } finally {
         setIsTracking(false)
@@ -254,7 +251,6 @@ export function useAd(placement: AdPlacement, context: AdContext) {
 
   const handleAdClick = useCallback(async () => {
     if (!adData.ad || !impressionId) {
-      console.warn('[useAd] Cannot track click: no ad or impression ID')
       return false
     }
 
@@ -332,7 +328,6 @@ export function useAds() {
           frequencyCapped: result.frequencyCapped,
         }
       } catch (error) {
-        console.error('[useAds.fetchAd] Error:', error)
         return {
           ad: null,
           reason: 'error',

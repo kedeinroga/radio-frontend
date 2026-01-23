@@ -76,15 +76,7 @@ export class CancelSubscription {
       cancelAt: request.cancelImmediately ? now : endsAt,
     })
 
-    // 7. Log para analytics
-    console.log('[CancelSubscription] Subscription canceled:', {
-      subscriptionId: request.subscriptionId,
-      userId: request.userId,
-      reason: request.reason,
-      immediate: request.cancelImmediately,
-    })
-
-    // 8. Retornar resultado
+    // 7. Retornar resultado
     return {
       success: true,
       subscriptionId: request.subscriptionId,
@@ -129,7 +121,6 @@ export class CancelSubscription {
         })
       }
     } catch (error) {
-      console.error('[CancelSubscription] Stripe error:', error)
       throw new Error('Failed to cancel subscription in Stripe')
     }
   }

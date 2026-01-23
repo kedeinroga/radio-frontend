@@ -43,7 +43,7 @@ export class LocaleFormatter implements ILocaleFormatter {
     try {
       return format(dateObj, formatPattern, { locale: dateFnsLocale })
     } catch (error) {
-      console.error('Error formatting date:', error)
+
       return dateObj.toLocaleDateString(locale.code)
     }
   }
@@ -70,7 +70,7 @@ export class LocaleFormatter implements ILocaleFormatter {
         locale: dateFnsLocale
       })
     } catch (error) {
-      console.error('Error formatting relative time:', error)
+
       return dateObj.toLocaleString(locale.code)
     }
   }
@@ -83,7 +83,7 @@ export class LocaleFormatter implements ILocaleFormatter {
         useGrouping: options?.useGrouping !== false
       }).format(value)
     } catch (error) {
-      console.error('Error formatting number:', error)
+
       return value.toString()
     }
   }
@@ -96,7 +96,7 @@ export class LocaleFormatter implements ILocaleFormatter {
         maximumFractionDigits: options?.maximumFractionDigits ?? 2
       }).format(value)
     } catch (error) {
-      console.error('Error formatting percent:', error)
+
       return `${(value * 100).toFixed(2)}%`
     }
   }
@@ -116,7 +116,7 @@ export class LocaleFormatter implements ILocaleFormatter {
         maximumFractionDigits: options?.maximumFractionDigits ?? 2
       }).format(amount)
     } catch (error) {
-      console.error('Error formatting currency:', error)
+
       return `${currency} ${amount.toFixed(2)}`
     }
   }

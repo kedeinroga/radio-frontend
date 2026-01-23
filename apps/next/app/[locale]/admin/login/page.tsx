@@ -49,7 +49,7 @@ export default function AdminLoginPage() {
               useAuthStore.getState().setUser(null)
             }
           } catch (error) {
-            console.error('Error verifying session:', error)
+
             useAuthStore.getState().setUser(null)
           }
         }
@@ -57,7 +57,7 @@ export default function AdminLoginPage() {
         // No user or session invalid - show login form
         setIsCheckingAuth(false)
       } catch (error) {
-        console.error('Error checking auth:', error)
+
         setIsCheckingAuth(false)
       }
     }
