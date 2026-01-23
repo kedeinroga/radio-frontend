@@ -9,7 +9,7 @@ import {
 } from '@radio-app/app'
 import { StationGridItem } from '@/components/StationGridItem'
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://radioapp.com'
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://rradio.online'
 
 interface PageProps {
   params: Promise<{ countryCode: string; locale: string }>

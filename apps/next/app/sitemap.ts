@@ -1,8 +1,26 @@
 import { MetadataRoute } from 'next'
 import { SEOApiRepository, GetSitemapData } from '@radio-app/app'
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://radioapp.com'
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://rradio.online'
 const SUPPORTED_LOCALES = ['es', 'en', 'fr', 'de'] as const
+
+/**
+ * Generate minimal sitemap when API is unavailable
+ */
+function generateMinimalSitemap(): MetadataRoute.Sitemap {
+  const minimalSitemap: MetadataRoute.Sitemap = []
+  
+  SUPPORTED_LOCALES.forEach(locale => {
+    minimalSitemap.push({
+      url: `${BASE_URL}/${locale}`,
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 1.0,
+    })
+  })
+  
+  return minimalSitemap
+}
 
 /**
  * Dynamic Sitemap Generator
@@ -11,6 +29,12 @@ const SUPPORTED_LOCALES = ['es', 'en', 'fr', 'de'] as const
  * Generates URLs for all supported locales with alternates
  */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  // During build time, skip API calls if no API URL is configured
+  if (!process.env.NEXT_PUBLIC_API_URL) {
+    console.log('[Build] Skipping sitemap generation - no API URL configured')
+    return generateMinimalSitemap()
+  }
+
   const seoRepository = new SEOApiRepository()
   const getSitemapData = new GetSitemapData(seoRepository)
   
@@ -83,19 +107,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     return sitemapEntries
   } catch (error) {
-
+    console.error('[Build] Error generating sitemap:', error)
     // Return minimal sitemap on error - with all locales
-    const minimalSitemap: MetadataRoute.Sitemap = []
-    
-    SUPPORTED_LOCALES.forEach(locale => {
-      minimalSitemap.push({
-        url: `${BASE_URL}/${locale}`,
-        lastModified: new Date(),
-        changeFrequency: 'daily',
-        priority: 1.0,
-      })
-    })
-    
-    return minimalSitemap
+    return generateMinimalSitemap()
   }
 }

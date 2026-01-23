@@ -5705,7 +5705,7 @@
                 },
                 "url": {
                     "type": "string",
-                    "example": "https://radioapp.com/stations/rock-fm-100-1?lang=es"
+                    "example": "https://rradio.online/stations/rock-fm-100-1?lang=es"
                 }
             }
         },
@@ -5868,7 +5868,7 @@
                 },
                 "canonical_url": {
                     "type": "string",
-                    "example": "https://radioapp.com/stations/rock-fm-100-1"
+                    "example": "https://rradio.online/stations/rock-fm-100-1"
                 },
                 "description": {
                     "type": "string",

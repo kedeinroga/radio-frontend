@@ -6,7 +6,7 @@ import { generateLocaleParams } from '@/lib/locale'
 import fs from 'fs'
 import path from 'path'
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://radioapp.com'
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://rradio.online'
 
 /**
  * Load translations for a given locale from the file system

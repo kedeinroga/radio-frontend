@@ -6,7 +6,7 @@ import '@/lib/env' // ✅ Validate environment variables at app startup
 
 const inter = Inter({ subsets: ['latin'] })
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://radioapp.com'
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://rradio.online'
 
 // 🔥 Viewport configuration (Next.js 15+ requirement)
 export const viewport: Viewport = {

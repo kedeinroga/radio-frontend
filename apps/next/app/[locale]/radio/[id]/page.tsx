@@ -8,7 +8,7 @@ import {
 } from '@radio-app/app'
 import { StationDetails } from '@/components/StationDetails'
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://radioapp.com'
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://rradio.online'
 
 interface PageProps {
   params: Promise<{ id: string; locale: string }>
