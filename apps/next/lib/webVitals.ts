@@ -81,7 +81,7 @@ interface EnhancedMetric {
 export class WebVitalsReporter {
   private static metrics: EnhancedMetric[] = []
   private static reportQueue: EnhancedMetric[] = []
-  private static flushInterval: NodeJS.Timeout | null = null
+  private static flushInterval: ReturnType<typeof setInterval> | null = null
 
   /**
    * Initialize web vitals monitoring

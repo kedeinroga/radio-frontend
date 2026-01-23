@@ -34,8 +34,8 @@ export function useSessionValidation(options?: {
   } = options || {}
 
   const { logout, isAuthenticated } = useAuthStore()
-  const validationTimerRef = useRef<NodeJS.Timeout | undefined>(undefined)
-  const refreshTimerRef = useRef<NodeJS.Timeout | undefined>(undefined)
+  const validationTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
+  const refreshTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
 
   /**
    * Validates the current session with the backend

@@ -48,7 +48,7 @@ export function BannerAd({
   const adRef = useRef<HTMLDivElement>(null)
   const [isVisible, setIsVisible] = useState(false)
   const [hasTrackedImpression, setHasTrackedImpression] = useState(false)
-  const visibilityTimerRef = useRef<NodeJS.Timeout | null>(null)
+  const visibilityTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const visibilityStartTimeRef = useRef<number | null>(null)
   const totalVisibilityDurationRef = useRef(0)
 

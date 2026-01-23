@@ -1,14 +1,22 @@
+const path = require('path');
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   transpilePackages: ['@radio-app/app'],
   reactStrictMode: true,
   
+  // Webpack configuration to resolve path aliases
+  webpack: (config) => {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@': path.resolve(__dirname),
+    };
+    return config;
+  },
+  
   // Performance optimizations for Vercel free tier
   compress: true, // Enable gzip compression
   poweredByHeader: false, // Remove X-Powered-By header
-  
-  // Optimize production builds
-  swcMinify: true,
   
   // Production optimizations
   productionBrowserSourceMaps: false, // Disable source maps in production to save space

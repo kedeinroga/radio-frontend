@@ -33,7 +33,7 @@ export class ImpressionCache {
   private sessionImpressionCounts: Map<string, number> = new Map()
   
   // Cleanup interval (5 minutes)
-  private cleanupInterval: NodeJS.Timeout | null = null
+  private cleanupInterval: ReturnType<typeof setInterval> | null = null
   
   // TTL for cached data (1 hour)
   private readonly CACHE_TTL_MS = 60 * 60 * 1000

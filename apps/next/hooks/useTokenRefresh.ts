@@ -49,7 +49,7 @@ export function useTokenRefresh(options: UseTokenRefreshOptions = {}) {
   const router = useRouter()
   const pathname = usePathname()
   const { setUser } = useAuthStore()
-  const intervalRef = useRef<NodeJS.Timeout | null>(null)
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const isRefreshingRef = useRef(false)
 
   /**
