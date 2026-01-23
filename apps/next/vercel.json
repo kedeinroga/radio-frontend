@@ -1,9 +1,8 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "npm run build --workspace=@radio-app/next",
-  "outputDirectory": "apps/next/.next",
-  "installCommand": "npm ci",
-  "framework": null,
+  "buildCommand": "npm run build",
+  "installCommand": "npm install",
+  "outputDirectory": ".next",
   
   "headers": [
     {
