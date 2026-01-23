@@ -40,7 +40,6 @@ export function generateNonce(): string {
   }
   
   // Fallback for build time (should never be used at runtime)
-  console.warn('[CSP] Using fallback nonce generation - crypto not available')
   return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
 }
 
@@ -88,6 +87,11 @@ export const TRUSTED_DOMAINS = {
     // Radio stream URLs
     'https://*.radiostream.com',
     'http://*.radiostream.com', // Some radio stations use HTTP
+  ],
+  
+  // Backend API
+  backend: [
+    'https://api.rradio.online',
   ],
   
   // Image hosts
@@ -156,6 +160,7 @@ export function buildCSPDirectives(nonce: string): Record<string, string[]> {
       ...TRUSTED_DOMAINS.analytics,
       ...TRUSTED_DOMAINS.adServers,
       ...TRUSTED_DOMAINS.audioStreaming,
+      ...TRUSTED_DOMAINS.backend,
       // Allow development server
       ...(isDevelopment ? ['ws://localhost:*', 'http://localhost:*'] : []),
     ],
@@ -327,25 +332,6 @@ export function validateCSPConfig(): {
  */
 export function logCSPConfig(): void {
   if (isDevelopment) {
-    console.log('\n🔒 CSP Configuration:')
-    console.log('━'.repeat(50))
-    
-    const validation = validateCSPConfig()
-    
-    if (validation.errors.length > 0) {
-      console.error('❌ CSP Errors:')
-      validation.errors.forEach(error => console.error(`  - ${error}`))
-    }
-    
-    if (validation.warnings.length > 0) {
-      console.warn('⚠️  CSP Warnings:')
-      validation.warnings.forEach(warning => console.warn(`  - ${warning}`))
-    }
-    
-    if (validation.valid) {
-      console.log('✅ CSP configuration is valid')
-    }
-    
-    console.log('━'.repeat(50) + '\n')
+    // CSP config logging silenced
   }
 }

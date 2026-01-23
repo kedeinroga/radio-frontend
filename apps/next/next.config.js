@@ -38,6 +38,7 @@ const nextConfig = {
   },
   env: {
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api/v1',
+    // Production: https://api.rradio.online/api/v1
   },
   
   // Security Headers
@@ -86,7 +87,7 @@ const nextConfig = {
               "style-src 'self' 'unsafe-inline'", // Required for styled-components/emotion
               "img-src 'self' data: https: http: blob:", // Allow images from any HTTPS/HTTP source
               "font-src 'self' data:",
-              "connect-src 'self' https://radio-backend-296736956418.us-central1.run.app https://radio-backend-296736956418.us-central1.run.app/api/v1 http://localhost:8080 http://localhost:8080/api/v1 ws://localhost:3000", // Allow API and WebSocket
+              "connect-src 'self' https://api.rradio.online https://api.rradio.online/api/v1 https://radio-backend-296736956418.us-central1.run.app http://localhost:8080 http://localhost:8080/api/v1 ws://localhost:3000", // Allow API and WebSocket
               "media-src 'self' https: http: blob:", // Allow audio streaming from HTTP/HTTPS
               "object-src 'none'",
               "frame-ancestors 'none'",
