@@ -32,15 +32,6 @@ export const dynamic = 'force-dynamic'
 export const dynamicParams = true
 
 /**
- * Generate static params for all supported locales
- * DISABLED: Causing build worker crash in Vercel
- */
-export function generateStaticParams() {
-  // Always return empty to force dynamic rendering
-  return []
-}
-
-/**
  * Generate metadata for each locale
  * SEO-optimized with language-specific content
  */

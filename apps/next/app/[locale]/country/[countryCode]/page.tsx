@@ -25,13 +25,6 @@ export const dynamicParams = true
 // Note: This is ignored when dynamic = 'force-dynamic'
 export const revalidate = 3600
 
-// 🔥 GENERATE STATIC PATHS FOR TOP COUNTRIES
-// DISABLED: Causing build worker crash in Vercel
-export async function generateStaticParams() {
-  // Always return empty to force dynamic rendering
-  return []
-}
-
 // Helper to get translated text based on locale
 function getLocalizedCountryText(locale: string, countryName: string) {
   const texts: Record<string, any> = {

@@ -25,11 +25,9 @@ const nextConfig = {
     // Configure output file tracing for monorepo
     // This helps Vercel correctly trace and include files from workspace packages
     outputFileTracingRoot: path.join(__dirname, '../../'),
+    // Disable ISR and static generation completely
+    isrMemoryCacheSize: 0,
   },
-  
-  // CRITICAL: Force all pages to be dynamic - no static generation
-  // This prevents "Collecting page data" phase from executing Server Components
-  generateStaticParams: false,
   
   // Disable static generation during build to prevent API calls
   // This is critical for Vercel builds where API might not be accessible
@@ -69,6 +67,10 @@ const nextConfig = {
       if (Array.isArray(config.externals)) {
         config.externals.push('react-native');
       }
+      
+      // Prevent build worker crashes by disabling chunking
+      config.optimization.runtimeChunk = false;
+      config.optimization.splitChunks = false;
     }
     
     return config;

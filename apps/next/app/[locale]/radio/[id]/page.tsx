@@ -61,6 +61,15 @@ function getLocalizedText(locale: string) {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id, locale } = await params
   
+  // SKIP metadata generation during build to prevent API calls and worker crashes
+  // Metadata will be generated at runtime instead
+  if (process.env.NEXT_PHASE === 'phase-production-build') {
+    return {
+      title: 'Radio Station',
+      description: 'Listen to your favorite radio station online',
+    }
+  }
+  
   // Don't try to fetch metadata during build if API is not available
   if (!process.env.NEXT_PUBLIC_API_URL) {
     return {
