@@ -3,13 +3,6 @@
   "buildCommand": "npm run build --workspace=@radio-app/next",
   "installCommand": "npm install",
   "outputDirectory": "apps/next/.next",
-  
-  "functions": {
-    "apps/next/app/api/**/*.ts": {
-      "maxDuration": 10,
-      "memory": 1024
-    }
-  },
 
   "headers": [
     {
