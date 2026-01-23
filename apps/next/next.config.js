@@ -14,12 +14,27 @@ const nextConfig = {
     ignoreDuringBuilds: true, // Skip ESLint during builds
   },
   
+  // Experimental: Use lighter build mode for Vercel
+  experimental: {
+    workerThreads: false,
+    cpus: 1,
+  },
+  
   // Webpack configuration to resolve path aliases
-  webpack: (config) => {
+  webpack: (config, { isServer }) => {
     config.resolve.alias = {
       ...config.resolve.alias,
       '@': path.resolve(__dirname),
     };
+    
+    // Optimize build for serverless
+    if (isServer) {
+      config.optimization = {
+        ...config.optimization,
+        moduleIds: 'named',
+      };
+    }
+    
     return config;
   },
   
