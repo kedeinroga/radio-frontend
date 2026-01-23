@@ -18,9 +18,11 @@ const nextConfig = {
   experimental: {
     workerThreads: false,
     cpus: 1,
-    // Disable all data collection during build
-    isrMemoryCacheSize: 0,
   },
+  
+  // CRITICAL: Force all pages to be dynamic - no static generation
+  // This prevents "Collecting page data" phase from executing Server Components
+  generateStaticParams: false,
   
   // Disable static generation during build to prevent API calls
   // This is critical for Vercel builds where API might not be accessible

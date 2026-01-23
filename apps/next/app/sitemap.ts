@@ -33,6 +33,12 @@ function generateMinimalSitemap(): MetadataRoute.Sitemap {
  * Generates URLs for all supported locales with alternates
  */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  // CRITICAL: Skip during build to prevent worker crash
+  if (process.env.SKIP_BUILD_STATIC_GENERATION === '1') {
+    console.log('[Build] Skipping sitemap generation during build')
+    return generateMinimalSitemap()
+  }
+  
   // During build time, skip API calls if no API URL is configured
   if (!process.env.NEXT_PUBLIC_API_URL) {
     console.log('[Build] Skipping sitemap generation - no API URL configured')
