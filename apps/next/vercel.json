@@ -1,8 +1,8 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "nextjs",
-  "buildCommand": "npm run build",
-  "installCommand": "npm install",
+  "buildCommand": "cd ../.. && npm run build --workspace=@radio-app/next",
+  "installCommand": "cd ../.. && npm install",
   
   "functions": {
     "app/api/**/*.ts": {
