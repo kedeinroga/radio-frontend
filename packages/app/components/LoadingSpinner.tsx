@@ -1,32 +1,42 @@
 import React from 'react'
-import { View, ActivityIndicator, Text } from 'react-native'
+import { View, ActivityIndicator, Text, StyleSheet } from 'react-native'
 
 export interface LoadingSpinnerProps {
   size?: 'small' | 'large'
   message?: string
 }
 
-/**
- * Loading Spinner Component
- * Accessible loading indicator with optional message
- */
-export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
-  size = 'large',
-  message = 'Loading...',
-}) => {
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 32,
+  },
+  message: {
+    fontSize: 16,
+    color: '#525252',
+    marginTop: 16,
+    textAlign: 'center',
+  },
+})
+
+const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ size = 'large', message }) => {
   return (
     <View
-      className="flex-1 items-center justify-center p-8"
+      style={styles.container}
       accessible={true}
       accessibilityLabel={message}
       accessibilityRole="progressbar"
     >
       <ActivityIndicator size={size} color="#0ea5e9" />
       {message && (
-        <Text className="text-base text-neutral-600 dark:text-neutral-400 mt-4 text-center">
+        <Text style={styles.message}>
           {message}
         </Text>
       )}
     </View>
   )
 }
+
+export default LoadingSpinner
