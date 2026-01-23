@@ -4,7 +4,8 @@ import {
   StationApiRepository,
   GetRelatedStations,
   RadioStationSchema,
-  RelatedStations
+  RelatedStations,
+  Station
 } from '@radio-app/app'
 import { StationDetails } from '@/components/StationDetails'
 
@@ -59,8 +60,26 @@ function getLocalizedText(locale: string) {
 // 🔥 DYNAMIC METADATA FOR SEO
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id, locale } = await params
+  
+  // Don't try to fetch metadata during build if API is not available
+  if (!process.env.NEXT_PUBLIC_API_URL) {
+    return {
+      title: 'Radio Station',
+      description: 'Listen to your favorite radio station online',
+    }
+  }
+  
   const repository = new StationApiRepository()
-  const station = await repository.findById(id)
+  let station
+  try {
+    station = await repository.findById(id)
+  } catch (error) {
+    console.error('[generateMetadata] Error fetching station:', error)
+    return {
+      title: 'Radio Station',
+      description: 'Listen to your favorite radio station online',
+    }
+  }
 
   const localizedText = getLocalizedText(locale)
 
@@ -113,8 +132,20 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 // 🔥 SERVER COMPONENT - SSR RENDERING
 export default async function RadioStationPage({ params }: PageProps) {
   const { id } = await params
+  
+  // Don't try to render during build if API is not available
+  if (!process.env.NEXT_PUBLIC_API_URL) {
+    notFound()
+  }
+  
   const repository = new StationApiRepository()
-  const station = await repository.findById(id)
+  let station
+  try {
+    station = await repository.findById(id)
+  } catch (error) {
+    console.error('[RadioStationPage] Error fetching station:', error)
+    notFound()
+  }
 
   if (!station) {
     notFound()
@@ -122,7 +153,13 @@ export default async function RadioStationPage({ params }: PageProps) {
 
   // Fetch related stations for internal linking
   const relatedStationsUseCase = new GetRelatedStations(repository)
-  const relatedStations = await relatedStationsUseCase.execute(station, 6)
+  let relatedStations: Station[] = []
+  try {
+    relatedStations = await relatedStationsUseCase.execute(station, 6)
+  } catch (error) {
+    console.error('[RadioStationPage] Error fetching related stations:', error)
+    // Continue without related stations
+  }
 
   // Convert station entity to plain object for client component
   const stationData = station.toJSON()

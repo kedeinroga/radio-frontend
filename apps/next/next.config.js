@@ -20,6 +20,13 @@ const nextConfig = {
     cpus: 1,
   },
   
+  // Disable static generation during build to prevent API calls
+  // This is critical for Vercel builds where API might not be accessible
+  generateBuildId: async () => {
+    // Use timestamp to ensure fresh builds
+    return `build-${Date.now()}`
+  },
+  
   // Webpack configuration to resolve path aliases
   webpack: (config, { isServer }) => {
     config.resolve.alias = {
