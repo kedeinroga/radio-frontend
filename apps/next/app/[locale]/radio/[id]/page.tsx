@@ -14,6 +14,9 @@ interface PageProps {
   params: Promise<{ id: string; locale: string }>
 }
 
+// Force dynamic rendering - don't try to pre-render during build
+export const dynamic = 'force-dynamic'
+
 // Helper to get translated text based on locale
 function getLocalizedText(locale: string) {
   const texts: Record<string, any> = {
