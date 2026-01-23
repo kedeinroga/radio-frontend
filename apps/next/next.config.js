@@ -18,6 +18,8 @@ const nextConfig = {
   experimental: {
     workerThreads: false,
     cpus: 1,
+    // Disable all data collection during build
+    isrMemoryCacheSize: 0,
   },
   
   // Disable static generation during build to prevent API calls
@@ -38,12 +40,26 @@ const nextConfig = {
       '@': path.resolve(__dirname),
     };
     
+    // Exclude React Native from bundle
+    if (!isServer) {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        'react-native$': 'react-native-web',
+      };
+    }
+    
     // Optimize build for serverless
     if (isServer) {
       config.optimization = {
         ...config.optimization,
         moduleIds: 'named',
       };
+      
+      // Don't bundle react-native on server
+      config.externals = config.externals || [];
+      if (Array.isArray(config.externals)) {
+        config.externals.push('react-native');
+      }
     }
     
     return config;
