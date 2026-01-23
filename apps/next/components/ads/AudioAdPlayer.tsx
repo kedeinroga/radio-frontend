@@ -260,8 +260,8 @@ export function AudioAdPlayer({
     
     // Auto play
     if (autoPlay) {
-      audio.play().catch(error => {
-
+      audio.play().catch(() => {
+        // Autoplay failed, requires user interaction
         setState(prev => ({ ...prev, status: 'error', error: 'Autoplay failed' }))
       })
     }

@@ -96,9 +96,7 @@ export async function POST(request: NextRequest) {
     // Check for common issues and provide hints
     const hints = analyzeViolation(cspReport)
     if (hints.length > 0 && process.env.NODE_ENV === 'development') {
-
-      hints.forEach(hint =>)
-
+      console.warn('CSP Violation Hints:', hints)
     }
     
     // Always return 204 No Content to browsers

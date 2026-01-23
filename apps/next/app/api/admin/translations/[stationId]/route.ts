@@ -10,8 +10,10 @@ import { rateLimit, RATE_LIMITS } from '@/lib/rateLimit'
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { stationId: string } }
+  { params }: { params: Promise<{ stationId: string }> }
 ) {
+  const { stationId } = await params
+  
   // Apply rate limiting
   const rateLimitResult = rateLimit(request, RATE_LIMITS.ADMIN)
   if (rateLimitResult) {
@@ -30,7 +32,6 @@ export async function GET(
   
   try {
     const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api/v1'
-    const { stationId } = params
     
     const response = await fetch(`${BACKEND_URL}/admin/translations/${stationId}`, {
       method: 'GET',

@@ -180,6 +180,8 @@ class SecurityLogger {
       critical: '🔴',
     }[event.severity]
 
+    // eslint-disable-next-line no-console
+    console.warn(`${emoji} Security Event [${event.severity}]: ${event.type}`, event)
   }
 
   /**
@@ -190,8 +192,8 @@ class SecurityLogger {
 
     try {
       localStorage.setItem(this.storageKey, JSON.stringify(this.events))
-    } catch (error) {
-
+    } catch {
+      // Failed to store events in localStorage (quota exceeded or unavailable)
     }
   }
 
@@ -230,10 +232,11 @@ class SecurityLogger {
       
       // For now, just log that we would send it
       if (process.env.NODE_ENV === 'development') {
-
+        // eslint-disable-next-line no-console
+        console.info('[SecurityLogger] Would send to backend:', event.type)
       }
-    } catch (error) {
-
+    } catch {
+      // Failed to send security event to backend
     }
   }
 }

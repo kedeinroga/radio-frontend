@@ -289,5 +289,163 @@
     "version": "Version {{version}}",
     "copyright": "© {{year}} Radio App. Alle Rechte vorbehalten.",
     "poweredBy": "Angetrieben von"
+  },
+  "premium": {
+    "title": "Premium",
+    "upgradeTitle": "Werbung entfernen",
+    "upgradeSubtitle": "Genießen Sie ohne Unterbrechungen mit Premium",
+    "tryFree": "Kostenlos testen",
+    "freeTrial": "7 Tage kostenlos",
+    "cancelAnytime": "Jederzeit kündbar",
+    "noCommitment": "Keine Verpflichtung",
+    "getStarted": "Loslegen",
+    "learnMore": "Mehr erfahren",
+    "features": {
+      "noAds": "Keine Werbung",
+      "superiorQuality": "Überlegene Qualität",
+      "exclusiveStations": "Exklusive Sender"
+    },
+    "plans": {
+      "free": "Kostenlos",
+      "premium": "Premium",
+      "monthly": "Monatlich",
+      "yearly": "Jährlich",
+      "perMonth": "/Monat",
+      "perYear": "/Jahr",
+      "billedAnnually": "jährlich abgerechnet",
+      "mostPopular": "Am beliebtesten",
+      "save": "Sparen",
+      "currentPlan": "Aktueller Plan",
+      "freeDescription": "Perfekt zum Starten",
+      "premiumDescription": "Das beste Radioerlebnis",
+      "freeFeatures": {
+        "thousands": "Tausende von Radiosendern",
+        "search": "Suche nach Genre und Land",
+        "favorites": "Unbegrenzte Favoriten",
+        "withAds": "Mit Werbung",
+        "standardQuality": "Standard Audioqualität",
+        "exclusiveStations": "Exklusive Sender"
+      },
+      "premiumFeatures": {
+        "everything": "Alles in Kostenlos",
+        "noAds": "Keine Werbung",
+        "superiorQuality": "Überlegene Audioqualität",
+        "exclusiveStations": "Exklusive Sender",
+        "backgroundPlay": "Hintergrundwiedergabe",
+        "prioritySupport": "Prioritäts-Support"
+      },
+      "cta": {
+        "startFree": "Kostenlos starten",
+        "tryFree": "7 Tage kostenlos testen",
+        "processing": "Verarbeitung..."
+      }
+    },
+    "benefits": {
+      "title": "Alles inklusive mit Premium",
+      "noAds": {
+        "title": "Keine Werbung",
+        "description": "Genießen Sie Ihre Lieblingsmusik ohne Werbeunterbrechungen. 100% werbefreies Erlebnis."
+      },
+      "superiorQuality": {
+        "title": "Überlegene Audioqualität",
+        "description": "Hören Sie mit der besten verfügbaren Klangqualität. High-Definition-Streaming für Audiophile."
+      },
+      "exclusiveStations": {
+        "title": "Exklusive Sender",
+        "description": "Zugang zu Premium-Inhalten und exklusiven Sendern, die in der kostenlosen Version nicht verfügbar sind."
+      },
+      "backgroundPlay": {
+        "title": "Hintergrundwiedergabe",
+        "description": "Hören Sie, während Sie andere Apps verwenden. Perfekt für unbegrenztes Multitasking."
+      },
+      "recording": {
+        "title": "Inhaltsaufzeichnung",
+        "description": "Nehmen Sie Ihre Lieblingssendungen auf, um sie jederzeit offline anzuhören."
+      },
+      "prioritySupport": {
+        "title": "Prioritäts-Support",
+        "description": "Erhalten Sie schnelle Hilfe von unserem Team. Premium-Kundenservice rund um die Uhr."
+      },
+      "unlimitedListening": {
+        "title": "Unbegrenztes Hören",
+        "description": "Hören Sie so viel Sie möchten ohne Zeit- oder Skip-Beschränkungen."
+      },
+      "multiDevice": {
+        "title": "Multi-Geräte-Synchronisation",
+        "description": "Ihre Favoriten und Einstellungen synchronisiert auf allen Ihren Geräten."
+      }
+    },
+    "faq": {
+      "title": "Häufig gestellte Fragen",
+      "trial": {
+        "question": "Wie funktioniert die kostenlose Testversion?",
+        "answer": "Sie erhalten 7 Tage vollen Premium-Zugang ohne Kosten. Sie können jederzeit während des Testzeitraums kündigen und Ihnen wird nichts berechnet. Wenn Sie fortfahren möchten, beginnt die Zahlung nach den 7 Tagen."
+      },
+      "cancel": {
+        "question": "Kann ich mein Abonnement kündigen?",
+        "answer": "Ja, Sie können jederzeit über Ihr Konto kündigen. Es gibt keine langfristigen Verpflichtungen. Wenn Sie kündigen, haben Sie weiterhin Premium-Zugang bis zum Ende des bereits bezahlten Zeitraums."
+      },
+      "payment": {
+        "question": "Welche Zahlungsmethoden akzeptieren Sie?",
+        "answer": "Wir akzeptieren alle gängigen Kredit- und Debitkarten (Visa, Mastercard, American Express) sowie PayPal und andere lokale Zahlungsmethoden über Stripe."
+      },
+      "changePlan": {
+        "question": "Kann ich vom monatlichen zum jährlichen Plan wechseln?",
+        "answer": "Ja, Sie können Ihren Plan jederzeit in den Kontoeinstellungen ändern. Wenn Sie zu jährlich wechseln, erhalten Sie eine anteilige Gutschrift von Ihrem monatlichen Plan."
+      },
+      "taxes": {
+        "question": "Enthält der Preis Steuern?",
+        "answer": "Die angezeigten Preise können je nach Standort aufgrund lokaler Steuern variieren. Der endgültige Preis mit Steuern wird vor der Zahlungsbestätigung angezeigt."
+      },
+      "multiDevice": {
+        "question": "Kann ich Premium auf mehreren Geräten verwenden?",
+        "answer": "Ja, Sie können Ihr Premium-Konto auf allen Ihren Geräten (Handy, Tablet, Desktop) verwenden. Sie können nur eine aktive Sitzung gleichzeitig haben."
+      },
+      "data": {
+        "question": "Was passiert mit meinen Daten, wenn ich kündige?",
+        "answer": "Alle Ihre Favoriten, Einstellungen und Kontodaten bleiben gespeichert. Wenn Sie sich später erneut anmelden, ist alles so, wie Sie es hinterlassen haben."
+      },
+      "student": {
+        "question": "Bieten Sie Studentenrabatte an?",
+        "answer": "Wir arbeiten derzeit an einem Sonderplan für Studenten. Abonnieren Sie unseren Newsletter, um als Erster zu erfahren, wenn er verfügbar ist."
+      }
+    },
+    "success": {
+      "title": "Willkommen bei Premium!",
+      "subtitle": "Ihr Abonnement ist aktiv und einsatzbereit",
+      "nowYouCan": "Jetzt können Sie genießen:",
+      "startListening": "Zu hören beginnen",
+      "viewSubscription": "Mein Abonnement anzeigen",
+      "confirmationNote": "Sie erhalten eine Bestätigungs-E-Mail mit Ihren Abonnementdetails. Sie können Ihr Abonnement jederzeit über Ihr Konto verwalten."
+    },
+    "subscription": {
+      "title": "Mein Abonnement",
+      "status": {
+        "active": "Aktiv",
+        "trialing": "Testzeitraum",
+        "canceled": "Gekündigt",
+        "pastDue": "Zahlung ausstehend"
+      },
+      "nextRenewal": "Nächste Verlängerung",
+      "trialEnd": "Testende",
+      "accessUntil": "Zugang bis",
+      "canceledWarning": "Ihr Abonnement wurde gekündigt",
+      "canceledMessage": "Sie haben weiterhin Premium-Zugang bis {{date}}. Danach wird Ihr Konto zum kostenlosen Plan zurückkehren.",
+      "reactivate": "Abonnement reaktivieren",
+      "paymentMethod": "Zahlungsmethode",
+      "updatePaymentMethod": "Ihre Kredit- oder Debitkarte aktualisieren",
+      "update": "Aktualisieren",
+      "cancelSubscription": "Abonnement kündigen",
+      "canceling": "Kündigung läuft...",
+      "cancelConfirm": "Sind Sie sicher, dass Sie Ihr Abonnement kündigen möchten? Sie haben weiterhin Premium-Zugang bis zum Ende des bezahlten Zeitraums.",
+      "cancelSuccess": "Ihr Abonnement wurde gekündigt. Sie haben weiterhin Premium-Zugang bis zum Ende des Zeitraums.",
+      "reactivateSuccess": "Ihr Abonnement wurde reaktiviert.",
+      "noSubscription": "Sie haben kein aktives Abonnement",
+      "noSubscriptionMessage": "Abonnieren Sie Premium, um ohne Werbung und mit exklusiven Funktionen zu genießen.",
+      "viewPlans": "Pläne anzeigen"
+    },
+    "banner": {
+      "dismiss": "Banner schließen"
+    }
   }
 }

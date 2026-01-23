@@ -43,8 +43,7 @@ export function Example1_RenderProp() {
     }
   }
 
-  const handleError = (error: string) => {
-
+  const handleError = (_error: string) => {
     // Aquí podrías mostrar un toast o notificación al usuario
   }
 
@@ -77,11 +76,11 @@ export function Example2_Hook() {
   const { handleClick, isTracking } = useAdClickHandler({
     ad: mockAd,
     impressionId: 'imp-790',
-    onClickTracked: (result) => {
-
+    onClickTracked: () => {
+      // Click tracked successfully
     },
-    onError: (error) => {
-
+    onError: () => {
+      // Error tracking click
     },
   })
 
@@ -159,8 +158,8 @@ export function Example4_NativeAdCard() {
     <AdClickHandler
       ad={mockAd}
       impressionId="imp-792"
-      onClickTracked={(result) => {
-
+      onClickTracked={() => {
+        // Click tracked successfully
       }}
     >
       {(handleClick, isTracking) => (

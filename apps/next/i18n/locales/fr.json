@@ -289,5 +289,163 @@
     "version": "Version {{version}}",
     "copyright": "© {{year}} Radio App. Tous droits réservés.",
     "poweredBy": "Propulsé par"
+  },
+  "premium": {
+    "title": "Premium",
+    "upgradeTitle": "Supprimer les publicités",
+    "upgradeSubtitle": "Profitez sans interruptions avec Premium",
+    "tryFree": "Essayer gratuitement",
+    "freeTrial": "7 jours gratuits",
+    "cancelAnytime": "Annuler à tout moment",
+    "noCommitment": "Sans engagement",
+    "getStarted": "Commencer",
+    "learnMore": "En savoir plus",
+    "features": {
+      "noAds": "Sans publicités",
+      "superiorQuality": "Qualité supérieure",
+      "exclusiveStations": "Stations exclusives"
+    },
+    "plans": {
+      "free": "Gratuit",
+      "premium": "Premium",
+      "monthly": "Mensuel",
+      "yearly": "Annuel",
+      "perMonth": "/mois",
+      "perYear": "/an",
+      "billedAnnually": "facturé annuellement",
+      "mostPopular": "Le plus populaire",
+      "save": "Économiser",
+      "currentPlan": "Plan actuel",
+      "freeDescription": "Parfait pour commencer",
+      "premiumDescription": "La meilleure expérience radio",
+      "freeFeatures": {
+        "thousands": "Des milliers de stations de radio",
+        "search": "Recherche par genre et pays",
+        "favorites": "Favoris illimités",
+        "withAds": "Avec publicités",
+        "standardQuality": "Qualité audio standard",
+        "exclusiveStations": "Stations exclusives"
+      },
+      "premiumFeatures": {
+        "everything": "Tout dans Gratuit",
+        "noAds": "Sans publicités",
+        "superiorQuality": "Qualité audio supérieure",
+        "exclusiveStations": "Stations exclusives",
+        "backgroundPlay": "Lecture en arrière-plan",
+        "prioritySupport": "Support prioritaire"
+      },
+      "cta": {
+        "startFree": "Commencer gratuitement",
+        "tryFree": "Essayer 7 jours gratuits",
+        "processing": "Traitement..."
+      }
+    },
+    "benefits": {
+      "title": "Tout inclus avec Premium",
+      "noAds": {
+        "title": "Sans publicités",
+        "description": "Profitez de votre musique préférée sans interruptions publicitaires. Expérience 100% sans pub."
+      },
+      "superiorQuality": {
+        "title": "Qualité audio supérieure",
+        "description": "Écoutez avec la meilleure qualité sonore disponible. Streaming haute définition pour les audiophiles."
+      },
+      "exclusiveStations": {
+        "title": "Stations exclusives",
+        "description": "Accédez à du contenu premium et des stations exclusives non disponibles dans la version gratuite."
+      },
+      "backgroundPlay": {
+        "title": "Lecture en arrière-plan",
+        "description": "Écoutez tout en utilisant d'autres applications. Parfait pour le multitâche illimité."
+      },
+      "recording": {
+        "title": "Enregistrement de contenu",
+        "description": "Enregistrez vos émissions préférées pour les écouter quand vous voulez, hors ligne."
+      },
+      "prioritySupport": {
+        "title": "Support prioritaire",
+        "description": "Obtenez une aide rapide de notre équipe. Service client Premium 24h/24 et 7j/7."
+      },
+      "unlimitedListening": {
+        "title": "Écoute illimitée",
+        "description": "Écoutez autant que vous voulez sans restrictions de temps ou de saut."
+      },
+      "multiDevice": {
+        "title": "Synchronisation multi-appareils",
+        "description": "Vos favoris et paramètres synchronisés sur tous vos appareils."
+      }
+    },
+    "faq": {
+      "title": "Questions fréquemment posées",
+      "trial": {
+        "question": "Comment fonctionne l'essai gratuit ?",
+        "answer": "Vous bénéficiez de 7 jours d'accès complet à Premium sans frais. Vous pouvez annuler à tout moment pendant la période d'essai et vous ne serez pas facturé. Si vous décidez de continuer, le paiement commencera après les 7 jours."
+      },
+      "cancel": {
+        "question": "Puis-je annuler mon abonnement ?",
+        "answer": "Oui, vous pouvez annuler à tout moment depuis votre compte. Il n'y a pas d'engagement à long terme. Si vous annulez, vous continuerez à avoir accès Premium jusqu'à la fin de la période que vous avez déjà payée."
+      },
+      "payment": {
+        "question": "Quels moyens de paiement acceptez-vous ?",
+        "answer": "Nous acceptons toutes les principales cartes de crédit et de débit (Visa, Mastercard, American Express), ainsi que PayPal et d'autres méthodes de paiement locales via Stripe."
+      },
+      "changePlan": {
+        "question": "Puis-je passer du plan mensuel à annuel ?",
+        "answer": "Oui, vous pouvez changer votre plan à tout moment depuis les paramètres de votre compte. Si vous passez à l'annuel, vous recevrez un crédit au prorata de votre plan mensuel."
+      },
+      "taxes": {
+        "question": "Le prix inclut-il les taxes ?",
+        "answer": "Les prix affichés peuvent varier en fonction de votre localisation en raison des taxes locales. Le prix final avec les taxes sera affiché avant de confirmer le paiement."
+      },
+      "multiDevice": {
+        "question": "Puis-je utiliser Premium sur plusieurs appareils ?",
+        "answer": "Oui, vous pouvez utiliser votre compte Premium sur tous vos appareils (mobile, tablette, ordinateur). Vous ne pouvez avoir qu'une seule session active de lecture de contenu à la fois."
+      },
+      "data": {
+        "question": "Qu'advient-il de mes données si j'annule ?",
+        "answer": "Tous vos favoris, paramètres et données de compte restent sauvegardés. Si vous vous réabonnez plus tard, tout sera comme vous l'avez laissé."
+      },
+      "student": {
+        "question": "Proposez-vous des réductions étudiantes ?",
+        "answer": "Nous travaillons actuellement sur un plan spécial pour les étudiants. Abonnez-vous à notre newsletter pour être le premier informé quand il sera disponible."
+      }
+    },
+    "success": {
+      "title": "Bienvenue dans Premium !",
+      "subtitle": "Votre abonnement est actif et prêt à utiliser",
+      "nowYouCan": "Vous pouvez maintenant profiter de :",
+      "startListening": "Commencer à écouter",
+      "viewSubscription": "Voir mon abonnement",
+      "confirmationNote": "Vous recevrez un email de confirmation avec les détails de votre abonnement. Vous pouvez gérer votre abonnement depuis votre compte à tout moment."
+    },
+    "subscription": {
+      "title": "Mon abonnement",
+      "status": {
+        "active": "Actif",
+        "trialing": "Période d'essai",
+        "canceled": "Annulé",
+        "pastDue": "Paiement en attente"
+      },
+      "nextRenewal": "Prochain renouvellement",
+      "trialEnd": "Fin de l'essai",
+      "accessUntil": "Accès jusqu'au",
+      "canceledWarning": "Votre abonnement a été annulé",
+      "canceledMessage": "Vous continuerez à avoir accès Premium jusqu'au {{date}}. Après cela, votre compte reviendra au plan gratuit.",
+      "reactivate": "Réactiver l'abonnement",
+      "paymentMethod": "Méthode de paiement",
+      "updatePaymentMethod": "Mettre à jour votre carte de crédit ou de débit",
+      "update": "Mettre à jour",
+      "cancelSubscription": "Annuler l'abonnement",
+      "canceling": "Annulation en cours...",
+      "cancelConfirm": "Êtes-vous sûr de vouloir annuler votre abonnement ? Vous continuerez à avoir accès Premium jusqu'à la fin de la période payée.",
+      "cancelSuccess": "Votre abonnement a été annulé. Vous continuerez à avoir accès Premium jusqu'à la fin de la période.",
+      "reactivateSuccess": "Votre abonnement a été réactivé.",
+      "noSubscription": "Vous n'avez pas d'abonnement actif",
+      "noSubscriptionMessage": "Abonnez-vous à Premium pour profiter sans publicités et avec des fonctionnalités exclusives.",
+      "viewPlans": "Voir les plans"
+    },
+    "banner": {
+      "dismiss": "Fermer la bannière"
+    }
   }
 }
