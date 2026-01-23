@@ -2,7 +2,11 @@ const path = require('path');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  transpilePackages: ['@radio-app/app'],
+  // Transpile packages from monorepo
+  transpilePackages: [
+    '@radio-app/app',
+    // Add any other workspace packages that need transpiling
+  ],
   reactStrictMode: true,
   
   // Skip type checking and linting during build in Vercel
@@ -18,6 +22,9 @@ const nextConfig = {
   experimental: {
     workerThreads: false,
     cpus: 1,
+    // Configure output file tracing for monorepo
+    // This helps Vercel correctly trace and include files from workspace packages
+    outputFileTracingRoot: path.join(__dirname, '../../'),
   },
   
   // CRITICAL: Force all pages to be dynamic - no static generation
