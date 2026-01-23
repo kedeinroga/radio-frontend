@@ -1,6 +1,10 @@
 import { MetadataRoute } from 'next'
 import { SEOApiRepository, GetSitemapData } from '@radio-app/app'
 
+// Force dynamic generation - don't generate during build
+export const dynamic = 'force-dynamic'
+export const revalidate = 3600 // Revalidate every hour
+
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://rradio.online'
 const SUPPORTED_LOCALES = ['es', 'en', 'fr', 'de'] as const
 

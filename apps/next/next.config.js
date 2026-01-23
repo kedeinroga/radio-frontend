@@ -27,6 +27,10 @@ const nextConfig = {
     return `build-${Date.now()}`
   },
   
+  // Skip all static optimization during build
+  skipTrailingSlashRedirect: true,
+  skipMiddlewareUrlNormalize: true,
+  
   // Webpack configuration to resolve path aliases
   webpack: (config, { isServer }) => {
     config.resolve.alias = {

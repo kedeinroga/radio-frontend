@@ -1,5 +1,8 @@
 import { MetadataRoute } from 'next'
 
+// Force dynamic generation - don't generate during build
+export const dynamic = 'force-dynamic'
+
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://rradio.online'
 
 /**

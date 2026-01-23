@@ -122,6 +122,19 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 // 🔥 SERVER COMPONENT WITH ISR
 export default async function CountryPage({ params }: PageProps) {
   const { countryCode } = await params
+  
+  // Don't try to render during build if API is not available
+  if (!process.env.NEXT_PUBLIC_API_URL) {
+    return (
+      <main className="min-h-screen bg-gray-50 dark:bg-gray-950 p-8">
+        <div className="container mx-auto max-w-6xl">
+          <h1 className="text-2xl font-bold mb-4">API Not Configured</h1>
+          <p>Please configure NEXT_PUBLIC_API_URL environment variable.</p>
+        </div>
+      </main>
+    )
+  }
+  
   const repository = new StationApiRepository()
   const countryName = decodeURIComponent(countryCode).toUpperCase()
   

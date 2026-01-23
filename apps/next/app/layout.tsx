@@ -8,6 +8,10 @@ const inter = Inter({ subsets: ['latin'] })
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://rradio.online'
 
+// Force all routes to be dynamic - prevents build-time API calls
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 // 🔥 Viewport configuration (Next.js 15+ requirement)
 export const viewport: Viewport = {
   width: 'device-width',

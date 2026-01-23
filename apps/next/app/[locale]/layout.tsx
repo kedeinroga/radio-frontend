@@ -27,11 +27,19 @@ async function loadServerTranslations(locale: string) {
   }
 }
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic'
+export const dynamicParams = true
+
 /**
  * Generate static params for all supported locales
- * Enables static generation for each locale variant
+ * Disabled during build to prevent "Collecting page data" hang
  */
 export function generateStaticParams() {
+  // Return empty array during build to skip static generation
+  if (process.env.VERCEL_ENV === 'production' || process.env.NODE_ENV === 'production') {
+    return []
+  }
   return generateLocaleParams()
 }
 
