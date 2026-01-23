@@ -16,10 +16,14 @@ interface PageProps {
   params: Promise<{ tag: string; locale: string }>
 }
 
+// Force dynamic rendering - don't try to pre-render during build
+export const dynamic = 'force-dynamic'
+
 // Allow dynamic params to be generated on-demand
 export const dynamicParams = true
 
 // 🔥 ISR - Regenerate every hour
+// Note: This is ignored when dynamic = 'force-dynamic'
 export const revalidate = 3600
 
 // 🔥 GENERATE STATIC PATHS FOR TOP GENRES
