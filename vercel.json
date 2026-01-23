@@ -1,7 +1,7 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "cd ../.. && npx turbo run build --filter=@radio-app/next",
-  "installCommand": "cd ../.. && npm install",
+  "installCommand": "cd ../.. && npm ci",
+  "buildCommand": "cd ../.. && npm run build --workspace=@radio-app/next",
   "outputDirectory": ".next",
   
   "headers": [
