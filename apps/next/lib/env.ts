@@ -85,6 +85,26 @@ export type Env = z.infer<typeof envSchema>
  * @throws {Error} Si alguna variable de entorno es inválida
  */
 export function validateEnv(): Env {
+  // CRITICAL: Skip validation during build phase
+  // Build phase doesn't need all runtime env vars (Stripe keys, etc)
+  const isBuild = process.env.NEXT_PHASE === 'phase-production-build'
+  
+  if (isBuild) {
+    // Return minimal env for build phase
+    return {
+      NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080',
+      STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder',
+      STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET || 'whsec_placeholder',
+      NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || 'pk_test_placeholder',
+      STRIPE_PRICE_ID_MONTHLY: process.env.STRIPE_PRICE_ID_MONTHLY || 'price_placeholder',
+      STRIPE_PRICE_ID_YEARLY: process.env.STRIPE_PRICE_ID_YEARLY || 'price_placeholder',
+      NODE_ENV: (process.env.NODE_ENV as any) || 'production',
+      NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL || 'https://rradio.online',
+      NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
+      NEXT_PUBLIC_GA_MEASUREMENT_ID: process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID,
+    } as Env
+  }
+  
   try {
     const parsed = envSchema.parse(process.env)
     
