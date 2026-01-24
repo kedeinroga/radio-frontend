@@ -1,0 +1,11 @@
+# Vercel ignore file
+# Exclude files that don't need to be uploaded to Vercel
+
+node_modules
+.next
+.turbo
+coverage
+.cache
+.env*.local
+*.log
+.DS_Store

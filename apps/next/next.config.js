@@ -29,6 +29,8 @@ const nextConfig = {
   experimental: {
     workerThreads: false,
     cpus: 1,
+    // CRITICAL: Disable PPR to prevent prerendering
+    ppr: false,
   },
   
   // Disable static generation during build to prevent API calls
