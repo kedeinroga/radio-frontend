@@ -8,7 +8,6 @@ import {
   Station
 } from '@radio-app/app'
 import { StationDetails } from '@/components/StationDetails'
-import { ConfigurationError } from '@/components/ConfigurationError'
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://rradio.online'
 
@@ -63,18 +62,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { id, locale } = await params
   const texts = getLocalizedText(locale)
   
-  // Check if API URL is configured
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL
-  if (!apiUrl) {
-    console.error('[generateMetadata] NEXT_PUBLIC_API_URL is not configured')
-    return {
-      title: 'Configuration Error',
-      description: 'API URL is not configured',
-    }
-  }
+  // Log environment variables for debugging
+  console.log('[generateMetadata] Environment variables:', {
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+    NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
+    NODE_ENV: process.env.NODE_ENV,
+    VERCEL_ENV: process.env.VERCEL_ENV,
+  })
   
   try {
-    console.log(`[generateMetadata] Fetching station ${id} from ${apiUrl}`)
     const repository = new StationApiRepository()
     const station = await repository.findById(id)
     
@@ -135,42 +131,28 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function RadioStationPage({ params }: PageProps) {
   const { id } = await params
   
-  // Check if API URL is configured
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL
-  if (!apiUrl) {
-    console.error('[RadioStationPage] CRITICAL: NEXT_PUBLIC_API_URL is not configured')
-    return (
-      <ConfigurationError
-        message="The API URL is not configured."
-        details="NEXT_PUBLIC_API_URL environment variable is missing"
-      />
-    )
-  }
+  // Log environment variables for debugging
+  console.log('[RadioStationPage] Environment variables:', {
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+    NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
+    NODE_ENV: process.env.NODE_ENV,
+    VERCEL_ENV: process.env.VERCEL_ENV,
+  })
   
-  console.log(`[RadioStationPage] Fetching station ${id} from ${apiUrl}`)
+  console.log(`[RadioStationPage] Fetching station: ${id}`)
   
   const repository = new StationApiRepository()
   let station
   try {
     station = await repository.findById(id)
+    console.log(`[RadioStationPage] Station found:`, station?.name)
   } catch (error) {
     console.error('[RadioStationPage] Error fetching station:', error)
-    console.error('[RadioStationPage] API URL:', apiUrl)
-    
-    // If it's a network error, show configuration error instead of 404
-    if (error instanceof Error && error.message.includes('Failed to fetch')) {
-      return (
-        <ConfigurationError
-          message="Unable to connect to the backend API."
-          details={`API URL: ${apiUrl}\nError: ${error.message}`}
-        />
-      )
-    }
-    
     notFound()
   }
 
   if (!station) {
+    console.log('[RadioStationPage] Station not found (null returned)')
     notFound()
   }
 
