@@ -8,6 +8,7 @@ import {
   Station
 } from '@radio-app/app'
 import { StationDetails } from '@/components/StationDetails'
+import { ConfigurationError } from '@/components/ConfigurationError'
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://rradio.online'
 
@@ -62,7 +63,18 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { id, locale } = await params
   const texts = getLocalizedText(locale)
   
+  // Check if API URL is configured
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL
+  if (!apiUrl) {
+    console.error('[generateMetadata] NEXT_PUBLIC_API_URL is not configured')
+    return {
+      title: 'Configuration Error',
+      description: 'API URL is not configured',
+    }
+  }
+  
   try {
+    console.log(`[generateMetadata] Fetching station ${id} from ${apiUrl}`)
     const repository = new StationApiRepository()
     const station = await repository.findById(id)
     
@@ -123,10 +135,19 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function RadioStationPage({ params }: PageProps) {
   const { id } = await params
   
-  // Don't try to render if API is not available
-  if (!process.env.NEXT_PUBLIC_API_URL) {
-    notFound()
+  // Check if API URL is configured
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL
+  if (!apiUrl) {
+    console.error('[RadioStationPage] CRITICAL: NEXT_PUBLIC_API_URL is not configured')
+    return (
+      <ConfigurationError
+        message="The API URL is not configured."
+        details="NEXT_PUBLIC_API_URL environment variable is missing"
+      />
+    )
   }
+  
+  console.log(`[RadioStationPage] Fetching station ${id} from ${apiUrl}`)
   
   const repository = new StationApiRepository()
   let station
@@ -134,6 +155,18 @@ export default async function RadioStationPage({ params }: PageProps) {
     station = await repository.findById(id)
   } catch (error) {
     console.error('[RadioStationPage] Error fetching station:', error)
+    console.error('[RadioStationPage] API URL:', apiUrl)
+    
+    // If it's a network error, show configuration error instead of 404
+    if (error instanceof Error && error.message.includes('Failed to fetch')) {
+      return (
+        <ConfigurationError
+          message="Unable to connect to the backend API."
+          details={`API URL: ${apiUrl}\nError: ${error.message}`}
+        />
+      )
+    }
+    
     notFound()
   }
 
