@@ -24,17 +24,15 @@ export const dynamicParams = true
 /**
  * Generate metadata for each locale
  * SEO-optimized with language-specific content
+ * Made synchronous to prevent build crashes
  */
-export async function generateMetadata({
+export function generateMetadata({
   params,
 }: {
-  params: Promise<{ locale: string }>
-}): Promise<Metadata> {
-  // Await params as required by Next.js 15
-  const { locale: localeCode } = await params
-  
+  params: { locale: string }
+}): Metadata {
   const supportedLocales = ['es', 'en', 'fr', 'de']
-  const locale = supportedLocales.includes(localeCode) ? localeCode : 'es'
+  const locale = supportedLocales.includes(params.locale) ? params.locale : 'es'
 
   // Language-specific metadata
   const metadataByLocale: Record<string, any> = {
@@ -192,30 +190,21 @@ export async function generateMetadata({
  * Locale Layout Component
  * 
  * Wraps the application with I18nProvider for internationalization.
- * Each locale has its own static version of the layout.
+ * Made synchronous to prevent build worker crashes during "Collecting page data" phase.
  */
-export default async function LocaleLayout({
+export default function LocaleLayout({
   children,
   params,
 }: {
   children: React.ReactNode
-  params: Promise<{ locale: string }>
+  params: { locale: string }
 }) {
-  // Await params as required by Next.js 15
-  const { locale: localeCode } = await params
-  
   // Validate it's a supported locale
   const supportedLocales = ['es', 'en', 'fr', 'de']
-  const validLocaleCode = supportedLocales.includes(localeCode) ? localeCode : 'es'
+  const validLocaleCode = supportedLocales.includes(params.locale) ? params.locale : 'es'
 
-  // Load translations on the server - with error handling to prevent build crashes
-  let translations = {}
-  try {
-    translations = await loadServerTranslations(validLocaleCode)
-  } catch (error) {
-    console.warn(`[LocaleLayout] Failed to load translations for ${validLocaleCode}:`, error)
-    // Continue with empty translations - client will load them
-  }
+  // Translations will be loaded on the client side by I18nProvider
+  const translations = {}
 
   return (
     <I18nProvider initialLocaleCode={validLocaleCode} initialTranslations={translations}>

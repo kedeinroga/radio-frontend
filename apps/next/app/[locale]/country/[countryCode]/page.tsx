@@ -62,7 +62,8 @@ function getLocalizedCountryText(locale: string, countryName: string) {
 
 // 🔥 DYNAMIC METADATA
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { countryCode, locale } = await params
+  const resolvedParams = await Promise.resolve(params)
+  const { countryCode, locale } = resolvedParams
   const countryName = decodeURIComponent(countryCode).toUpperCase()
   const localizedText = getLocalizedCountryText(locale, countryName)
   
@@ -91,7 +92,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 // 🔥 SERVER COMPONENT WITH ISR
 export default async function CountryPage({ params }: PageProps) {
-  const { countryCode } = await params
+  const { countryCode } = await Promise.resolve(params)
   
   // Don't try to render during build if API is not available
   if (!process.env.NEXT_PUBLIC_API_URL) {

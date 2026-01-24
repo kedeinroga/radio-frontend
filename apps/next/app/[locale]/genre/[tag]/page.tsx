@@ -13,7 +13,7 @@ import { StationGridItem } from '@/components/StationGridItem'
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://rradio.online'
 
 interface PageProps {
-  params: Promise<{ tag: string; locale: string }>
+  params: Promise<{ tag: string; locale: string }> | { tag: string; locale: string }
 }
 
 // Force dynamic rendering - don't try to pre-render during build
@@ -63,7 +63,8 @@ function getLocalizedGenreText(locale: string, genreName: string, displayName: s
 
 // 🔥 DYNAMIC METADATA
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { tag, locale } = await params
+  const resolvedParams = await Promise.resolve(params)
+  const { tag, locale } = resolvedParams
   const genreName = decodeURIComponent(tag).replace(/-/g, ' ')
   const displayName = genreName.charAt(0).toUpperCase() + genreName.slice(1)
   const localizedText = getLocalizedGenreText(locale, genreName, displayName)
@@ -93,7 +94,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 // 🔥 SERVER COMPONENT WITH ISR
 export default async function GenrePage({ params }: PageProps) {
-  const { tag } = await params
+  const { tag } = await Promise.resolve(params)
   
   // Don't try to render during build if API is not available
   if (!process.env.NEXT_PUBLIC_API_URL) {
