@@ -15,8 +15,9 @@ interface PageProps {
   params: Promise<{ id: string; locale: string }> | { id: string; locale: string }
 }
 
-// Force dynamic rendering - don't try to pre-render during build
-export const dynamic = 'force-dynamic'
+// Removed: export const dynamic = 'force-dynamic'
+// Not needed - page is already dynamic due to [id] param and runtime data fetching
+// This allows Next.js to use ISR if configured in the future
 
 // Helper to get translated text based on locale
 function getLocalizedText(locale: string) {

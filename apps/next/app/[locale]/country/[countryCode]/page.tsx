@@ -15,8 +15,9 @@ interface PageProps {
   params: Promise<{ countryCode: string; locale: string }>
 }
 
-// Force dynamic rendering - don't try to pre-render during build
-export const dynamic = 'force-dynamic'
+// Removed: export const dynamic = 'force-dynamic'
+// Not needed - page is already dynamic due to [countryCode] param and runtime data fetching
+// ISR below will handle regeneration strategy
 
 // Allow dynamic params to be generated on-demand
 export const dynamicParams = true
