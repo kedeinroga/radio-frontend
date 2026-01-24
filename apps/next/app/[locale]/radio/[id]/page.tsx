@@ -74,13 +74,65 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function RadioStationPage({ params }: PageProps) {
   const { id } = await params
   
-  // CRITICAL: Minimal render to prevent build crashes
-  // force-dynamic ensures this only renders at request time
+  // CRITICAL: Skip rendering during build phase to prevent crashes
+  // This prevents API calls during "Collecting page data" in Vercel builds
+  // The page will render properly at runtime with force-dynamic
+  if (process.env.NODE_ENV === 'production' && !process.env.VERCEL_ENV) {
+    // During build (not runtime), return minimal placeholder
+    return (
+      <main className="min-h-screen bg-gray-50 dark:bg-gray-950 p-8">
+        <div className="container mx-auto">
+          <p>Loading station...</p>
+        </div>
+      </main>
+    )
+  }
+  
+  // Don't try to render if API is not available
+  if (!process.env.NEXT_PUBLIC_API_URL) {
+    notFound()
+  }
+  
+  const repository = new StationApiRepository()
+  let station
+  try {
+    station = await repository.findById(id)
+  } catch (error) {
+    console.error('[RadioStationPage] Error fetching station:', error)
+    notFound()
+  }
+
+  if (!station) {
+    notFound()
+  }
+
+  // Fetch related stations for internal linking
+  const relatedStationsUseCase = new GetRelatedStations(repository)
+  let relatedStations: Station[] = []
+  try {
+    relatedStations = await relatedStationsUseCase.execute(station, 6)
+  } catch (error) {
+    console.error('[RadioStationPage] Error fetching related stations:', error)
+    // Continue without related stations
+  }
+
+  // Convert station entity to plain object for client component
+  const stationData = station.toJSON()
+
   return (
-    <main className="min-h-screen bg-gray-50 dark:bg-gray-950 p-8">
-      <div className="container mx-auto">
-        <p>Loading station {id}...</p>
-      </div>
-    </main>
+    <>
+      {/* JSON-LD Schema for Google Rich Results */}
+      <RadioStationSchema station={station} baseUrl={BASE_URL} />
+
+      <main className="min-h-screen bg-gray-50 dark:bg-gray-950">
+        <div className="container mx-auto px-4 py-8 max-w-6xl">
+          {/* Station Details */}
+          <StationDetails station={stationData} />
+
+          {/* Related Stations - Internal Linking for SEO */}
+          <RelatedStations stations={relatedStations.map(s => s.toJSON())} />
+        </div>
+      </main>
+    </>
   )
 }
