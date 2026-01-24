@@ -12,11 +12,11 @@ import { FAQ } from '@/components/premium/FAQ'
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params
-  const t = (await import(`@/i18n/locales/${locale}.json`)).default
   
+  // Simple metadata without dynamic imports to prevent build crashes
   return {
-    title: `${t.premium.title} - Radio App`,
-    description: t.premium.upgradeSubtitle,
+    title: `Premium Plans - Radio App`,
+    description: 'Choose your premium subscription plan',
   }
 }
 

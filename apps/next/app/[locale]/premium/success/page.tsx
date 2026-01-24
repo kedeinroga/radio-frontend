@@ -10,11 +10,11 @@ import { CheckCircle, Sparkles } from 'lucide-react'
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params
-  const translations = (await import(`@/i18n/locales/${locale}.json`)).default
   
+  // Simple metadata without dynamic imports to prevent build crashes
   return {
-    title: `${translations.premium.success.title} - Radio App`,
-    description: translations.premium.success.subtitle,
+    title: `Premium Success - Radio App`,
+    description: 'Your premium subscription is now active',
   }
 }
 
