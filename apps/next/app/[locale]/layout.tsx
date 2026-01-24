@@ -2,40 +2,18 @@ import type { Metadata } from 'next'
 import { PlayerBar } from '@/components/PlayerBar'
 import BottomNav from '@/components/BottomNav'
 import { I18nProvider } from '@/components/I18nProvider'
-import { generateLocaleParams } from '@/lib/locale'
-import fs from 'fs'
-import path from 'path'
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://rradio.online'
 
 /**
  * Load translations for a given locale from the file system
  * This runs on the server during SSR/SSG
+ * 
+ * DISABLED DURING BUILD: Returns empty object to prevent build worker crashes
  */
 async function loadServerTranslations(locale: string) {
-  // ALWAYS SKIP during any build/prerendering to prevent worker crashes
-  // Translations will be loaded at runtime on the client side
-  if (typeof window === 'undefined') {
-    // We're on the server
-    try {
-      // During build, Next.js tries to execute this
-      // Return empty to prevent file system access during build
-      const translationsPath = path.join(process.cwd(), 'i18n', 'locales', `${locale}.json`)
-      
-      // Check if file exists first to avoid crashes
-      if (!fs.existsSync(translationsPath)) {
-        return {}
-      }
-      
-      const translationsContent = fs.readFileSync(translationsPath, 'utf-8')
-      return JSON.parse(translationsContent)
-    } catch (error) {
-      console.warn(`[loadServerTranslations] Failed to load translations for ${locale}, using fallback`)
-      // Return empty instead of throwing to prevent build crashes
-      return {}
-    }
-  }
-  
+  // CRITICAL: Always return empty during any server-side execution
+  // Translations will be loaded on the client side via I18nProvider
   return {}
 }
 
