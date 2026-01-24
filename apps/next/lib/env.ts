@@ -111,13 +111,26 @@ export function validateEnv(): Env {
     return parsed
   } catch (error) {
     if (error instanceof z.ZodError) {
-      // Environment validation failed
-      // In production, fail immediately
-    }
-    
-    // En producción, fallar de inmediato
-    if (process.env.NODE_ENV === 'production') {
-      process.exit(1)
+      console.error('❌ Environment validation failed:')
+      console.error(error.issues)
+      
+      // CRITICAL: In production, use safe defaults instead of crashing
+      // This prevents the entire app from crashing if Stripe keys are missing
+      if (process.env.NODE_ENV === 'production') {
+        console.warn('⚠️ Using fallback values for missing env vars in production')
+        return {
+          NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080',
+          STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder_missing',
+          STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET || 'whsec_placeholder_missing',
+          NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || 'pk_test_placeholder_missing',
+          STRIPE_PRICE_ID_MONTHLY: process.env.STRIPE_PRICE_ID_MONTHLY || 'price_placeholder_missing',
+          STRIPE_PRICE_ID_YEARLY: process.env.STRIPE_PRICE_ID_YEARLY || 'price_placeholder_missing',
+          NODE_ENV: (process.env.NODE_ENV as any) || 'production',
+          NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL || 'https://rradio.online',
+          NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
+          NEXT_PUBLIC_GA_MEASUREMENT_ID: process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID,
+        } as Env
+      }
     }
     
     throw error
