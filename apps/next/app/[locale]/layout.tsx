@@ -29,17 +29,17 @@ function getTranslations(locale: string): Record<string, any> {
 /**
  * Generate metadata for each locale
  * SEO-optimized with language-specific content
- * Made synchronous to prevent build crashes
+ * Now properly async to await params (Next.js 15 requirement)
  */
-export function generateMetadata({
+export async function generateMetadata({
   params,
 }: {
-  params: { locale: string }
-}): Metadata {
+  params: Promise<{ locale: string }> | { locale: string }
+}): Promise<Metadata> {
   const supportedLocales = ['es', 'en', 'fr', 'de']
-  // Note: In Next.js 15, params should be awaited, but for metadata generation
-  // we can access it synchronously as it's available during build
-  const locale = supportedLocales.includes(params.locale) ? params.locale : 'es'
+  // Await params to comply with Next.js 15 requirements
+  const resolvedParams = await Promise.resolve(params)
+  const locale = supportedLocales.includes(resolvedParams.locale) ? resolvedParams.locale : 'es'
 
   // Language-specific metadata
   const metadataByLocale: Record<string, any> = {
@@ -198,19 +198,20 @@ export function generateMetadata({
  * 
  * Wraps the application with I18nProvider for internationalization.
  * Now loads translations via static imports for reliability.
+ * Now properly async to await params (Next.js 15 requirement)
  */
-export default function LocaleLayout({
+export default async function LocaleLayout({
   children,
   params,
 }: {
   children: React.ReactNode
-  params: { locale: string }
+  params: Promise<{ locale: string }> | { locale: string }
 }) {
   // Validate it's a supported locale
   const supportedLocales = ['es', 'en', 'fr', 'de']
-  // Note: In Next.js 15, params should be awaited, but for layout rendering
-  // we can access it synchronously as it's available during render
-  const validLocaleCode = supportedLocales.includes(params.locale) ? params.locale : 'es'
+  // Await params to comply with Next.js 15 requirements
+  const resolvedParams = await Promise.resolve(params)
+  const validLocaleCode = supportedLocales.includes(resolvedParams.locale) ? resolvedParams.locale : 'es'
 
   // Get translations for the current locale
   const translations = getTranslations(validLocaleCode)
