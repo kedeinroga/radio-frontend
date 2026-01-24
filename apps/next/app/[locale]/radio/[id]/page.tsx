@@ -15,9 +15,8 @@ interface PageProps {
   params: Promise<{ id: string; locale: string }> | { id: string; locale: string }
 }
 
-// Removed: export const dynamic = 'force-dynamic'
-// Not needed - page is already dynamic due to [id] param and runtime data fetching
-// This allows Next.js to use ISR if configured in the future
+// Force dynamic rendering - don't try to generate this page at build time
+export const dynamic = 'force-dynamic'
 
 // Helper to get translated text based on locale
 function getLocalizedText(locale: string) {
@@ -61,33 +60,68 @@ function getLocalizedText(locale: string) {
 // 🔥 DYNAMIC METADATA FOR SEO
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id, locale } = await params
+  const texts = getLocalizedText(locale)
   
-  // CRITICAL: Return simple metadata during build to prevent crashes
-  // The page is dynamic (force-dynamic), so full metadata will be generated at runtime
-  // This prevents API calls during "Collecting page data" phase in Vercel builds
-  return {
-    title: 'Radio Station | Listen Online',
-    description: 'Listen to your favorite radio station online with high quality streaming',
+  try {
+    const repository = new StationApiRepository()
+    const station = await repository.findById(id)
+    
+    if (!station) {
+      return {
+        title: texts.notFoundTitle,
+        description: texts.notFoundDescription,
+      }
+    }
+
+    const tags = station.tags.join(', ')
+    const country = station.country || 'Online'
+    const genre = station.tags[0] || 'Radio'
+
+    return {
+      title: texts.titleTemplate(station.name, genre),
+      description: texts.descriptionTemplate(station.name, country, tags),
+      openGraph: {
+        title: station.name,
+        description: texts.ogDescriptionTemplate(station.name),
+        type: 'website',
+        url: `${BASE_URL}/${locale}/radio/${id}`,
+        images: station.imageUrl ? [
+          {
+            url: station.imageUrl,
+            width: 256,
+            height: 256,
+            alt: station.name,
+          },
+        ] : [],
+      },
+      twitter: {
+        card: 'summary',
+        title: station.name,
+        description: texts.ogDescriptionTemplate(station.name),
+        images: station.imageUrl ? [station.imageUrl] : [],
+      },
+      alternates: {
+        canonical: `${BASE_URL}/${locale}/radio/${id}`,
+        languages: {
+          'es': `${BASE_URL}/es/radio/${id}`,
+          'en': `${BASE_URL}/en/radio/${id}`,
+          'fr': `${BASE_URL}/fr/radio/${id}`,
+          'de': `${BASE_URL}/de/radio/${id}`,
+        },
+      },
+    }
+  } catch (error) {
+    console.error('[generateMetadata] Error:', error)
+    return {
+      title: 'Radio Station | Listen Online',
+      description: 'Listen to your favorite radio station online with high quality streaming',
+    }
   }
 }
 
 // 🔥 SERVER COMPONENT - SSR RENDERING
 export default async function RadioStationPage({ params }: PageProps) {
   const { id } = await params
-  
-  // CRITICAL: Skip rendering during build phase to prevent crashes
-  // This prevents API calls during "Collecting page data" in Vercel builds
-  // The page will render properly at runtime with force-dynamic
-  if (process.env.NODE_ENV === 'production' && !process.env.VERCEL_ENV) {
-    // During build (not runtime), return minimal placeholder
-    return (
-      <main className="min-h-screen bg-gray-50 dark:bg-gray-950 p-8">
-        <div className="container mx-auto">
-          <p>Loading station...</p>
-        </div>
-      </main>
-    )
-  }
   
   // Don't try to render if API is not available
   if (!process.env.NEXT_PUBLIC_API_URL) {
