@@ -17,10 +17,6 @@ async function loadServerTranslations(locale: string) {
   return {}
 }
 
-// Force dynamic rendering
-export const dynamic = 'force-dynamic'
-export const dynamicParams = true
-
 /**
  * Generate metadata for each locale
  * SEO-optimized with language-specific content

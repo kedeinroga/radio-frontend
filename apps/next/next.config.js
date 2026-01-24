@@ -31,19 +31,12 @@ const nextConfig = {
     // Removed artificial restrictions that were causing build crashes
   },
   
-  // Increase timeout for page generation to prevent worker crashes
-  staticPageGenerationTimeout: 120, // 120 seconds (default is 60)
+  // CRITICAL: Increase timeout for page generation to prevent worker crashes
+  staticPageGenerationTimeout: 180, // 3 minutes (increased from 120)
   
-  // Disable static generation during build to prevent API calls
-  // This is critical for Vercel builds where API might not be accessible
-  generateBuildId: async () => {
-    // Use timestamp to ensure fresh builds
-    return `build-${Date.now()}`
-  },
-  
-  // Skip all static optimization during build
-  skipTrailingSlashRedirect: true,
-  skipMiddlewareUrlNormalize: true,
+  // CRITICAL: Use standalone output for optimal Vercel deployment
+  // This creates a minimal production build
+  output: 'standalone',
   
   // Webpack configuration to resolve path aliases
   webpack: (config, { isServer }) => {

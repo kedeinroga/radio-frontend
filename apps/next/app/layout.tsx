@@ -8,9 +8,10 @@ const inter = Inter({ subsets: ['latin'] })
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://rradio.online'
 
-// Force all routes to be dynamic - prevents build-time API calls
-export const dynamic = 'force-dynamic'
-export const revalidate = 0
+// REMOVED: export const dynamic = 'force-dynamic' 
+// This was causing Next.js to try to pre-render ALL pages during build,
+// which crashes the build worker. Pages that need dynamic rendering
+// should declare it individually, not at root layout level.
 
 // 🔥 Viewport configuration (Next.js 15+ requirement)
 export const viewport: Viewport = {
