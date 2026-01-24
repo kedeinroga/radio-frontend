@@ -31,6 +31,9 @@ const nextConfig = {
     // Removed artificial restrictions that were causing build crashes
   },
   
+  // Increase timeout for page generation to prevent worker crashes
+  staticPageGenerationTimeout: 120, // 120 seconds (default is 60)
+  
   // Disable static generation during build to prevent API calls
   // This is critical for Vercel builds where API might not be accessible
   generateBuildId: async () => {

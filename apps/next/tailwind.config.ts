@@ -5,9 +5,9 @@ const config: Config = {
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
     './app/**/*.{js,ts,jsx,tsx,mdx}',
-    '../../packages/app/components/**/*.{js,ts,jsx,tsx}',
-    '../../packages/app/application/**/*.{js,ts,jsx,tsx}',
-    '../../packages/app/domain/**/*.{js,ts,jsx,tsx}',
+    // More specific patterns to avoid scanning node_modules
+    '../../packages/app/components/**/*.tsx',
+    '../../packages/app/domain/entities/*.ts',
   ],
   theme: {
     extend: {
