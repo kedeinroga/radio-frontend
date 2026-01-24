@@ -9,9 +9,10 @@ import { Station, SEOMetadata } from '../../domain/entities/Station'
 export class StationApiRepository implements IStationRepository {
   // In-memory cache for slug -> ID mapping
   private slugToIdCache = new Map<string, string>()
-  
+
   async findById(id: string): Promise<Station | null> {
     try {
+      console.log(`[StationApiRepository] Fetching station ${id} from ${apiClient.defaults.baseURL}`)
       const response = await apiClient.get(`/stations/${id}`)
       // Backend returns { data: {...}, seo_metadata: {...} }
       if (response.data.data) {
@@ -20,10 +21,17 @@ export class StationApiRepository implements IStationRepository {
           ...response.data.data,
           seo_metadata: response.data.seo_metadata
         }
+        console.log(`[StationApiRepository] Station ${id} fetched successfully`)
         return this.mapToStation(stationData)
       }
+      console.log(`[StationApiRepository] Station ${id} not found (no data in response)`)
       return null
     } catch (error: any) {
+      console.error(`[StationApiRepository] Error fetching station ${id}:`, {
+        message: error.message,
+        status: error.response?.status,
+        baseURL: apiClient.defaults.baseURL,
+      })
       if (error.response?.status === 404) {
         return null
       }
@@ -116,7 +124,7 @@ export class StationApiRepository implements IStationRepository {
       // Try popular stations first (most likely to contain the slug)
       const popularStations = await this.getPopular(100)
       const station = popularStations.find(s => s.slug === slug)
-      
+
       if (station) {
         // Cache the mapping
         this.slugToIdCache.set(slug, station.id)
@@ -126,7 +134,7 @@ export class StationApiRepository implements IStationRepository {
       // If not found in popular, try searching by name
       const searchResults = await this.search(slug.replace(/-/g, ' '), 50)
       const searchStation = searchResults.find(s => s.slug === slug)
-      
+
       if (searchStation) {
         this.slugToIdCache.set(slug, searchStation.id)
         return searchStation

@@ -8,9 +8,10 @@ import { safeRedirect } from '../utils/securityHelpers'
  */
 
 const API_BASE_URL =
-  typeof window !== 'undefined'
-    ? process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api/v1'
-    : process.env.EXPO_PUBLIC_API_URL || 'http://localhost:8080/api/v1'
+  process.env.NEXT_PUBLIC_API_URL ||
+  process.env.EXPO_PUBLIC_API_URL ||
+  'http://localhost:8080/api/v1'
+
 
 // Global locale state (injected from i18n system)
 let currentLocale: Locale = Locale.default()
@@ -33,7 +34,7 @@ export const getApiLocale = (): Locale => {
 // Create axios instance
 const apiClient: AxiosInstance = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 15000, // Reduced from 30s to 15s for better security
+  timeout: 30000, // 30 seconds - increased for SSR stability in production
   headers: {
     'Content-Type': 'application/json',
   },
@@ -103,19 +104,19 @@ apiClient.interceptors.request.use(
     if (config.headers) {
       config.headers['Accept-Language'] = currentLocale.code
     }
-    
+
     // Try to get token from localStorage directly (always works after page refresh)
     let token = getTokenFromStorage('access_token')
-    
+
     // Fallback to tokenStorage if available (legacy support)
     if (!token && tokenStorage) {
       token = await tokenStorage.getAccessToken()
     }
-    
+
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`
     }
-    
+
     return config
   },
   (error: AxiosError) => {
@@ -139,7 +140,7 @@ apiClient.interceptors.response.use(
       try {
         // Get refresh token from localStorage
         let refreshToken = getTokenFromStorage('refresh_token')
-        
+
         // Fallback to tokenStorage if available
         if (!refreshToken && tokenStorage) {
           refreshToken = await tokenStorage.getRefreshToken()
@@ -152,7 +153,7 @@ apiClient.interceptors.response.use(
           if (tokenStorage) {
             await tokenStorage.clearTokens()
           }
-          
+
           if (typeof window !== 'undefined') {
             // Check if we're in admin area
             const isAdminRoute = window.location.pathname.startsWith('/admin')
@@ -188,7 +189,7 @@ apiClient.interceptors.response.use(
         if (tokenStorage) {
           await tokenStorage.clearTokens()
         }
-        
+
         if (typeof window !== 'undefined') {
           const isAdminRoute = window.location.pathname.startsWith('/admin')
           const redirectUrl = isAdminRoute ? '/admin/login' : '/login'
