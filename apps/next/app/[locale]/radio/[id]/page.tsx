@@ -62,14 +62,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { id, locale } = await params
   const texts = getLocalizedText(locale)
   
-  // Log environment variables for debugging
-  console.log('[generateMetadata] Environment variables:', {
-    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
-    NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
-    NODE_ENV: process.env.NODE_ENV,
-    VERCEL_ENV: process.env.VERCEL_ENV,
-  })
-  
   try {
     const repository = new StationApiRepository()
     const station = await repository.findById(id)
@@ -131,28 +123,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function RadioStationPage({ params }: PageProps) {
   const { id } = await params
   
-  // Log environment variables for debugging
-  console.log('[RadioStationPage] Environment variables:', {
-    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
-    NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
-    NODE_ENV: process.env.NODE_ENV,
-    VERCEL_ENV: process.env.VERCEL_ENV,
-  })
-  
-  console.log(`[RadioStationPage] Fetching station: ${id}`)
-  
   const repository = new StationApiRepository()
   let station
   try {
     station = await repository.findById(id)
-    console.log(`[RadioStationPage] Station found:`, station?.name)
   } catch (error) {
     console.error('[RadioStationPage] Error fetching station:', error)
     notFound()
   }
 
   if (!station) {
-    console.log('[RadioStationPage] Station not found (null returned)')
     notFound()
   }
 

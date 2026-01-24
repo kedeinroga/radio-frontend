@@ -13,7 +13,7 @@ const SUPPORTED_LOCALES = ['es', 'en', 'fr', 'de'] as const
  */
 function generateMinimalSitemap(): MetadataRoute.Sitemap {
   const minimalSitemap: MetadataRoute.Sitemap = []
-  
+
   SUPPORTED_LOCALES.forEach(locale => {
     minimalSitemap.push({
       url: `${BASE_URL}/${locale}`,
@@ -22,7 +22,7 @@ function generateMinimalSitemap(): MetadataRoute.Sitemap {
       priority: 1.0,
     })
   })
-  
+
   return minimalSitemap
 }
 
@@ -35,19 +35,17 @@ function generateMinimalSitemap(): MetadataRoute.Sitemap {
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // CRITICAL: Skip during build to prevent worker crash
   if (process.env.SKIP_BUILD_STATIC_GENERATION === '1') {
-    console.log('[Build] Skipping sitemap generation during build')
     return generateMinimalSitemap()
   }
-  
+
   // During build time, skip API calls if no API URL is configured
   if (!process.env.NEXT_PUBLIC_API_URL) {
-    console.log('[Build] Skipping sitemap generation - no API URL configured')
     return generateMinimalSitemap()
   }
 
   const seoRepository = new SEOApiRepository()
   const getSitemapData = new GetSitemapData(seoRepository)
-  
+
   try {
     const sitemapData = await getSitemapData.execute()
 
@@ -58,11 +56,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       const alternates: { languages: Record<string, string> } = {
         languages: {}
       }
-      
+
       SUPPORTED_LOCALES.forEach(locale => {
         alternates.languages[locale] = `${BASE_URL}/${locale}${path}`
       })
-      
+
       return alternates
     }
 
@@ -88,7 +86,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // Country pages - generate for each locale
     sitemapData.popularCountries.forEach(country => {
       const path = `/country/${country.urlSlug}`
-      
+
       SUPPORTED_LOCALES.forEach(locale => {
         sitemapEntries.push({
           url: `${BASE_URL}/${locale}${path}`,
@@ -103,7 +101,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // Genre/Tag pages - generate for each locale
     sitemapData.popularTags.forEach(tag => {
       const path = `/genre/${tag.urlSlug}`
-      
+
       SUPPORTED_LOCALES.forEach(locale => {
         sitemapEntries.push({
           url: `${BASE_URL}/${locale}${path}`,
@@ -117,7 +115,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     return sitemapEntries
   } catch (error) {
-    console.error('[Build] Error generating sitemap:', error)
     // Return minimal sitemap on error - with all locales
     return generateMinimalSitemap()
   }

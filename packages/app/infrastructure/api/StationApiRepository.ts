@@ -12,7 +12,6 @@ export class StationApiRepository implements IStationRepository {
 
   async findById(id: string): Promise<Station | null> {
     try {
-      console.log(`[StationApiRepository] Fetching station ${id} from ${apiClient.defaults.baseURL}`)
       const response = await apiClient.get(`/stations/${id}`)
       // Backend returns { data: {...}, seo_metadata: {...} }
       if (response.data.data) {
@@ -21,17 +20,10 @@ export class StationApiRepository implements IStationRepository {
           ...response.data.data,
           seo_metadata: response.data.seo_metadata
         }
-        console.log(`[StationApiRepository] Station ${id} fetched successfully`)
         return this.mapToStation(stationData)
       }
-      console.log(`[StationApiRepository] Station ${id} not found (no data in response)`)
       return null
     } catch (error: any) {
-      console.error(`[StationApiRepository] Error fetching station ${id}:`, {
-        message: error.message,
-        status: error.response?.status,
-        baseURL: apiClient.defaults.baseURL,
-      })
       if (error.response?.status === 404) {
         return null
       }

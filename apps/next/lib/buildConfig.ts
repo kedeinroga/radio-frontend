@@ -13,7 +13,6 @@ export const hasApiUrl = !!process.env.NEXT_PUBLIC_API_URL
 export const shouldSkipApiCalls = (): boolean => {
   // Skip API calls during build if no API URL is configured
   if (isBuildTime && !hasApiUrl) {
-    console.log('[Build] Skipping API calls - no API URL configured')
     return true
   }
   return false
