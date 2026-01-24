@@ -3,18 +3,27 @@ import { PlayerBar } from '@/components/PlayerBar'
 import BottomNav from '@/components/BottomNav'
 import { I18nProvider } from '@/components/I18nProvider'
 
+// Import translations statically to avoid dynamic imports during build
+import esTranslations from '@/i18n/locales/es.json'
+import enTranslations from '@/i18n/locales/en.json'
+import frTranslations from '@/i18n/locales/fr.json'
+import deTranslations from '@/i18n/locales/de.json'
+
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://rradio.online'
 
 /**
- * Load translations for a given locale from the file system
- * This runs on the server during SSR/SSG
- * 
- * DISABLED DURING BUILD: Returns empty object to prevent build worker crashes
+ * Get translations for a given locale
+ * Uses static imports to avoid dynamic loading issues
  */
-async function loadServerTranslations(locale: string) {
-  // CRITICAL: Always return empty during any server-side execution
-  // Translations will be loaded on the client side via I18nProvider
-  return {}
+function getTranslations(locale: string): Record<string, any> {
+  const translationsMap: Record<string, any> = {
+    es: esTranslations,
+    en: enTranslations,
+    fr: frTranslations,
+    de: deTranslations,
+  }
+  
+  return translationsMap[locale] || esTranslations
 }
 
 /**
@@ -28,6 +37,8 @@ export function generateMetadata({
   params: { locale: string }
 }): Metadata {
   const supportedLocales = ['es', 'en', 'fr', 'de']
+  // Note: In Next.js 15, params should be awaited, but for metadata generation
+  // we can access it synchronously as it's available during build
   const locale = supportedLocales.includes(params.locale) ? params.locale : 'es'
 
   // Language-specific metadata
@@ -186,7 +197,7 @@ export function generateMetadata({
  * Locale Layout Component
  * 
  * Wraps the application with I18nProvider for internationalization.
- * Made synchronous to prevent build worker crashes during "Collecting page data" phase.
+ * Now loads translations via static imports for reliability.
  */
 export default function LocaleLayout({
   children,
@@ -197,10 +208,12 @@ export default function LocaleLayout({
 }) {
   // Validate it's a supported locale
   const supportedLocales = ['es', 'en', 'fr', 'de']
+  // Note: In Next.js 15, params should be awaited, but for layout rendering
+  // we can access it synchronously as it's available during render
   const validLocaleCode = supportedLocales.includes(params.locale) ? params.locale : 'es'
 
-  // Translations will be loaded on the client side by I18nProvider
-  const translations = {}
+  // Get translations for the current locale
+  const translations = getTranslations(validLocaleCode)
 
   return (
     <I18nProvider initialLocaleCode={validLocaleCode} initialTranslations={translations}>
