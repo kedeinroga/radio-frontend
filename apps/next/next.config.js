@@ -1,5 +1,8 @@
 const path = require('path');
 
+// Check if we're in build mode to skip data collection
+const isBuild = process.env.NODE_ENV === 'production' && process.argv.includes('build');
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Transpile packages from monorepo
@@ -27,6 +30,8 @@ const nextConfig = {
     outputFileTracingRoot: path.join(__dirname, '../../'),
     // Disable ISR and static generation completely
     isrMemoryCacheSize: 0,
+    // Force dynamic rendering for all pages
+    dynamicIO: false,
   },
   
   // Disable static generation during build to prevent API calls
@@ -109,6 +114,8 @@ const nextConfig = {
   env: {
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api/v1',
     // Production: https://api.rradio.online/api/v1
+    // Tell the app we're in build mode to skip data fetching
+    IS_BUILD_TIME: isBuild ? 'true' : 'false',
   },
   
   // Security Headers

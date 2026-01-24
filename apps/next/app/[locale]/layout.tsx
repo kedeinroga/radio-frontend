@@ -13,6 +13,11 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://rradio.online'
  * This runs on the server during SSR/SSG
  */
 async function loadServerTranslations(locale: string) {
+  // SKIP during build phase to prevent worker crashes
+  if (process.env.NEXT_PHASE === 'phase-production-build' || process.env.IS_BUILD_TIME === 'true') {
+    return {}
+  }
+  
   try {
     const translationsPath = path.join(process.cwd(), 'i18n', 'locales', `${locale}.json`)
     const translationsContent = fs.readFileSync(translationsPath, 'utf-8')

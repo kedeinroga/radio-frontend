@@ -63,7 +63,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   
   // SKIP metadata generation during build to prevent API calls and worker crashes
   // Metadata will be generated at runtime instead
-  if (process.env.NEXT_PHASE === 'phase-production-build') {
+  if (process.env.NEXT_PHASE === 'phase-production-build' || process.env.IS_BUILD_TIME === 'true') {
     return {
       title: 'Radio Station',
       description: 'Listen to your favorite radio station online',
