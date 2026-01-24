@@ -3,7 +3,9 @@ module.exports = {
   content: [
     './app/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
-    '../../packages/app/**/*.{js,ts,jsx,tsx}',
+    // More specific patterns to avoid scanning node_modules
+    '../../packages/app/components/**/*.tsx',
+    '../../packages/app/domain/entities/*.ts',
   ],
   theme: {
     extend: {
