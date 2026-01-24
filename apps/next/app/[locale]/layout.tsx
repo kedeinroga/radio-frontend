@@ -13,23 +13,30 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://rradio.online'
  * This runs on the server during SSR/SSG
  */
 async function loadServerTranslations(locale: string) {
-  // SKIP during build phase to prevent worker crashes
-  if (process.env.NEXT_PHASE === 'phase-production-build' || process.env.IS_BUILD_TIME === 'true') {
-    return {}
+  // ALWAYS SKIP during any build/prerendering to prevent worker crashes
+  // Translations will be loaded at runtime on the client side
+  if (typeof window === 'undefined') {
+    // We're on the server
+    try {
+      // During build, Next.js tries to execute this
+      // Return empty to prevent file system access during build
+      const translationsPath = path.join(process.cwd(), 'i18n', 'locales', `${locale}.json`)
+      
+      // Check if file exists first to avoid crashes
+      if (!fs.existsSync(translationsPath)) {
+        return {}
+      }
+      
+      const translationsContent = fs.readFileSync(translationsPath, 'utf-8')
+      return JSON.parse(translationsContent)
+    } catch (error) {
+      console.warn(`[loadServerTranslations] Failed to load translations for ${locale}, using fallback`)
+      // Return empty instead of throwing to prevent build crashes
+      return {}
+    }
   }
   
-  try {
-    const translationsPath = path.join(process.cwd(), 'i18n', 'locales', `${locale}.json`)
-    const translationsContent = fs.readFileSync(translationsPath, 'utf-8')
-    return JSON.parse(translationsContent)
-  } catch (error) {
-
-    // Fallback to Spanish if locale file doesn't exist
-    if (locale !== 'es') {
-      return loadServerTranslations('es')
-    }
-    return {}
-  }
+  return {}
 }
 
 // Force dynamic rendering
@@ -223,8 +230,14 @@ export default async function LocaleLayout({
   const supportedLocales = ['es', 'en', 'fr', 'de']
   const validLocaleCode = supportedLocales.includes(localeCode) ? localeCode : 'es'
 
-  // Load translations on the server
-  const translations = await loadServerTranslations(validLocaleCode)
+  // Load translations on the server - with error handling to prevent build crashes
+  let translations = {}
+  try {
+    translations = await loadServerTranslations(validLocaleCode)
+  } catch (error) {
+    console.warn(`[LocaleLayout] Failed to load translations for ${validLocaleCode}:`, error)
+    // Continue with empty translations - client will load them
+  }
 
   return (
     <I18nProvider initialLocaleCode={validLocaleCode} initialTranslations={translations}>

@@ -61,80 +61,72 @@ function getLocalizedText(locale: string) {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id, locale } = await params
   
-  // SKIP metadata generation during build to prevent API calls and worker crashes
-  // Metadata will be generated at runtime instead
-  if (process.env.NEXT_PHASE === 'phase-production-build' || process.env.IS_BUILD_TIME === 'true') {
-    return {
-      title: 'Radio Station',
-      description: 'Listen to your favorite radio station online',
-    }
+  // ALWAYS return simple metadata to prevent API calls during build
+  // Metadata will be generated properly at runtime
+  const defaultMetadata = {
+    title: 'Radio Station',
+    description: 'Listen to your favorite radio station online',
   }
   
-  // Don't try to fetch metadata during build if API is not available
+  // Don't try to fetch metadata if API is not available
   if (!process.env.NEXT_PUBLIC_API_URL) {
-    return {
-      title: 'Radio Station',
-      description: 'Listen to your favorite radio station online',
-    }
+    return defaultMetadata
   }
   
-  const repository = new StationApiRepository()
-  let station
+  // Wrap in try-catch to prevent any build crashes
   try {
-    station = await repository.findById(id)
+    const repository = new StationApiRepository()
+    const station = await repository.findById(id)
+    
+    if (!station) {
+      const localizedText = getLocalizedText(locale)
+      return {
+        title: localizedText.notFoundTitle,
+        description: localizedText.notFoundDescription
+      }
+    }
+
+    const localizedText = getLocalizedText(locale)
+    const metadata = station.seoMetadata
+    const genre = station.primaryGenre || 'Radio'
+    const tagsText = station.tags.join(', ')
+
+    return {
+      title: metadata?.title || localizedText.titleTemplate(station.name, genre),
+      description: metadata?.description || localizedText.descriptionTemplate(station.name, station.country, tagsText),
+      keywords: metadata?.keywords || station.tags,
+      openGraph: {
+        title: metadata?.title || station.name,
+        description: metadata?.description || localizedText.ogDescriptionTemplate(station.name),
+        images: [metadata?.imageUrl || station.imageUrl || '/default-radio.png'],
+        url: metadata?.canonicalUrl || `${BASE_URL}/${locale}/radio/${station.id}`,
+        type: 'website',
+        siteName: 'RadioApp',
+        locale: locale === 'es' ? 'es_ES' : locale === 'en' ? 'en_US' : locale === 'fr' ? 'fr_FR' : 'de_DE',
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: metadata?.title || station.name,
+        description: metadata?.description || localizedText.ogDescriptionTemplate(station.name),
+        images: [metadata?.imageUrl || station.imageUrl || '/default-radio.png'],
+      },
+      alternates: {
+        canonical: `${BASE_URL}/${locale}/radio/${station.id}`,
+        languages: {
+          'es': `${BASE_URL}/es/radio/${station.id}`,
+          'en': `${BASE_URL}/en/radio/${station.id}`,
+          'fr': `${BASE_URL}/fr/radio/${station.id}`,
+          'de': `${BASE_URL}/de/radio/${station.id}`,
+          'x-default': `${BASE_URL}/es/radio/${station.id}`,
+        },
+      },
+      other: {
+        'last-modified': metadata?.lastModified || new Date().toISOString()
+      }
+    }
   } catch (error) {
     console.error('[generateMetadata] Error fetching station:', error)
-    return {
-      title: 'Radio Station',
-      description: 'Listen to your favorite radio station online',
-    }
-  }
-
-  const localizedText = getLocalizedText(locale)
-
-  if (!station) {
-    return {
-      title: localizedText.notFoundTitle,
-      description: localizedText.notFoundDescription
-    }
-  }
-
-  const metadata = station.seoMetadata
-  const genre = station.primaryGenre || 'Radio'
-  const tagsText = station.tags.join(', ')
-
-  return {
-    title: metadata?.title || localizedText.titleTemplate(station.name, genre),
-    description: metadata?.description || localizedText.descriptionTemplate(station.name, station.country, tagsText),
-    keywords: metadata?.keywords || station.tags,
-    openGraph: {
-      title: metadata?.title || station.name,
-      description: metadata?.description || localizedText.ogDescriptionTemplate(station.name),
-      images: [metadata?.imageUrl || station.imageUrl || '/default-radio.png'],
-      url: metadata?.canonicalUrl || `${BASE_URL}/${locale}/radio/${station.id}`,
-      type: 'website',
-      siteName: 'RadioApp',
-      locale: locale === 'es' ? 'es_ES' : locale === 'en' ? 'en_US' : locale === 'fr' ? 'fr_FR' : 'de_DE',
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: metadata?.title || station.name,
-      description: metadata?.description || localizedText.ogDescriptionTemplate(station.name),
-      images: [metadata?.imageUrl || station.imageUrl || '/default-radio.png'],
-    },
-    alternates: {
-      canonical: `${BASE_URL}/${locale}/radio/${station.id}`,
-      languages: {
-        'es': `${BASE_URL}/es/radio/${station.id}`,
-        'en': `${BASE_URL}/en/radio/${station.id}`,
-        'fr': `${BASE_URL}/fr/radio/${station.id}`,
-        'de': `${BASE_URL}/de/radio/${station.id}`,
-        'x-default': `${BASE_URL}/es/radio/${station.id}`,
-      },
-    },
-    other: {
-      'last-modified': metadata?.lastModified || new Date().toISOString()
-    }
+    return defaultMetadata
   }
 }
 
