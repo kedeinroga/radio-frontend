@@ -94,7 +94,19 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function CountryPage({ params }: PageProps) {
   const { countryCode } = await Promise.resolve(params)
   
-  // Don't try to render during build if API is not available
+  // CRITICAL: Skip rendering during build phase to prevent crashes
+  // This prevents API calls during "Collecting page data" in Vercel builds
+  if (process.env.NODE_ENV === 'production' && !process.env.VERCEL_ENV) {
+    return (
+      <main className="min-h-screen bg-gray-50 dark:bg-gray-950 p-8">
+        <div className="container mx-auto">
+          <p>Loading country...</p>
+        </div>
+      </main>
+    )
+  }
+  
+  // Don't try to render if API is not available
   if (!process.env.NEXT_PUBLIC_API_URL) {
     return (
       <main className="min-h-screen bg-gray-50 dark:bg-gray-950 p-8">
