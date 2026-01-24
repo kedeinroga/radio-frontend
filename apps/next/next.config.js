@@ -21,17 +21,14 @@ const nextConfig = {
     ignoreDuringBuilds: true, // Skip ESLint during builds
   },
   
+  // Configure output file tracing for monorepo (moved from experimental)
+  // This helps Vercel correctly trace and include files from workspace packages
+  outputFileTracingRoot: path.join(__dirname, '../../'),
+  
   // Experimental: Use lighter build mode for Vercel
   experimental: {
     workerThreads: false,
     cpus: 1,
-    // Configure output file tracing for monorepo
-    // This helps Vercel correctly trace and include files from workspace packages
-    outputFileTracingRoot: path.join(__dirname, '../../'),
-    // Disable ISR and static generation completely
-    isrMemoryCacheSize: 0,
-    // Force dynamic rendering for all pages
-    dynamicIO: false,
   },
   
   // Disable static generation during build to prevent API calls
