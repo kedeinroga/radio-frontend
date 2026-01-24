@@ -25,12 +25,10 @@ const nextConfig = {
   // This helps Vercel correctly trace and include files from workspace packages
   outputFileTracingRoot: path.join(__dirname, '../../'),
   
-  // Experimental: Use lighter build mode for Vercel
+  // Experimental features
   experimental: {
-    workerThreads: false,
-    cpus: 1,
-    // CRITICAL: Disable PPR to prevent prerendering
-    ppr: false,
+    // Let Next.js use optimal settings for build
+    // Removed artificial restrictions that were causing build crashes
   },
   
   // Disable static generation during build to prevent API calls
@@ -72,9 +70,8 @@ const nextConfig = {
         config.externals.push('react-native');
       }
       
-      // Prevent build worker crashes by disabling chunking
-      config.optimization.runtimeChunk = false;
-      config.optimization.splitChunks = false;
+      // Let webpack use default optimizations for better performance
+      // Removed artificial restrictions (runtimeChunk/splitChunks = false)
     }
     
     return config;
