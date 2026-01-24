@@ -13,9 +13,14 @@ export class StationApiRepository implements IStationRepository {
   async findById(id: string): Promise<Station | null> {
     try {
       const response = await apiClient.get(`/stations/${id}`)
-      // Backend returns { data: {...}, meta: {...} }
+      // Backend returns { data: {...}, seo_metadata: {...} }
       if (response.data.data) {
-        return this.mapToStation(response.data.data)
+        // Merge data and seo_metadata for the mapper
+        const stationData = {
+          ...response.data.data,
+          seo_metadata: response.data.seo_metadata
+        }
+        return this.mapToStation(stationData)
       }
       return null
     } catch (error: any) {
