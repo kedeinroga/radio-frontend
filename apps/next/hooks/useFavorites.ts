@@ -1,9 +1,10 @@
+import { useCallback } from 'react'
 import { Station } from '@radio-app/app'
 
 const FAVORITES_KEY = 'radio-app-favorites'
 
 export const useFavorites = () => {
-  const getFavorites = (): Station[] => {
+  const getFavorites = useCallback((): Station[] => {
     if (typeof window === 'undefined') return []
 
     try {
@@ -31,14 +32,14 @@ export const useFavorites = () => {
     } catch (error) {
       return []
     }
-  }
+  }, [])
 
-  const isFavorite = (stationId: string): boolean => {
+  const isFavorite = useCallback((stationId: string): boolean => {
     const favorites = getFavorites()
     return favorites.some(s => s.id === stationId)
-  }
+  }, [getFavorites])
 
-  const addFavorite = (station: Station): void => {
+  const addFavorite = useCallback((station: Station): void => {
     const favorites = getFavorites()
 
     // Don't add if already exists
@@ -51,9 +52,9 @@ export const useFavorites = () => {
     } catch (error) {
       // Silent fail
     }
-  }
+  }, [getFavorites])
 
-  const removeFavorite = (stationId: string): void => {
+  const removeFavorite = useCallback((stationId: string): void => {
     const favorites = getFavorites()
     const updated = favorites.filter(s => s.id !== stationId)
 
@@ -62,15 +63,15 @@ export const useFavorites = () => {
     } catch (error) {
       // Silent fail
     }
-  }
+  }, [getFavorites])
 
-  const toggleFavorite = (station: Station): void => {
+  const toggleFavorite = useCallback((station: Station): void => {
     if (isFavorite(station.id)) {
       removeFavorite(station.id)
     } else {
       addFavorite(station)
     }
-  }
+  }, [isFavorite, removeFavorite, addFavorite])
 
   return {
     getFavorites,
