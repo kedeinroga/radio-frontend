@@ -1,7 +1,7 @@
 'use client'
 
 import { usePlayer } from '@/hooks/usePlayer'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 import { useState } from 'react'
 import { useAppTranslation } from '@/hooks/useAppTranslation'
 
@@ -9,9 +9,19 @@ export function PlayerBar() {
   const { t } = useAppTranslation()
   const { currentStation, playerState, togglePlayPause, stop, setVolume } = usePlayer()
   const router = useRouter()
+  const pathname = usePathname()
   const [imgError, setImgError] = useState(false)
 
   if (!currentStation) {
+    return null
+  }
+
+  // Hide PlayerBar if we're on the detail page of the currently playing station
+  const isOnStationDetailPage = 
+    pathname?.includes(`/radio/${currentStation.id}`) || 
+    pathname?.includes(`/stations/${currentStation.id}`)
+
+  if (isOnStationDetailPage) {
     return null
   }
 
@@ -81,8 +91,8 @@ export function PlayerBar() {
               <span className="text-lg">⏹</span>
             </button>
 
-            {/* Volume Control */}
-            <div className="flex items-center gap-2 min-w-[120px]">
+            {/* Volume Control - Hidden on mobile devices */}
+            <div className="hidden md:flex items-center gap-2 min-w-[120px]">
               <button
                 onClick={() => setVolume((playerState.volume ?? 0.7) === 0 ? 0.7 : 0)}
                 aria-label={(playerState.volume ?? 0.7) === 0 ? t('player.unmute') : t('player.mute')}

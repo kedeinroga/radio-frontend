@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, Image, Pressable } from 'react-native'
+import { View, Text, Image, Pressable, StyleSheet } from 'react-native'
 import { Station } from '../domain/entities/Station'
 
 export interface StationCardProps {
@@ -24,78 +24,152 @@ export const StationCard: React.FC<StationCardProps> = ({
   const [imgError, setImgError] = React.useState(false)
 
   return (
-    <View
-      className="bg-white dark:bg-neutral-900 rounded-xl p-4 mb-3 shadow-sm"
+    <Pressable
+      onPress={onPlay}
       accessible={true}
       accessibilityLabel={`${station.name}, ${station.metadata}`}
-      accessibilityHint="Double tap to view station details"
+      accessibilityHint={isPlaying ? 'Double tap to pause' : 'Double tap to play'}
+      style={styles.card}
     >
-      <View className="flex-row items-center gap-4">
+      <View style={styles.cardContent}>
         {/* Station Image */}
-        <View className="w-20 h-20 rounded-lg bg-neutral-200 dark:bg-neutral-800 items-center justify-center overflow-hidden">
+        <View style={styles.imageContainer}>
           {!imgError && station.imageUrl ? (
             <Image
               source={{ uri: station.imageUrl }}
-              className="w-20 h-20 rounded-lg"
+              style={styles.image}
               accessibilityIgnoresInvertColors
               alt={`${station.name} logo`}
               onError={() => setImgError(true)}
             />
           ) : (
-            <View className="w-20 h-20 bg-gradient-to-br from-primary-400 to-primary-600 items-center justify-center">
-              <Text className="text-3xl">📻</Text>
+            <View style={styles.imagePlaceholder}>
+              <Text style={styles.placeholderIcon}>📻</Text>
             </View>
           )}
         </View>
 
         {/* Station Info */}
-        <View className="flex-1">
-          <View className="flex-row items-center gap-2 mb-1">
+        <View style={styles.infoContainer}>
+          <View style={styles.titleRow}>
             <Text
-              className="text-lg font-bold text-neutral-900 dark:text-white flex-1"
+              style={styles.stationName}
               numberOfLines={1}
             >
               {station.name}
             </Text>
             {station.isPremium && (
-              <View className="bg-warning px-2 py-0.5 rounded">
-                <Text className="text-xs font-semibold text-white">PRO</Text>
+              <View style={styles.premiumBadge}>
+                <Text style={styles.premiumText}>PRO</Text>
               </View>
             )}
           </View>
 
-          <Text className="text-sm text-neutral-600 dark:text-neutral-400" numberOfLines={1}>
+          <Text style={styles.metadata} numberOfLines={1}>
             {station.metadata}
           </Text>
         </View>
 
-        {/* Action Buttons */}
-        <View className="flex-row gap-2">
-          {/* Play Button */}
-          <Pressable
-            onPress={onPlay}
-            accessible={true}
-            accessibilityRole="button"
-            accessibilityLabel={isPlaying ? 'Pause station' : 'Play station'}
-            accessibilityHint={`${isPlaying ? 'Pause' : 'Play'} ${station.name}`}
-            className="w-12 h-12 bg-primary-500 rounded-full items-center justify-center active:bg-primary-600"
-          >
-            <Text className="text-white text-xl">{isPlaying ? '⏸' : '▶'}</Text>
-          </Pressable>
-
-          {/* Favorite Button */}
-          <Pressable
-            onPress={onFavorite}
-            accessible={true}
-            accessibilityRole="button"
-            accessibilityLabel={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
-            accessibilityHint={`${isFavorite ? 'Remove' : 'Add'} ${station.name} ${isFavorite ? 'from' : 'to'} favorites`}
-            className="w-12 h-12 bg-neutral-100 dark:bg-neutral-800 rounded-full items-center justify-center active:bg-neutral-200"
-          >
-            <Text className="text-xl">{isFavorite ? '❤️' : '🤍'}</Text>
-          </Pressable>
-        </View>
+        {/* Favorite Button */}
+        <Pressable
+          onPress={(e) => {
+            e?.stopPropagation?.()
+            onFavorite()
+          }}
+          accessible={true}
+          accessibilityRole="button"
+          accessibilityLabel={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+          accessibilityHint={`${isFavorite ? 'Remove' : 'Add'} ${station.name} ${isFavorite ? 'from' : 'to'} favorites`}
+          style={styles.favoriteButton}
+        >
+          <Text style={styles.favoriteIcon}>
+            {isFavorite ? '♥' : '♡'}
+          </Text>
+        </Pressable>
       </View>
-    </View>
+    </Pressable>
   )
 }
+
+const styles = StyleSheet.create({
+  card: {
+    backgroundColor: '#ffffff',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  cardContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
+  },
+  imageContainer: {
+    width: 80,
+    height: 80,
+    borderRadius: 8,
+    backgroundColor: '#e5e5e5',
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
+  },
+  image: {
+    width: 80,
+    height: 80,
+    borderRadius: 8,
+  },
+  imagePlaceholder: {
+    width: 80,
+    height: 80,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#8b5cf6',
+  },
+  placeholderIcon: {
+    fontSize: 32,
+  },
+  infoContainer: {
+    flex: 1,
+  },
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 4,
+  },
+  stationName: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#171717',
+    flex: 1,
+  },
+  premiumBadge: {
+    backgroundColor: '#f59e0b',
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 4,
+  },
+  premiumText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#ffffff',
+  },
+  metadata: {
+    fontSize: 14,
+    color: '#737373',
+  },
+  favoriteButton: {
+    width: 48,
+    height: 48,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  favoriteIcon: {
+    fontSize: 24,
+    color: '#ef4444',
+  },
+})

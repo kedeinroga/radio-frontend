@@ -26,8 +26,13 @@ export const StationCard: React.FC<StationCardProps> = ({
   const { t } = useAppTranslation()
 
   const handleCardClick = () => {
-    // Use ID for URLs
-    router.push(`/radio/${station.id}`)
+    // On small screens, clicking the card plays/pauses the station
+    // On larger screens, it navigates to the station detail page
+    if (window.innerWidth < 640) {
+      onPlay()
+    } else {
+      router.push(`/radio/${station.id}`)
+    }
   }
 
   const [imgError, setImgError] = React.useState(false)
@@ -39,7 +44,7 @@ export const StationCard: React.FC<StationCardProps> = ({
     >
       <div className="flex items-center gap-4">
         {/* Station Image */}
-        <div className="w-20 h-20 rounded-lg bg-neutral-200 dark:bg-neutral-800 flex items-center justify-center overflow-hidden">
+        <div className="w-20 h-20 rounded-lg bg-neutral-200 dark:bg-neutral-800 flex items-center justify-center overflow-hidden flex-shrink-0">
           {!imgError && station.imageUrl ? (
             <img
               src={station.imageUrl}
@@ -61,7 +66,7 @@ export const StationCard: React.FC<StationCardProps> = ({
               {station.name}
             </h3>
             {station.isPremium && (
-              <span className="bg-warning px-2 py-0.5 rounded text-xs font-semibold text-white">
+              <span className="bg-warning px-2 py-0.5 rounded text-xs font-semibold text-white flex-shrink-0">
                 PRO
               </span>
             )}
@@ -73,8 +78,8 @@ export const StationCard: React.FC<StationCardProps> = ({
         </div>
 
         {/* Action Buttons */}
-        <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
-          {/* Play Button */}
+        <div className="flex gap-2 flex-shrink-0" onClick={(e) => e.stopPropagation()}>
+          {/* Play Button - Hidden on small screens */}
           <button
             onClick={(e) => {
               e.stopPropagation()
@@ -82,7 +87,7 @@ export const StationCard: React.FC<StationCardProps> = ({
             }}
             disabled={isBuffering}
             aria-label={isPlaying ? t('player.pauseStation', { name: station.name }) : t('player.playStation', { name: station.name })}
-            className="w-12 h-12 bg-primary-500 hover:bg-primary-600 disabled:bg-primary-300 rounded-full flex items-center justify-center text-white transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+            className="hidden sm:flex w-12 h-12 bg-primary-500 hover:bg-primary-600 disabled:bg-primary-300 rounded-full items-center justify-center text-white transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
           >
             {isBuffering ? (
               <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -99,9 +104,22 @@ export const StationCard: React.FC<StationCardProps> = ({
                 onFavorite()
               }}
               aria-label={isFavorite ? t('favorites.removeFromFavorites') : t('favorites.addToFavorites')}
-              className="w-12 h-12 bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 rounded-full flex items-center justify-center transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+              className="w-12 h-12 flex items-center justify-center transition-colors focus:outline-none"
             >
-              <span className="text-xl">{isFavorite ? '❤️' : '🤍'}</span>
+              <svg
+                className="w-6 h-6 text-red-500 hover:scale-110 transition-transform"
+                fill={isFavorite ? 'currentColor' : 'none'}
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                />
+              </svg>
             </button>
           )}
         </div>

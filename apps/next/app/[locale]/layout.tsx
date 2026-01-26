@@ -155,7 +155,7 @@ export async function generateMetadata({
       description: localeMetadata.ogDescription,
       images: [
         {
-          url: '/og-image.png',
+          url: '/og-image.jpg',
           width: 1200,
           height: 630,
           alt: 'RadioApp',
@@ -168,7 +168,7 @@ export async function generateMetadata({
       creator: '@radioapp',
       title: localeMetadata.ogTitle,
       description: localeMetadata.ogDescription,
-      images: ['/og-image.png'],
+      images: ['/og-image.jpg'],
     },
     robots: {
       index: true,
@@ -191,6 +191,7 @@ export async function generateMetadata({
         'x-default': `${BASE_URL}/es`,
       },
     },
+    manifest: '/manifest.webmanifest',
     category: 'entertainment',
   }
 }

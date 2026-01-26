@@ -19,11 +19,11 @@ type SupportedLocale = typeof SUPPORTED_LOCALES[number]
 function getLocaleFromPathname(pathname: string): SupportedLocale | undefined {
   const segments = pathname.split('/')
   const potentialLocale = segments[1]
-  
+
   if (SUPPORTED_LOCALES.includes(potentialLocale as SupportedLocale)) {
     return potentialLocale as SupportedLocale
   }
-  
+
   return undefined
 }
 
@@ -34,7 +34,7 @@ function getLocaleFromPathname(pathname: string): SupportedLocale | undefined {
  */
 function detectLocaleFromHeader(request: NextRequest): SupportedLocale {
   const acceptLanguage = request.headers.get('accept-language')
-  
+
   if (!acceptLanguage) {
     return DEFAULT_LOCALE
   }
@@ -76,6 +76,7 @@ function shouldExcludePath(pathname: string): boolean {
     '/sitemap.xml',
     '/ads.txt',        // ads.txt must be served from root without locale prefix
     '/manifest.json',
+    '/manifest.webmanifest',  // PWA manifest must be served from root
     '/sw.js',
   ]
 
@@ -87,6 +88,7 @@ function shouldExcludePath(pathname: string): boolean {
     '.gif',
     '.svg',
     '.webp',
+    '.webmanifest',  // PWA manifest extension
     '.css',
     '.js',
     '.json',
@@ -126,7 +128,7 @@ export async function middleware(request: NextRequest) {
 
   // Generate CSP nonce for this request
   const nonce = generateNonce()
-  
+
   // Get security headers including CSP
   const securityHeaders = getSecurityHeaders(nonce)
 
@@ -159,7 +161,7 @@ export async function middleware(request: NextRequest) {
 
   // 1. Try to get locale from cookie (user preference)
   const cookieLocale = request.cookies.get('app-locale')?.value as SupportedLocale | undefined
-  
+
   let detectedLocale: SupportedLocale
 
   if (cookieLocale && SUPPORTED_LOCALES.includes(cookieLocale)) {
@@ -171,24 +173,24 @@ export async function middleware(request: NextRequest) {
 
   // Redirect to path with locale prefix
   const newUrl = new URL(`/${detectedLocale}${pathname}${search}`, request.url)
-  
+
   const response = NextResponse.redirect(newUrl)
-  
+
   // Set cookie to remember user's locale preference
   response.cookies.set('app-locale', detectedLocale, {
     maxAge: 60 * 60 * 24 * 365, // 1 year
     path: '/',
     sameSite: 'lax',
   })
-  
+
   // Add CSP nonce to response headers
   response.headers.set('x-nonce', nonce)
-  
+
   // Add security headers
   Object.entries(securityHeaders).forEach(([key, value]) => {
     response.headers.set(key, value)
   })
-  
+
   return response
 }
 
@@ -204,7 +206,8 @@ export const config = {
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
      * - public files (public folder)
+     * - .webmanifest files (PWA manifest)
      */
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|css|js)$).*)',
+    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|webmanifest|ico|css|js)$).*)',
   ],
 }

@@ -49,7 +49,7 @@ export default function HomePage() {
         <header className="mb-8 flex items-start justify-between">
           <div className="flex-1">
             <h1 className="text-4xl font-bold text-neutral-900 dark:text-white mb-2">
-              🎵 {t('app.title')}
+              {t('app.title')}
             </h1>
             <p className="text-lg text-neutral-600 dark:text-neutral-400">
               {t('app.subtitle')}
