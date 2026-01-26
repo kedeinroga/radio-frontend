@@ -27,7 +27,6 @@ export function PlayerBar() {
 
   const handleStationClick = () => {
     if (currentStation?.id) {
-      // Use ID for URLs
       router.push(`/radio/${currentStation.id}`)
     }
   }
