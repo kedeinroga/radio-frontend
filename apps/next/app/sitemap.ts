@@ -1,121 +1,79 @@
 import { MetadataRoute } from 'next'
-import { SEOApiRepository, GetSitemapData } from '@radio-app/app'
+import { SEOApiRepository } from '@radio-app/app'
 
-// Force dynamic generation - don't generate during build
+// Force dynamic generation
 export const dynamic = 'force-dynamic'
 export const revalidate = 3600 // Revalidate every hour
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://rradio.online'
-const SUPPORTED_LOCALES = ['es', 'en', 'fr', 'de'] as const
+const STATIONS_PER_SITEMAP = 5000 // Google recommends max 50,000 URLs per sitemap
 
 /**
- * Generate minimal sitemap when API is unavailable
- */
-function generateMinimalSitemap(): MetadataRoute.Sitemap {
-  const minimalSitemap: MetadataRoute.Sitemap = []
-
-  SUPPORTED_LOCALES.forEach(locale => {
-    minimalSitemap.push({
-      url: `${BASE_URL}/${locale}`,
-      lastModified: new Date(),
-      changeFrequency: 'daily',
-      priority: 1.0,
-    })
-  })
-
-  return minimalSitemap
-}
-
-/**
- * Dynamic Sitemap Generator
- * Generates sitemap.xml from backend SEO data
- * Includes: home, search, countries, genres
- * Generates URLs for all supported locales with alternates
+ * Sitemap Index
+ * 
+ * With 30,000+ stations, we need multiple sitemaps:
+ * - sitemap.xml (this file) - Index pointing to all sitemaps
+ * - sitemap-static.xml - Static pages (home, search, etc)
+ * - sitemap-countries.xml - Country pages
+ * - sitemap-genres.xml - Genre pages
+ * - sitemap-stations-0.xml - Stations 0-4999
+ * - sitemap-stations-1.xml - Stations 5000-9999
+ * - sitemap-stations-2.xml - Stations 10000-14999
+ * - ... etc
  */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // CRITICAL: Skip during build to prevent worker crash
   if (process.env.SKIP_BUILD_STATIC_GENERATION === '1') {
-    return generateMinimalSitemap()
+    return []
   }
 
   // During build time, skip API calls if no API URL is configured
   if (!process.env.NEXT_PUBLIC_API_URL) {
-    return generateMinimalSitemap()
+    return []
   }
 
-  const seoRepository = new SEOApiRepository()
-  const getSitemapData = new GetSitemapData(seoRepository)
-
   try {
-    const sitemapData = await getSitemapData.execute()
+    // Get actual station count from API
+    const seoRepository = new SEOApiRepository()
+    let totalStations = 30000 // Default fallback
 
-    const sitemapEntries: MetadataRoute.Sitemap = []
-
-    // Helper function to generate alternates for a given path
-    const generateAlternates = (path: string) => {
-      const alternates: { languages: Record<string, string> } = {
-        languages: {}
-      }
-
-      SUPPORTED_LOCALES.forEach(locale => {
-        alternates.languages[locale] = `${BASE_URL}/${locale}${path}`
-      })
-
-      return alternates
+    try {
+      totalStations = await seoRepository.getTotalStationCount()
+    } catch (error) {
+      console.error('[sitemap] Error getting station count, using default:', error)
     }
 
-    // Static pages - generate for each locale
-    const staticPaths = [
-      { path: '', priority: 1.0, changeFrequency: 'daily' as const },
-      { path: '/search', priority: 0.8, changeFrequency: 'daily' as const },
-      { path: '/favorites', priority: 0.7, changeFrequency: 'weekly' as const }
+    const numStationSitemaps = Math.ceil(totalStations / STATIONS_PER_SITEMAP)
+
+    const sitemapIndex: MetadataRoute.Sitemap = [
+      // Static pages sitemap
+      {
+        url: `${BASE_URL}/sitemap-static.xml`,
+        lastModified: new Date(),
+      },
+      // Countries sitemap
+      {
+        url: `${BASE_URL}/sitemap-countries.xml`,
+        lastModified: new Date(),
+      },
+      // Genres sitemap
+      {
+        url: `${BASE_URL}/sitemap-genres.xml`,
+        lastModified: new Date(),
+      },
     ]
 
-    staticPaths.forEach(({ path, priority, changeFrequency }) => {
-      SUPPORTED_LOCALES.forEach(locale => {
-        sitemapEntries.push({
-          url: `${BASE_URL}/${locale}${path}`,
-          lastModified: new Date(),
-          changeFrequency,
-          priority,
-          alternates: generateAlternates(path)
-        })
+    // Add station sitemaps dynamically based on actual count
+    for (let i = 0; i < numStationSitemaps; i++) {
+      sitemapIndex.push({
+        url: `${BASE_URL}/sitemap-stations-${i}.xml`,
+        lastModified: new Date(),
       })
-    })
+    }
 
-    // Country pages - generate for each locale
-    sitemapData.popularCountries.forEach(country => {
-      const path = `/country/${country.urlSlug}`
-
-      SUPPORTED_LOCALES.forEach(locale => {
-        sitemapEntries.push({
-          url: `${BASE_URL}/${locale}${path}`,
-          lastModified: sitemapData.lastUpdatedDate,
-          changeFrequency: 'daily' as const,
-          priority: 0.9,
-          alternates: generateAlternates(path)
-        })
-      })
-    })
-
-    // Genre/Tag pages - generate for each locale
-    sitemapData.popularTags.forEach(tag => {
-      const path = `/genre/${tag.urlSlug}`
-
-      SUPPORTED_LOCALES.forEach(locale => {
-        sitemapEntries.push({
-          url: `${BASE_URL}/${locale}${path}`,
-          lastModified: sitemapData.lastUpdatedDate,
-          changeFrequency: 'daily' as const,
-          priority: 0.8,
-          alternates: generateAlternates(path)
-        })
-      })
-    })
-
-    return sitemapEntries
+    return sitemapIndex
   } catch (error) {
-    // Return minimal sitemap on error - with all locales
-    return generateMinimalSitemap()
+    console.error('[sitemap] Error generating sitemap index:', error)
+    return []
   }
 }

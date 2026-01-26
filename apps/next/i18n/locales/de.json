@@ -244,8 +244,8 @@
   },
   "seo": {
     "home": {
-      "title": "Radio App - Radiosender aus aller Welt streamen",
-      "description": "Genießen Sie Tausende von Live-Radiosendern aus der ganzen Welt. Hören Sie Musik, Nachrichten, Sport und mehr."
+      "title": "Rradio - Kostenloses Online-Radio Hören | Tausende Live-Sender",
+      "description": "Genießen Sie Tausende von Live-Radiosendern aus der ganzen Welt. Hören Sie Musik, Nachrichten, Sport und mehr, kostenlos und ohne Downloads."
     },
     "search": {
       "title": "Radiosender Suchen",
@@ -266,6 +266,50 @@
     "genre": {
       "title": "{{genre}} Radiosender",
       "description": "Erkunden und hören Sie {{genre}}-Radiosender aus der ganzen Welt."
+    },
+    "whyChooseUs": {
+      "title": "Warum Rradio wählen?"
+    },
+    "features": {
+      "variety": {
+        "title": "Tausende von Sendern",
+        "description": "Zugriff auf über 30.000 Radiosender aus der ganzen Welt. Von Musik bis Nachrichten, Sport und Podcasts, finden Sie genau das, was Sie suchen."
+      },
+      "global": {
+        "title": "Weltweite Abdeckung",
+        "description": "Hören Sie Sender aus über 200 Ländern. Entdecken Sie lokale Musik, internationale Nachrichten und Inhalte in mehreren Sprachen."
+      },
+      "free": {
+        "title": "100% Kostenlos",
+        "description": "Genießen Sie alle unsere Sender ohne Kosten. Keine versteckten Abonnements, keine Zeitlimits. Völlig kostenloses Online-Radio."
+      },
+      "anywhere": {
+        "title": "Überall Hören",
+        "description": "Kompatibel mit allen Ihren Geräten: Handy, Tablet, Computer. Nehmen Sie Ihre Lieblingsmusik überall mit hin."
+      }
+    },
+    "faq": {
+      "title": "Häufig Gestellte Fragen",
+      "q1": {
+        "question": "Ist es wirklich kostenlos, Radio auf Rradio zu hören?",
+        "answer": "Ja, Rradio ist 100% kostenlos. Sie können alle Radiosender ohne Kosten hören, ohne Zeitlimits und ohne Registrierung. Wählen Sie einfach Ihren Lieblingssender und beginnen Sie zu hören."
+      },
+      "q2": {
+        "question": "Muss ich etwas herunterladen, um Radio zu hören?",
+        "answer": "Sie müssen keine App herunterladen. Rradio funktioniert direkt in Ihrem Webbrowser. Sie können jedoch auch die Progressive Web App (PWA) auf Ihrem Gerät installieren für schnelleren Zugriff."
+      },
+      "q3": {
+        "question": "Wie viele Radiosender sind verfügbar?",
+        "answer": "Wir haben über 30.000 Radiosender aus der ganzen Welt. Wir decken alle Musikgenres, Nachrichten, Sport, Podcasts und mehr ab. Wir fügen ständig neue Sender hinzu, um Ihnen die beste Vielfalt zu bieten."
+      },
+      "q4": {
+        "question": "Kann ich Sender aus anderen Ländern hören?",
+        "answer": "Natürlich! Rradio ermöglicht es Ihnen, Sender aus über 200 Ländern zu hören. Entdecken Sie Musik und Kultur aus der ganzen Welt, von lokalen Radios bis zu den beliebtesten internationalen Sendern."
+      },
+      "q5": {
+        "question": "Wie speichere ich meine Lieblingssender?",
+        "answer": "Es ist sehr einfach. Klicken Sie einfach auf das Herz-Symbol ❤️ bei einem beliebigen Sender, um ihn zu Ihren Favoriten hinzuzufügen. Sie können schnell darauf zugreifen über den Bereich 'Favoriten' im Navigations menü."
+      }
     }
   },
   "time": {
@@ -284,10 +328,10 @@
     "yearsAgo": "Vor {{count}} Jahren"
   },
   "app": {
-    "title": "Radio App",
-    "subtitle": "Streamen Sie Radiosender aus der ganzen Welt",
+    "title": "Rradio",
+    "subtitle": "Hören Sie über 30.000 Radiosender aus der ganzen Welt",
     "version": "Version {{version}}",
-    "copyright": "© {{year}} Radio App. Alle Rechte vorbehalten.",
+    "copyright": "© {{year}} Rradio. Alle Rechte vorbehalten.",
     "poweredBy": "Angetrieben von"
   },
   "premium": {

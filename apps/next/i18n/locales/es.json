@@ -244,8 +244,8 @@
   },
   "seo": {
     "home": {
-      "title": "Radio App - Stream Radio Stations from Around the World",
-      "description": "Disfruta de miles de estaciones de radio en vivo de todo el mundo. Escucha música, noticias, deportes y más."
+      "title": "Rradio - Escucha Radio Online Gratis | Miles de Estaciones en Vivo",
+      "description": "Disfruta de miles de estaciones de radio en vivo de todo el mundo. Escucha música, noticias, deportes y más, gratis y sin descargas."
     },
     "search": {
       "title": "Buscar Estaciones de Radio",
@@ -266,6 +266,50 @@
     "genre": {
       "title": "Estaciones de Radio {{genre}}",
       "description": "Explora y escucha estaciones de radio de {{genre}} de todo el mundo."
+    },
+    "whyChooseUs": {
+      "title": "¿Por qué elegir Rradio?"
+    },
+    "features": {
+      "variety": {
+        "title": "Miles de Estaciones",
+        "description": "Accede a más de 30,000 estaciones de radio de todo el mundo. Desde música hasta noticias, deportes y podcasts, encuentra exactamente lo que buscas."
+      },
+      "global": {
+        "title": "Cobertura Global",
+        "description": "Escucha estaciones de más de 200 países. Descubre música local, noticias internacionales y contenido en múltiples idiomas."
+      },
+      "free": {
+        "title": "100% Gratis",
+        "description": "Disfruta de todas nuestras estaciones sin costo alguno. Sin suscripciones ocultas, sin límites de tiempo. Radio online completamente gratis."
+      },
+      "anywhere": {
+        "title": "Escucha en Cualquier Lugar",
+        "description": "Compatible con todos tus dispositivos: móvil, tablet, computadora. Lleva tu música favorita contigo donde vayas."
+      }
+    },
+    "faq": {
+      "title": "Preguntas Frecuentes",
+      "q1": {
+        "question": "¿Es realmente gratis escuchar radio en Rradio?",
+        "answer": "Sí, Rradio es 100% gratuito. Puedes escuchar todas las estaciones de radio sin ningún costo, sin límites de tiempo y sin necesidad de registrarte. Simplemente elige tu estación favorita y comienza a escuchar."
+      },
+      "q2": {
+        "question": "¿Necesito descargar algo para escuchar radio?",
+        "answer": "No necesitas descargar ninguna aplicación. Rradio funciona directamente en tu navegador web. Sin embargo, también puedes instalar la aplicación web progresiva (PWA) en tu dispositivo para un acceso más rápido."
+      },
+      "q3": {
+        "question": "¿Cuántas estaciones de radio están disponibles?",
+        "answer": "Tenemos más de 30,000 estaciones de radio de todo el mundo. Cubrimos todos los géneros musicales, noticias, deportes, podcasts y más. Constantemente agregamos nuevas estaciones para ofrecerte la mejor variedad."
+      },
+      "q4": {
+        "question": "¿Puedo escuchar estaciones de otros países?",
+        "answer": "¡Por supuesto! Rradio te permite escuchar estaciones de más de 200 países. Descubre música y cultura de todo el mundo, desde radios locales hasta las estaciones más populares internacionalmente."
+      },
+      "q5": {
+        "question": "¿Cómo guardo mis estaciones favoritas?",
+        "answer": "Es muy fácil. Solo haz clic en el ícono de corazón ❤️ en cualquier estación para agregarla a tus favoritas. Podrás acceder a ellas rápidamente desde la sección 'Favoritas' en el menú de navegación."
+      }
     }
   },
   "time": {
@@ -284,10 +328,10 @@
     "yearsAgo": "Hace {{count}} años"
   },
   "app": {
-    "title": "Radio App",
-    "subtitle": "Transmite estaciones de radio de todo el mundo",
+    "title": "Rradio",
+    "subtitle": "Escucha más de 30,000 estaciones de radio de todo el mundo",
     "version": "Versión {{version}}",
-    "copyright": "© {{year}} Radio App. Todos los derechos reservados.",
+    "copyright": "© {{year}} Rradio. Todos los derechos reservados.",
     "poweredBy": "Potenciado por"
   },
   "premium": {

@@ -244,8 +244,8 @@
   },
   "seo": {
     "home": {
-      "title": "Radio App - Écoutez des Stations de Radio du Monde Entier",
-      "description": "Profitez de milliers de stations de radio en direct du monde entier. Écoutez de la musique, des actualités, des sports et plus encore."
+      "title": "Rradio - Écoutez la Radio en Ligne Gratuite | Des Milliers de Stations en Direct",
+      "description": "Profitez de milliers de stations de radio en direct du monde entier. Écoutez de la musique, des actualités, des sports et plus encore, gratuitement et sans téléchargement."
     },
     "search": {
       "title": "Rechercher des Stations de Radio",
@@ -266,6 +266,50 @@
     "genre": {
       "title": "Stations de Radio {{genre}}",
       "description": "Explorez et écoutez des stations de radio {{genre}} du monde entier."
+    },
+    "whyChooseUs": {
+      "title": "Pourquoi choisir Rradio ?"
+    },
+    "features": {
+      "variety": {
+        "title": "Des Milliers de Stations",
+        "description": "Accédez à plus de 30 000 stations de radio du monde entier. De la musique aux actualités, sports et podcasts, trouvez exactement ce que vous cherchez."
+      },
+      "global": {
+        "title": "Couverture Mondiale",
+        "description": "Écoutez des stations de plus de 200 pays. Découvrez de la musique locale, des actualités internationales et du contenu en plusieurs langues."
+      },
+      "free": {
+        "title": "100% Gratuit",
+        "description": "Profitez de toutes nos stations sans aucun coût. Pas d'abonnements cachés, pas de limites de temps. Radio en ligne totalement gratuite."
+      },
+      "anywhere": {
+        "title": "Écoutez Partout",
+        "description": "Compatible avec tous vos appareils : mobile, tablette, ordinateur. Emportez votre musique préférée partout avec vous."
+      }
+    },
+    "faq": {
+      "title": "Questions Fréquentes",
+      "q1": {
+        "question": "Est-ce vraiment gratuit d'écouter la radio sur Rradio ?",
+        "answer": "Oui, Rradio est 100% gratuit. Vous pouvez écouter toutes les stations de radio sans aucun coût, sans limites de temps et sans besoin de vous inscrire. Choisissez simplement votre station préférée et commencez à écouter."
+      },
+      "q2": {
+        "question": "Dois-je télécharger quelque chose pour écouter la radio ?",
+        "answer": "Vous n'avez besoin de télécharger aucune application. Rradio fonctionne directement dans votre navigateur web. Cependant, vous pouvez également installer l'application web progressive (PWA) sur votre appareil pour un accès plus rapide."
+      },
+      "q3": {
+        "question": "Combien de stations de radio sont disponibles ?",
+        "answer": "Nous avons plus de 30 000 stations de radio du monde entier. Nous couvrons tous les genres musicaux, actualités, sports, podcasts et plus encore. Nous ajoutons constamment de nouvelles stations pour vous offrir la meilleure variété."
+      },
+      "q4": {
+        "question": "Puis-je écouter des stations d'autres pays ?",
+        "answer": "Bien sûr ! Rradio vous permet d'écouter des stations de plus de 200 pays. Découvrez la musique et la culture du monde entier, des radios locales aux stations internationales les plus populaires."
+      },
+      "q5": {
+        "question": "Comment sauvegarder mes stations favorites ?",
+        "answer": "C'est très facile. Cliquez simplement sur l'icône cœur ❤️ sur n'importe quelle station pour l'ajouter à vos favoris. Vous pouvez y accéder rapidement depuis la section 'Favoris' dans le menu de navigation."
+      }
     }
   },
   "time": {
@@ -284,10 +328,10 @@
     "yearsAgo": "Il y a {{count}} ans"
   },
   "app": {
-    "title": "Radio App",
-    "subtitle": "Diffusez des stations de radio du monde entier",
+    "title": "Rradio",
+    "subtitle": "Écoutez plus de 30 000 stations de radio du monde entier",
     "version": "Version {{version}}",
-    "copyright": "© {{year}} Radio App. Tous droits réservés.",
+    "copyright": "© {{year}} Rradio. Tous droits réservés.",
     "poweredBy": "Propulsé par"
   },
   "premium": {

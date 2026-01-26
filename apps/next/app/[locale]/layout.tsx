@@ -45,11 +45,12 @@ export async function generateMetadata({
   const metadataByLocale: Record<string, any> = {
     es: {
       title: {
-        template: '%s | RadioApp - Escucha Radio Online',
-        default: 'RadioApp - Las Mejores Estaciones de Radio en Vivo',
+        template: '%s | Rradio - Escucha Radio Online',
+        default: 'Rradio - Las Mejores Estaciones de Radio en Vivo',
       },
-      description: 'Descubre y escucha miles de estaciones de radio de todo el mundo. Rock, Pop, Jazz, Noticias y más. Gratis y en alta calidad.',
+      description: 'Descubre y escucha más de 30,000 estaciones de radio de todo el mundo. Rock, Pop, Jazz, Noticias y más. Gratis y en alta calidad.',
       keywords: [
+        'rradio',
         'radio online',
         'streaming radio',
         'música en vivo',
@@ -59,16 +60,17 @@ export async function generateMetadata({
         'escuchar radio',
         'radio mundial'
       ],
-      ogTitle: 'RadioApp - Radio Online Gratis',
-      ogDescription: 'Escucha miles de estaciones de radio en vivo de todo el mundo',
+      ogTitle: 'Rradio - Radio Online Gratis',
+      ogDescription: 'Escucha más de 30,000 estaciones de radio en vivo de todo el mundo',
     },
     en: {
       title: {
-        template: '%s | RadioApp - Listen to Radio Online',
-        default: 'RadioApp - Best Live Radio Stations',
+        template: '%s | Rradio - Listen to Radio Online',
+        default: 'Rradio - Best Live Radio Stations',
       },
-      description: 'Discover and listen to thousands of radio stations from around the world. Rock, Pop, Jazz, News and more. Free and high quality.',
+      description: 'Discover and listen to over 30,000 radio stations from around the world. Rock, Pop, Jazz, News and more. Free and high quality.',
       keywords: [
+        'rradio',
         'online radio',
         'streaming radio',
         'live music',
@@ -78,8 +80,8 @@ export async function generateMetadata({
         'listen radio',
         'world radio'
       ],
-      ogTitle: 'RadioApp - Free Online Radio',
-      ogDescription: 'Listen to thousands of live radio stations from around the world',
+      ogTitle: 'Rradio - Free Online Radio',
+      ogDescription: 'Listen to over 30,000 live radio stations from around the world',
     },
     fr: {
       title: {
@@ -136,9 +138,9 @@ export async function generateMetadata({
     title: localeMetadata.title,
     description: localeMetadata.description,
     keywords: localeMetadata.keywords,
-    authors: [{ name: 'RadioApp Team' }],
-    creator: 'RadioApp',
-    publisher: 'RadioApp',
+    authors: [{ name: 'Rradio Team' }],
+    creator: 'Rradio',
+    publisher: 'Rradio',
     formatDetection: {
       email: false,
       address: false,
@@ -148,7 +150,7 @@ export async function generateMetadata({
       type: 'website',
       locale: ogLocaleMap[locale] || 'es_ES',
       url: `${BASE_URL}/${locale}`,
-      siteName: 'RadioApp',
+      siteName: 'Rradio',
       title: localeMetadata.ogTitle,
       description: localeMetadata.ogDescription,
       images: [

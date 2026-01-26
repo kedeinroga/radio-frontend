@@ -7,6 +7,7 @@ import { StationCard } from '@/components/StationCard'
 import { LoadingSpinner } from '@/components/LoadingSpinner'
 import { EmptyState } from '@/components/EmptyState'
 import { LanguageSelector } from '@/components/LanguageSelector'
+import { FAQSection } from '@/components/FAQSection'
 import { usePlayer } from '@/hooks/usePlayer'
 import { useFavorites } from '@/hooks/useFavorites'
 import { useAppTranslation } from '@/hooks/useAppTranslation'
@@ -106,6 +107,58 @@ export default function HomePage() {
               ))}
             </div>
           )}
+        </section>
+
+        {/* SEO Content Section */}
+        <section className="mt-16">
+          <h2 className="text-3xl font-bold text-neutral-900 dark:text-white mb-6">
+            {t('seo.whyChooseUs.title')}
+          </h2>
+          
+          <div className="grid md:grid-cols-2 gap-6 mb-12">
+            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm">
+              <h3 className="text-xl font-semibold text-neutral-900 dark:text-white mb-3 flex items-center gap-2">
+                <span>🎵</span> {t('seo.features.variety.title')}
+              </h3>
+              <p className="text-neutral-600 dark:text-neutral-400">
+                {t('seo.features.variety.description')}
+              </p>
+            </div>
+            
+            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm">
+              <h3 className="text-xl font-semibold text-neutral-900 dark:text-white mb-3 flex items-center gap-2">
+                <span>🌍</span> {t('seo.features.global.title')}
+              </h3>
+              <p className="text-neutral-600 dark:text-neutral-400">
+                {t('seo.features.global.description')}
+              </p>
+            </div>
+            
+            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm">
+              <h3 className="text-xl font-semibold text-neutral-900 dark:text-white mb-3 flex items-center gap-2">
+                <span>💯</span> {t('seo.features.free.title')}
+              </h3>
+              <p className="text-neutral-600 dark:text-neutral-400">
+                {t('seo.features.free.description')}
+              </p>
+            </div>
+            
+            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm">
+              <h3 className="text-xl font-semibold text-neutral-900 dark:text-white mb-3 flex items-center gap-2">
+                <span>📱</span> {t('seo.features.anywhere.title')}
+              </h3>
+              <p className="text-neutral-600 dark:text-neutral-400">
+                {t('seo.features.anywhere.description')}
+              </p>
+            </div>
+          </div>
+
+          {/* FAQ Section */}
+          <h2 className="text-3xl font-bold text-neutral-900 dark:text-white mb-6">
+            {t('seo.faq.title')}
+          </h2>
+          
+          <FAQSection />
         </section>
       </div>
     </main>
