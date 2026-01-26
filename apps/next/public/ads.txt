@@ -1,26 +1,15 @@
 # ==============================================
-# Authorized Digital Sellers (ads.txt) for radio.app
-# Last updated: 2026-01-21
-# Version: 1.0
+# Authorized Digital Sellers (ads.txt) for rradio.online
+# Last updated: 2026-01-26
+# Version: 1.1
 # ==============================================
 
-# Self-hosted advertising system
-# Format: domain, publisher_id, relationship, [certification_authority_id]
-radio.app, direct-inventory, DIRECT, 00000000000000000000000000000000
-
-# Note: The certification_authority_id (TAG ID) above is a placeholder.
-# TAG (Trustworthy Accountability Group) IDs are used by certified ad networks.
-# For self-hosted ad systems:
-# - Using a placeholder like above eliminates validation warnings
-# - You can apply for TAG certification at https://www.tagtoday.net/ if needed
-# - When integrating with real ad networks (Google, etc.), replace with their actual TAG ID
-
-# Contact information (required)
-contact=ads@radio.app
+# Contact information (required by IAB standards)
+contact=contact@rradio.online
 
 # Variables (optional)
 # subdomain=ads
-# managerdomain=ads.radio.app
+# managerdomain=ads.rradio.online
 
 # ==============================================
 # Third-party ad networks
@@ -28,7 +17,7 @@ contact=ads@radio.app
 # Uncomment and add your actual publisher IDs when you integrate with ad networks
 
 # Google AdSense (example - replace with your actual pub-id)
-# google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
+google.com, pub-6865354936810553, DIRECT, f08c47fec0942fa0
 
 # Google Ad Manager / DFP (example)
 # google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
@@ -54,21 +43,20 @@ contact=ads@radio.app
 # ==============================================
 # Instructions:
 # ==============================================
-# 1. Replace "radio.app" with your actual domain
-# 2. Add your actual publisher IDs for any ad networks you use
-# 3. Remove the "#" to uncomment lines for networks you've integrated
-# 4. Use DIRECT for relationships where you sell inventory directly
-# 5. Use RESELLER for relationships where inventory is sold through intermediaries
-# 6. Certification Authority ID (last field) is optional but recommended
-#    - For Google: f08c47fec0942fa0
-#    - Check with each network for their TAG ID
+# This file is configured for rradio.online
+# 
+# To add more ad networks:
+# 1. Uncomment the network line below
+# 2. Replace XXXXX with your actual publisher ID
+# 3. Use DIRECT for direct relationships
+# 4. Use RESELLER for intermediary relationships
 # 
 # Validation tools:
 # - https://adstxt.guru/
 # - https://www.adstxtvalidator.com/
-# - Google Search Console (if using Google Ads)
+# - Google Search Console
 #
-# This file must be accessible at: https://yourdomain.com/ads.txt
+# This file must be accessible at: https://rradio.online/ads.txt
 # It should return HTTP 200 with Content-Type: text/plain
 # ==============================================
 

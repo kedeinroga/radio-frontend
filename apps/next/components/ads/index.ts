@@ -19,4 +19,7 @@ export type { AdClickHandlerProps, ClickTrackingResult } from './AdClickHandler'
 export { AudioAdPlayer, MinimalAudioAdPlayer } from './AudioAdPlayer'
 export type { AudioAdPlayerProps } from './AudioAdPlayer'
 
+export { GoogleAdSense } from './GoogleAdSense'
+export type { GoogleAdSenseProps } from './GoogleAdSense'
+
 export { default as RadioPlayerWithAdsExample } from './RadioPlayerWithAdsExample'
