@@ -9,7 +9,6 @@ import {
   LocaleFormatter,
   setApiLocale,
 } from '@radio-app/app'
-import { useRestoreSession } from '@/hooks/useRestoreSession'
 
 /**
  * I18n Context Type
@@ -59,9 +58,6 @@ export function I18nProvider({ children, initialLocaleCode, initialTranslations 
   
   const [locale, setLocale] = useState<Locale>(defaultLocale)
   const [isLoading, setIsLoading] = useState(false) // Changed to false since we have initial translations
-
-  // Restore user session from HttpOnly cookies on mount
-  useRestoreSession()
 
   // Dependency Injection: Create adapters (infrastructure layer)
   const [translator] = useState<ITranslator>(() => {
