@@ -1,54 +1,45 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { backendHttpClient } from '@/lib/api/backendClient'
 
 /**
- * DELETE /api/auth/sessions/:sessionId
- * 
- * Revokes a specific session for the authenticated user
- * Proxies to backend /auth/sessions/:sessionId endpoint
+ * DELETE /api/auth/sessions/[sessionId]
+ * Delete a specific session
  */
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: Promise<{ sessionId: string }> }
+  { params }: { params: { sessionId: string } }
 ) {
-  const accessToken = request.cookies.get('@radio-app:access_token')?.value
-  
-  if (!accessToken) {
-    return NextResponse.json(
-      { error: { code: 'unauthorized', message: 'Not authenticated' } },
-      { status: 401 }
-    )
-  }
-  
   try {
-    // Await params in Next.js 15
-    const { sessionId } = await params
-    
-    const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api/v1'
-    
-    const response = await fetch(`${BACKEND_URL}/auth/sessions/${sessionId}`, {
-      method: 'DELETE',
-      headers: { 
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      },
-      signal: AbortSignal.timeout(5000), // 5 second timeout
-    })
-    
-    if (!response.ok) {
-      const errorText = await response.text()
+    const accessToken = request.cookies.get('@radio-app:access_token')?.value
+
+    if (!accessToken) {
       return NextResponse.json(
-        { error: { code: 'delete_failed', message: 'Failed to revoke session', details: errorText } },
-        { status: response.status }
+        { error: 'Unauthorized' },
+        { status: 401 }
       )
     }
-    
-    const data = await response.json()
-    return NextResponse.json(data)
+
+    const { sessionId } = params
+
+    await backendHttpClient.delete(`/auth/sessions/${sessionId}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+
+    return NextResponse.json({
+      success: true,
+      message: 'Session deleted successfully',
+    })
   } catch (error: any) {
+    console.error('Failed to delete session:', error)
 
     return NextResponse.json(
-      { error: { code: 'server_error', message: 'Internal server error', details: error.message } },
-      { status: 500 }
+      {
+        error: 'Failed to delete session',
+        message: error.message,
+      },
+      { status: error.status || 500 }
     )
   }
 }

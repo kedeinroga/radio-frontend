@@ -1,126 +1,52 @@
-'use client'
+import { useState, useEffect } from 'react'
+import { useHttpClient } from './useHttpClient'
+import { API_ROUTES } from '@/lib/constants/api'
 
 /**
- * usePremiumStatus Hook
+ * Hook para verificar el estado premium del usuario
  * 
- * Hook para verificar y gestionar el estado premium del usuario.
- * Cachea el resultado para evitar llamadas repetidas a la API.
- * 
- * @example
- * ```tsx
- * const { isPremium, isLoading, subscription, plan, refresh } = usePremiumStatus()
- * 
- * if (isPremium) {
- *   return <PremiumContent />
- * }
- * ```
+ * ✅ Usa useHttpClient (Clean Architecture)
+ * ✅ Usa API_ROUTES (no magic strings)
+ * ✅ Type-safe
  */
-
-import { useState, useEffect, useCallback } from 'react'
-import type { Subscription, SubscriptionPlan } from '@radio-app/app'
-
-interface PremiumStatusState {
-  isPremium: boolean
-  isLoading: boolean
-  subscription: Subscription | null
-  plan: SubscriptionPlan | null
-  isActive: boolean
-  daysRemaining?: number
-  error: string | null
-}
-
 export function usePremiumStatus() {
-  const [state, setState] = useState<PremiumStatusState>({
-    isPremium: false,
-    isLoading: true,
-    subscription: null,
-    plan: null,
-    isActive: false,
-    error: null,
-  })
+  const { get } = useHttpClient()
+  const [isPremium, setIsPremium] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
-  /**
-   * Fetch subscription status from API
-   */
-  const fetchStatus = useCallback(async () => {
-    try {
-      setState(prev => ({ ...prev, isLoading: true, error: null }))
-
-      const response = await fetch('/api/subscription/status', {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include', // Include cookies for auth
-      })
-
-      if (!response.ok) {
-        if (response.status === 401) {
-          // Not authenticated - treat as free user
-          setState({
-            isPremium: false,
-            isLoading: false,
-            subscription: null,
-            plan: null,
-            isActive: false,
-            error: null,
-          })
-          return
-        }
-
-        throw new Error(`HTTP ${response.status}`)
-      }
-
-      const data = await response.json()
-
-      setState({
-        isPremium: data.isPremium || false,
-        isLoading: false,
-        subscription: data.subscription,
-        plan: data.plan,
-        isActive: data.isActive || false,
-        daysRemaining: data.daysRemaining,
-        error: null,
-      })
-
-    } catch (error) {
-      setState({
-        isPremium: false,
-        isLoading: false,
-        subscription: null,
-        plan: null,
-        isActive: false,
-        error: error instanceof Error ? error.message : 'Unknown error',
-      })
-    }
+  useEffect(() => {
+    checkPremiumStatus()
   }, [])
 
-  /**
-   * Refresh status manually
-   */
-  const refresh = useCallback(() => {
-    fetchStatus()
-  }, [fetchStatus])
+  const checkPremiumStatus = async () => {
+    try {
+      setLoading(true)
+      setError(null)
 
-  /**
-   * Fetch on mount
-   */
-  useEffect(() => {
-    fetchStatus()
-  }, [fetchStatus])
+      // ✅ Usa hook con DI pattern
+      const data = await get<{ isPremium: boolean }>(
+        API_ROUTES.SUBSCRIPTION.STATUS
+      )
+
+      setIsPremium(data.isPremium)
+    } catch (err: any) {
+      console.error('Failed to check premium status:', err)
+      setError(err.message || 'Failed to check premium status')
+      setIsPremium(false)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const refresh = () => {
+    checkPremiumStatus()
+  }
 
   return {
-    ...state,
+    isPremium,
+    loading,
+    error,
     refresh,
   }
 }
-
-/**
- * Hook simplificado que solo retorna isPremium
- * Útil cuando solo necesitas saber si el usuario es premium
- */
-export function useIsPremium(): boolean {
-  const { isPremium } = usePremiumStatus()
-  return isPremium
-}
-
-export default usePremiumStatus

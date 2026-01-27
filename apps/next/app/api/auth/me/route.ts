@@ -1,47 +1,41 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { backendHttpClient } from '@/lib/api/backendClient'
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api/v1'
-
+/**
+ * GET /api/auth/me
+ * 
+ * Proxy para obtener información del usuario autenticado.
+ * ✅ Usa token de cookies HttpOnly
+ * ✅ Proxy al backend
+ */
 export async function GET(request: NextRequest) {
-  const accessToken = request.cookies.get('@radio-app:access_token')?.value
-
-  if (!accessToken) {
-    return NextResponse.json(
-      { error: { code: 'unauthorized', message: 'Not authenticated' } },
-      { status: 401 }
-    )
-  }
-
   try {
-    // Llamar al backend para obtener información del usuario
-    const response = await fetch(`${BACKEND_URL}/auth/me`, {
-      headers: {
-        'Authorization': `Bearer ${accessToken}`
-      }
-    })
+    const accessToken = request.cookies.get('@radio-app:access_token')?.value
 
-    if (!response.ok) {
+    if (!accessToken) {
       return NextResponse.json(
-        { error: { code: 'fetch_failed', message: 'Failed to fetch user info' } },
-        { status: response.status }
+        { error: 'Not authenticated' },
+        { status: 401 }
       )
     }
 
-    const data = await response.json()
+    // ✅ Proxy al backend con authorization
+    const data = await backendHttpClient.get('/auth/me', {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
 
-    // Mapear user_type a role para compatibilidad con frontend
-    const user = data.user || data
-    const mappedUser = {
-      id: user.id,
-      email: user.email,
-      role: user.user_type || user.role
-    }
+    return NextResponse.json(data, { status: 200 })
+  } catch (error: any) {
+    console.error('Failed to get user info:', error)
 
-    return NextResponse.json(mappedUser)
-  } catch (error) {
     return NextResponse.json(
-      { error: { code: 'server_error', message: 'Internal server error' } },
-      { status: 500 }
+      {
+        error: 'Failed to get user info',
+        message: error.message,
+      },
+      { status: error.status || 500 }
     )
   }
 }

@@ -1,217 +1,103 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { cookies } from 'next/headers'
-
-const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api/v1'
+import { backendHttpClient } from '@/lib/api/backendClient'
 
 /**
- * Generic Admin API Proxy
- * Handles all /api/admin/* requests and forwards them to the backend
- * with the access_token from HttpOnly cookies
+ * Dynamic catch-all admin route
+ * 
+ * Handles all admin API requests not covered by specific routes.
+ * Proxies requests to backend with authentication.
+ * 
+ * Examples:
+ * - /api/admin/users → /admin/users
+ * - /api/admin/reports/monthly → /admin/reports/monthly
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ path: string[] }> }
+  { params }: { params: { path: string[] } }
 ) {
-  try {
-    const cookieStore = await cookies()
-    const accessToken = cookieStore.get('@radio-app:access_token')?.value
-
-    if (!accessToken) {
-      return NextResponse.json(
-        { error: 'No access token found' },
-        { status: 401 }
-      )
-    }
-
-    // Await params in Next.js 15
-    const { path } = await params
-
-    // Build backend URL from path segments
-    const pathString = path.join('/')
-    const searchParams = request.nextUrl.searchParams.toString()
-    const backendUrl = `${BACKEND_URL}/admin/${pathString}${searchParams ? `?${searchParams}` : ''}`
-
-    // Forward request to backend with Authorization header
-    const response = await fetch(backendUrl, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      },
-    })
-
-    if (!response.ok) {
-      const errorText = await response.text()
-      return NextResponse.json(
-        { error: 'Backend request failed', details: errorText },
-        { status: response.status }
-      )
-    }
-
-    const data = await response.json()
-    return NextResponse.json(data)
-  } catch (error: any) {
-    return NextResponse.json(
-      { error: 'Internal server error', message: error.message },
-      { status: 500 }
-    )
-  }
+  return handleAdminRequest(request, params, 'GET')
 }
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: Promise<{ path: string[] }> }
+  { params }: { params: { path: string[] } }
 ) {
-  try {
-    const cookieStore = await cookies()
-    const accessToken = cookieStore.get('@radio-app:access_token')?.value
-
-    if (!accessToken) {
-      return NextResponse.json(
-        { error: 'No access token found' },
-        { status: 401 }
-      )
-    }
-
-    // Await params in Next.js 15
-    const { path } = await params
-
-    // Build backend URL from path segments
-    const pathString = path.join('/')
-    const searchParams = request.nextUrl.searchParams.toString()
-    const backendUrl = `${BACKEND_URL}/admin/${pathString}${searchParams ? `?${searchParams}` : ''}`
-
-    // Get request body
-    const body = await request.json()
-
-    // Forward request to backend with Authorization header
-    const response = await fetch(backendUrl, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
-    })
-
-    if (!response.ok) {
-      const errorText = await response.text()
-      return NextResponse.json(
-        { error: 'Backend request failed', details: errorText },
-        { status: response.status }
-      )
-    }
-
-    const data = await response.json()
-    return NextResponse.json(data)
-  } catch (error: any) {
-    return NextResponse.json(
-      { error: 'Internal server error', message: error.message },
-      { status: 500 }
-    )
-  }
+  return handleAdminRequest(request, params, 'POST')
 }
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: Promise<{ path: string[] }> }
+  { params }: { params: { path: string[] } }
 ) {
-  try {
-    const cookieStore = await cookies()
-    const accessToken = cookieStore.get('@radio-app:access_token')?.value
-
-    if (!accessToken) {
-      return NextResponse.json(
-        { error: 'No access token found' },
-        { status: 401 }
-      )
-    }
-
-    // Await params in Next.js 15
-    const { path } = await params
-
-    // Build backend URL from path segments
-    const pathString = path.join('/')
-    const searchParams = request.nextUrl.searchParams.toString()
-    const backendUrl = `${BACKEND_URL}/admin/${pathString}${searchParams ? `?${searchParams}` : ''}`
-
-    // Get request body
-    const body = await request.json()
-
-    // Forward request to backend with Authorization header
-    const response = await fetch(backendUrl, {
-      method: 'PUT',
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
-    })
-
-    if (!response.ok) {
-      const errorText = await response.text()
-      return NextResponse.json(
-        { error: 'Backend request failed', details: errorText },
-        { status: response.status }
-      )
-    }
-
-    const data = await response.json()
-    return NextResponse.json(data)
-  } catch (error: any) {
-    return NextResponse.json(
-      { error: 'Internal server error', message: error.message },
-      { status: 500 }
-    )
-  }
+  return handleAdminRequest(request, params, 'PUT')
 }
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: Promise<{ path: string[] }> }
+  { params }: { params: { path: string[] } }
+) {
+  return handleAdminRequest(request, params, 'DELETE')
+}
+
+async function handleAdminRequest(
+  request: NextRequest,
+  params: { path: string[] },
+  method: 'GET' | 'POST' | 'PUT' | 'DELETE'
 ) {
   try {
-    const cookieStore = await cookies()
-    const accessToken = cookieStore.get('@radio-app:access_token')?.value
+    const accessToken = request.cookies.get('@radio-app:access_token')?.value
 
     if (!accessToken) {
       return NextResponse.json(
-        { error: 'No access token found' },
+        { error: 'Unauthorized - Admin access required' },
         { status: 401 }
       )
     }
 
-    // Await params in Next.js 15
+    // Construct backend path from dynamic segments
+    // ✅ Next.js 15: params must be awaited
     const { path } = await params
+    const backendPath = `/admin/${path.join('/')}`
 
-    // Build backend URL from path segments
-    const pathString = path.join('/')
-    const searchParams = request.nextUrl.searchParams.toString()
-    const backendUrl = `${BACKEND_URL}/admin/${pathString}${searchParams ? `?${searchParams}` : ''}`
+    // Get query params
+    const { searchParams } = new URL(request.url)
+    const queryString = searchParams.toString()
+    const fullPath = queryString ? `${backendPath}?${queryString}` : backendPath
 
-    // Forward request to backend with Authorization header
-    const response = await fetch(backendUrl, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      },
-    })
-
-    if (!response.ok) {
-      const errorText = await response.text()
-      return NextResponse.json(
-        { error: 'Backend request failed', details: errorText },
-        { status: response.status }
-      )
+    const headers = {
+      Authorization: `Bearer ${accessToken}`,
     }
 
-    const data = await response.json()
-    return NextResponse.json(data)
+    let data: any
+
+    // Handle different HTTP methods
+    switch (method) {
+      case 'GET':
+        data = await backendHttpClient.get(fullPath, { headers })
+        break
+      case 'POST':
+        const postBody = await request.json().catch(() => ({}))
+        data = await backendHttpClient.post(backendPath, postBody, { headers })
+        break
+      case 'PUT':
+        const putBody = await request.json().catch(() => ({}))
+        data = await backendHttpClient.put(backendPath, putBody, { headers })
+        break
+      case 'DELETE':
+        data = await backendHttpClient.delete(fullPath, { headers })
+        break
+    }
+
+    return NextResponse.json(data, { status: 200 })
   } catch (error: any) {
+    console.error(`Admin API error (${method}):`, error)
+
     return NextResponse.json(
-      { error: 'Internal server error', message: error.message },
-      { status: 500 }
+      {
+        error: `Failed to ${method} admin resource`,
+        message: error.message,
+      },
+      { status: error.status || 500 }
     )
   }
 }

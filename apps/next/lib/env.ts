@@ -3,18 +3,17 @@ import { z } from 'zod'
 /**
  * Environment Variables Schema
  * 
- * Este schema valida todas las variables de entorno necesarias para la aplicación.
- * Se ejecuta al inicio de la aplicación para garantizar que todas las variables
- * están configuradas correctamente.
+ * ✅ Actualizado para usar API_URL (server-only) en lugar de NEXT_PUBLIC_API_URL
+ * ✅ Backend URL ahora es server-side only, nunca expuesto al cliente
  */
 const envSchema = z.object({
   // ==========================================
-  // Backend API
+  // Backend API (SERVER-SIDE ONLY)
   // ==========================================
-  NEXT_PUBLIC_API_URL: z
+  API_URL: z
     .string()
-    .url('NEXT_PUBLIC_API_URL debe ser una URL válida')
-    .describe('URL del backend API (ej: http://localhost:8080/api/v1)'),
+    .url('API_URL debe ser una URL válida')
+    .describe('URL del backend API (server-side only, ej: http://localhost:8080/api/v1)'),
 
   // ==========================================
   // Stripe Configuration (NEVER expose secret key to client!)
@@ -88,11 +87,11 @@ export function validateEnv(): Env {
   // CRITICAL: Skip validation during build phase
   // Build phase doesn't need all runtime env vars (Stripe keys, etc)
   const isBuild = process.env.NEXT_PHASE === 'phase-production-build'
-  
+
   if (isBuild) {
     // Return minimal env for build phase
     return {
-      NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080',
+      API_URL: process.env.API_URL || 'http://localhost:8080/api/v1',
       STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder',
       STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET || 'whsec_placeholder',
       NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || 'pk_test_placeholder',
@@ -104,22 +103,22 @@ export function validateEnv(): Env {
       NEXT_PUBLIC_GA_MEASUREMENT_ID: process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID,
     } as Env
   }
-  
+
   try {
     const parsed = envSchema.parse(process.env)
-    
+
     return parsed
   } catch (error) {
     if (error instanceof z.ZodError) {
       console.error('❌ Environment validation failed:')
       console.error(error.issues)
-      
+
       // CRITICAL: In production, use safe defaults instead of crashing
       // This prevents the entire app from crashing if Stripe keys are missing
       if (process.env.NODE_ENV === 'production') {
         console.warn('⚠️ Using fallback values for missing env vars in production')
         return {
-          NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080',
+          API_URL: process.env.API_URL || 'http://localhost:8080/api/v1',
           STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder_missing',
           STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET || 'whsec_placeholder_missing',
           NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || 'pk_test_placeholder_missing',
@@ -132,7 +131,7 @@ export function validateEnv(): Env {
         } as Env
       }
     }
-    
+
     throw error
   }
 }
@@ -144,7 +143,7 @@ export function validateEnv(): Env {
  * ```typescript
  * import { env } from '@/lib/env'
  * 
- * const apiUrl = env.NEXT_PUBLIC_API_URL
+ * const apiUrl = env.API_URL  // ✅ Server-side only
  * ```
  */
 export const env = validateEnv()

@@ -1,63 +1,42 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { cookies } from 'next/headers'
-import { rateLimit, RATE_LIMITS } from '@/lib/rateLimit'
+import { backendHttpClient } from '@/lib/api/backendClient'
 
 /**
  * GET /api/admin/translations/[stationId]
- * 
- * Gets all translations for a station
- * Proxies to backend /admin/translations/{stationId} endpoint
+ * Get all translations for a specific station
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ stationId: string }> }
+  { params }: { params: { stationId: string } }
 ) {
-  const { stationId } = await params
-  
-  // Apply rate limiting
-  const rateLimitResult = rateLimit(request, RATE_LIMITS.ADMIN)
-  if (rateLimitResult) {
-    return rateLimitResult
-  }
-  
-  const cookieStore = await cookies()
-  const accessToken = cookieStore.get('@radio-app:access_token')?.value
-  
-  if (!accessToken) {
-    return NextResponse.json(
-      { error: { code: 'unauthorized', message: 'Not authenticated' } },
-      { status: 401 }
-    )
-  }
-  
   try {
-    const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api/v1'
-    
-    const response = await fetch(`${BACKEND_URL}/admin/translations/${stationId}`, {
-      method: 'GET',
-      headers: { 
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
+    const accessToken = request.cookies.get('@radio-app:access_token')?.value
+
+    if (!accessToken) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      )
+    }
+
+    const { stationId } = params
+
+    const data = await backendHttpClient.get(`/admin/translations/${stationId}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
       },
     })
-    
-    const data = await response.json()
-    
-    if (!response.ok) {
-      return NextResponse.json(data, { status: response.status })
-    }
-    
-    return NextResponse.json(data, { status: 200 })
+
+    return NextResponse.json(data)
   } catch (error: any) {
+    console.error('Failed to get translations:', error)
 
     return NextResponse.json(
-      { 
-        error: { 
-          code: 'internal_error', 
-          message: error.message || 'Failed to get station translations' 
-        } 
+      {
+        error: 'Failed to get translations',
+        message: error.message,
       },
-      { status: 500 }
+      { status: error.status || 500 }
     )
   }
 }

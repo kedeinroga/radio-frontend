@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import { useAuthStore, User, loginSchema, validateData, sanitizeErrorMessage, SecurityLog } from '@radio-app/app'
 import { useRateLimit } from '@/hooks/useRateLimit'
@@ -15,6 +15,7 @@ export default function AdminLoginPage() {
   const [validationErrors, setValidationErrors] = useState<Record<string, string[]>>({})
   const [isLoggingIn, setIsLoggingIn] = useState(false)
   const [isCheckingAuth, setIsCheckingAuth] = useState(true)
+  const hasCheckedAuth = useRef(false) // ✅ Prevenir múltiples checks
   
   // Rate limiting
   const rateLimit = useRateLimit('admin-login', {
@@ -25,48 +26,53 @@ export default function AdminLoginPage() {
 
   // Check authentication and redirect if needed
   useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        // Get current user from store
-        const currentUser = useAuthStore.getState().user
-        
-        if (currentUser?.isAdmin) {
-          // User is admin - verify with backend
-          try {
-            const response = await fetch('/api/auth/me', {
-              credentials: 'include'
-            })
-            
-            if (response.ok) {
-              // Cookies are valid, redirect to dashboard
-              const locale = pathname?.split('/')[1] || 'es'
-              const targetPath = `/${locale}/admin`
-              router.push(targetPath)
-              // Keep isCheckingAuth true while redirecting
-              return
-            } else {
-              // Cookies invalid or expired - clear user
-              useAuthStore.getState().setUser(null)
-            }
-          } catch (error) {
+    // ✅ Solo verificar una vez
+    if (!hasCheckedAuth.current) {
+      hasCheckedAuth.current = true
+      checkAuth()
+    }
+  }, []) // Dependencias vacías OK porque hasCheckedAuth previene re-ejecución
 
+  const checkAuth = async () => {
+    try {
+      // Get current user from store
+      const currentUser = useAuthStore.getState().user
+      
+      if (currentUser?.isAdmin) {
+        // User is admin - verify with backend
+        try {
+          const response = await fetch('/api/auth/me', {
+            credentials: 'include'
+          })
+          
+          if (response.ok) {
+            // Cookies are valid, redirect to dashboard
+            const locale = pathname?.split('/')[1] || 'es'
+            const targetPath = `/${locale}/admin`
+            router.push(targetPath)
+            // Keep isCheckingAuth true while redirecting
+            return
+          } else {
+            // Cookies invalid or expired - clear user
             useAuthStore.getState().setUser(null)
           }
+        } catch (error) {
+          console.error('Auth check error:', error)
+          useAuthStore.getState().setUser(null)
         }
-        
-        // No user or session invalid - show login form
-        setIsCheckingAuth(false)
-      } catch (error) {
-
-        setIsCheckingAuth(false)
       }
+      
+      // No user or session invalid - show login form
+      setIsCheckingAuth(false)
+    } catch (error) {
+      console.error('Check auth error:', error)
+      setIsCheckingAuth(false)
     }
-    
-    checkAuth()
-  }, [router, pathname, user])
+  }
 
   // Show loading while checking auth
   if (isCheckingAuth) {
+
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
         <div className="text-center">

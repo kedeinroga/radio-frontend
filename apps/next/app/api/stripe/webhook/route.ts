@@ -20,6 +20,7 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
+import { backendHttpClient } from '@/lib/api/backendClient'
 import {
   getStripeServerClient,
   getStripeWebhookSecret,
@@ -51,7 +52,7 @@ function verifyWebhookSignature(
 
     return event
   } catch (error) {
-
+    console.error('Webhook signature verification failed:', error)
     return null
   }
 }
@@ -68,42 +69,27 @@ async function handleSubscriptionCreated(
     status: subscription.status,
   })
 
-  // TODO: Crear suscripción en nuestra base de datos
-  // Llamar al backend Go para crear el registro
-
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
-
   try {
-    const response = await fetch(`${apiUrl}/subscriptions`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        stripeSubscriptionId: subscription.id,
-        stripeCustomerId:
-          typeof subscription.customer === 'string'
-            ? subscription.customer
-            : subscription.customer.id,
-        status: mapStripeStatusToInternal(subscription.status),
-        stripePriceId: subscription.items.data[0]?.price.id,
-        amountCents: subscription.items.data[0]?.price.unit_amount || 0,
-        currency: subscription.currency,
-        currentPeriodStart: (subscription as any).current_period_start || Math.floor(Date.now() / 1000),
-        currentPeriodEnd: (subscription as any).current_period_end || Math.floor(Date.now() / 1000),
-        trialStart: (subscription as any).trial_start || undefined,
-        trialEnd: (subscription as any).trial_end || undefined,
-        cancelAt: (subscription as any).cancel_at || undefined,
-        canceledAt: (subscription as any).canceled_at || undefined,
-      }),
+    // ✅ Usar backendHttpClient en lugar de fetch directo
+    await backendHttpClient.post('/subscriptions', {
+      stripeSubscriptionId: subscription.id,
+      stripeCustomerId:
+        typeof subscription.customer === 'string'
+          ? subscription.customer
+          : subscription.customer.id,
+      status: mapStripeStatusToInternal(subscription.status),
+      stripePriceId: subscription.items.data[0]?.price.id,
+      amountCents: subscription.items.data[0]?.price.unit_amount || 0,
+      currency: subscription.currency,
+      currentPeriodStart: (subscription as any).current_period_start || Math.floor(Date.now() / 1000),
+      currentPeriodEnd: (subscription as any).current_period_end || Math.floor(Date.now() / 1000),
+      trialStart: (subscription as any).trial_start || undefined,
+      trialEnd: (subscription as any).trial_end || undefined,
+      cancelAt: (subscription as any).cancel_at || undefined,
+      canceledAt: (subscription as any).canceled_at || undefined,
     })
-
-    if (!response.ok) {
-      throw new Error(`Backend error: ${response.status}`)
-    }
-
   } catch (error) {
-
+    console.error('Failed to create subscription in backend:', error)
     throw error
   }
 }
@@ -119,33 +105,17 @@ async function handleSubscriptionUpdated(
     status: subscription.status,
   })
 
-  // TODO: Actualizar suscripción en nuestra base de datos
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
-
   try {
-    const response = await fetch(
-      `${apiUrl}/subscriptions/stripe/${subscription.id}`,
-      {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          status: mapStripeStatusToInternal(subscription.status),
-          currentPeriodStart: (subscription as any).current_period_start || Math.floor(Date.now() / 1000),
-          currentPeriodEnd: (subscription as any).current_period_end || Math.floor(Date.now() / 1000),
-          cancelAt: (subscription as any).cancel_at || undefined,
-          canceledAt: (subscription as any).canceled_at || undefined,
-        }),
-      }
-    )
-
-    if (!response.ok) {
-      throw new Error(`Backend error: ${response.status}`)
-    }
-
+    // ✅ Usar backendHttpClient
+    await backendHttpClient.put(`/subscriptions/stripe/${subscription.id}`, {
+      status: mapStripeStatusToInternal(subscription.status),
+      currentPeriodStart: (subscription as any).current_period_start || Math.floor(Date.now() / 1000),
+      currentPeriodEnd: (subscription as any).current_period_end || Math.floor(Date.now() / 1000),
+      cancelAt: (subscription as any).cancel_at || undefined,
+      canceledAt: (subscription as any).canceled_at || undefined,
+    })
   } catch (error) {
-
+    console.error('Failed to update subscription in backend:', error)
     throw error
   }
 }
@@ -160,23 +130,11 @@ async function handleSubscriptionDeleted(
     subscriptionId: subscription.id,
   })
 
-  // TODO: Marcar suscripción como cancelada en nuestra base de datos
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
-
   try {
-    const response = await fetch(
-      `${apiUrl}/subscriptions/stripe/${subscription.id}`,
-      {
-        method: 'DELETE',
-      }
-    )
-
-    if (!response.ok) {
-      throw new Error(`Backend error: ${response.status}`)
-    }
-
+    // ✅ Usar backendHttpClient
+    await backendHttpClient.delete(`/subscriptions/stripe/${subscription.id}`)
   } catch (error) {
-
+    console.error('Failed to delete subscription in backend:', error)
     throw error
   }
 }
@@ -193,7 +151,7 @@ async function handleTrialWillEnd(
   })
 
   // TODO: Enviar email al usuario notificando que el trial está por terminar
-
+  console.log(`Trial will end for subscription ${subscription.id}`)
 }
 
 /**
@@ -201,7 +159,7 @@ async function handleTrialWillEnd(
  */
 async function handlePaymentSucceeded(invoice: Stripe.Invoice): Promise<void> {
   const subscriptionId = (invoice as any).subscription || null
-    
+
   logStripeEvent('invoice.payment_succeeded', {
     invoiceId: invoice.id,
     subscriptionId,
@@ -209,8 +167,7 @@ async function handlePaymentSucceeded(invoice: Stripe.Invoice): Promise<void> {
   })
 
   // TODO: Actualizar estado de pago en la base de datos
-  // Extender período de suscripción si es necesario
-
+  console.log(`Payment succeeded for invoice ${invoice.id}`)
 }
 
 /**
@@ -218,7 +175,7 @@ async function handlePaymentSucceeded(invoice: Stripe.Invoice): Promise<void> {
  */
 async function handlePaymentFailed(invoice: Stripe.Invoice): Promise<void> {
   const subscriptionId = (invoice as any).subscription || null
-  
+
   logStripeEvent('invoice.payment_failed', {
     invoiceId: invoice.id,
     subscriptionId,
@@ -226,8 +183,7 @@ async function handlePaymentFailed(invoice: Stripe.Invoice): Promise<void> {
   })
 
   // TODO: Notificar al usuario del pago fallido
-  // Actualizar estado de la suscripción a past_due
-
+  console.log(`Payment failed for invoice ${invoice.id}`)
 }
 
 /**
@@ -243,8 +199,7 @@ async function handleCheckoutCompleted(
   })
 
   // TODO: Confirmar creación de suscripción después del checkout
-  // Enviar email de bienvenida
-
+  console.log(`Checkout completed for session ${session.id}`)
 }
 
 /**
@@ -282,7 +237,7 @@ async function handleWebhookEvent(event: Stripe.Event): Promise<void> {
       break
 
     default:
-
+      console.log(`Unhandled webhook event type: ${event.type}`)
   }
 }
 
@@ -316,7 +271,7 @@ export async function POST(request: NextRequest) {
 
     // 3. Verificar que sea un evento relevante
     if (!isRelevantWebhookEvent(event.type)) {
-
+      console.log(`Ignoring webhook event: ${event.type}`)
       return NextResponse.json({ received: true })
     }
 
@@ -327,7 +282,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ received: true })
 
   } catch (error) {
-
+    console.error('Webhook processing failed:', error)
     return NextResponse.json(
       {
         error: 'Webhook processing failed',

@@ -1,18 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server'
-
-const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api/v1'
+import { backendHttpClient } from '@/lib/api/backendClient'
 
 /**
  * GET /api/stations/search
- * Proxy to backend: GET /api/v1/stations/search
- * Public endpoint - no authentication required
+ * 
+ * Proxy para búsqueda de estaciones.
+ * ✅ Cliente llama a /api/stations/search?q=...
+ * ✅ Proxy al backend (URL oculto)
  */
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
     const query = searchParams.get('q')
+    const limit = searchParams.get('limit') || '20'
     const lang = searchParams.get('lang') || 'es'
-    
+
     if (!query) {
       return NextResponse.json(
         { error: 'Query parameter "q" is required' },
@@ -20,33 +22,24 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    // Build backend URL with query parameters
-    const backendUrl = `${BACKEND_URL}/stations/search?q=${encodeURIComponent(query)}&lang=${lang}`
+    // Construir query string para backend
+    const backendQuery = `/stations/search?q=${encodeURIComponent(query)}&limit=${limit}&lang=${lang}`
 
-    const response = await fetch(backendUrl, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+    // ✅ Proxy usando backendHttpClient
+    const data = await backendHttpClient.get(backendQuery, {
+      timeout: 60000, // 60s para búsquedas
     })
-
-    if (!response.ok) {
-      const errorText = await response.text()
-
-      return NextResponse.json(
-        { error: 'Failed to search stations', details: errorText },
-        { status: response.status }
-      )
-    }
-
-    const data = await response.json()
 
     return NextResponse.json(data, { status: 200 })
   } catch (error: any) {
+    console.error('Failed to search stations:', error)
 
     return NextResponse.json(
-      { error: 'Internal server error', message: error.message },
-      { status: 500 }
+      {
+        error: 'Failed to search stations',
+        message: error.message,
+      },
+      { status: error.status || 500 }
     )
   }
 }

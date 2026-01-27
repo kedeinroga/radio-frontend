@@ -5,13 +5,27 @@ import { safeRedirect } from '../utils/securityHelpers'
 /**
  * API Client Configuration
  * Axios instance with JWT auto-refresh interceptors and i18n support
+ * 
+ * ✅ Detecta automáticamente si está en cliente o servidor
+ * ✅ Cliente: usa /api routes (Next.js proxy)
+ * ✅ Servidor (SSR/SSG): usa backend directo
  */
 
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL ||
-  process.env.EXPO_PUBLIC_API_URL ||
-  'http://localhost:8080/api/v1'
+// Detectar si estamos en el servidor o el cliente
+const isServer = typeof window === 'undefined'
 
+// ✅ Configuración dinámica según contexto
+const getBaseURL = (): string => {
+  if (isServer) {
+    // En servidor (SSR/SSG): usar backend directo
+    return process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api/v1'
+  } else {
+    // En cliente: usar /api routes (Next.js proxy)
+    return '/api'
+  }
+}
+
+const API_BASE_URL = getBaseURL()
 
 // Global locale state (injected from i18n system)
 let currentLocale: Locale = Locale.default()
@@ -34,35 +48,40 @@ export const getApiLocale = (): Locale => {
 // Create axios instance
 const apiClient: AxiosInstance = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 30000, // 30 seconds - increased for SSR stability in production
+  timeout: 30000, // 30 seconds
   headers: {
     'Content-Type': 'application/json',
   },
+  // ✅ Solo en cliente: incluir cookies
+  withCredentials: !isServer,
 })
 
 /**
  * Helper to get token from localStorage
  * Works in both browser and SSR contexts
+ * 
+ * ⚠️ NOTA: Con cookies HttpOnly en cliente, esto es legacy.
+ * Los tokens ahora están en cookies, no localStorage.
  */
 const getTokenFromStorage = (key: string): string | null => {
   if (typeof window === 'undefined') return null
   try {
     return localStorage.getItem(`@radio-app:${key}`)
   } catch (error) {
-
     return null
   }
 }
 
 /**
  * Helper to set token in localStorage
+ * ⚠️ LEGACY - Tokens ahora en cookies HttpOnly
  */
 const setTokenInStorage = (key: string, value: string): void => {
   if (typeof window === 'undefined') return
   try {
     localStorage.setItem(`@radio-app:${key}`, value)
   } catch (error) {
-
+    // Ignore errors
   }
 }
 
@@ -74,7 +93,7 @@ const removeTokenFromStorage = (key: string): void => {
   try {
     localStorage.removeItem(`@radio-app:${key}`)
   } catch (error) {
-
+    // Ignore errors
   }
 }
 
@@ -88,7 +107,7 @@ let tokenStorage: {
 
 /**
  * Initialize API client with token storage
- * @deprecated - Now reads directly from localStorage, but kept for compatibility
+ * @deprecated - Now uses HttpOnly cookies, but kept for compatibility
  */
 export const initializeApiClient = (storage: typeof tokenStorage) => {
   tokenStorage = storage
@@ -96,7 +115,12 @@ export const initializeApiClient = (storage: typeof tokenStorage) => {
 
 /**
  * Request Interceptor
- * Automatically adds JWT token and Accept-Language header to requests
+ * Automatically adds Accept-Language header to requests
+ * 
+ * ⚠️ NOTA: En cliente, Authorization header no es necesario porque
+ * las cookies HttpOnly se envían automáticamente con withCredentials: true
+ * 
+ * En servidor (SSR/SSG), no hay cookies, así que no enviamos Authorization
  */
 apiClient.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
@@ -105,16 +129,14 @@ apiClient.interceptors.request.use(
       config.headers['Accept-Language'] = currentLocale.code
     }
 
-    // Try to get token from localStorage directly (always works after page refresh)
-    let token = getTokenFromStorage('access_token')
+    // ⚠️ Legacy: Try to get token from localStorage for backwards compatibility
+    // Solo en cliente
+    if (!isServer) {
+      const token = getTokenFromStorage('access_token')
 
-    // Fallback to tokenStorage if available (legacy support)
-    if (!token && tokenStorage) {
-      token = await tokenStorage.getAccessToken()
-    }
-
-    if (token && config.headers) {
-      config.headers.Authorization = `Bearer ${token}`
+      if (token && config.headers) {
+        config.headers.Authorization = `Bearer ${token}`
+      }
     }
 
     return config
@@ -126,76 +148,29 @@ apiClient.interceptors.request.use(
 
 /**
  * Response Interceptor
- * Handles token refresh on 401 errors
+ * Handles errors and redirects
+ * 
+ * ✅ En cliente: las cookies HttpOnly manejan auth automáticamente
+ * ✅ En servidor (SSR/SSG): no hay auth, requests son públicos
  */
 apiClient.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
-    const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean }
+    // Solo manejar 401 en cliente
+    if (!isServer && error.response?.status === 401) {
+      // Limpiar localStorage (legacy)
+      removeTokenFromStorage('access_token')
+      removeTokenFromStorage('refresh_token')
 
-    // If error is 401 and we haven't retried yet
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true
+      if (tokenStorage) {
+        await tokenStorage.clearTokens()
+      }
 
-      try {
-        // Get refresh token from localStorage
-        let refreshToken = getTokenFromStorage('refresh_token')
-
-        // Fallback to tokenStorage if available
-        if (!refreshToken && tokenStorage) {
-          refreshToken = await tokenStorage.getRefreshToken()
-        }
-
-        if (!refreshToken) {
-          // No refresh token, clear tokens and redirect to login
-          removeTokenFromStorage('access_token')
-          removeTokenFromStorage('refresh_token')
-          if (tokenStorage) {
-            await tokenStorage.clearTokens()
-          }
-
-          if (typeof window !== 'undefined') {
-            // Check if we're in admin area
-            const isAdminRoute = window.location.pathname.startsWith('/admin')
-            const redirectUrl = isAdminRoute ? '/admin/login' : '/login'
-            safeRedirect(redirectUrl)
-          }
-          return Promise.reject(error)
-        }
-
-        // Attempt to refresh token
-        const response = await axios.post(`${API_BASE_URL}/auth/refresh`, {
-          refresh_token: refreshToken,
-        })
-
-        const { access_token } = response.data
-
-        // Save new access token
-        setTokenInStorage('access_token', access_token)
-        if (tokenStorage) {
-          await tokenStorage.setAccessToken(access_token)
-        }
-
-        // Retry original request with new token
-        if (originalRequest.headers) {
-          originalRequest.headers.Authorization = `Bearer ${access_token}`
-        }
-
-        return apiClient(originalRequest)
-      } catch (refreshError) {
-        // Refresh failed, clear tokens and redirect to login
-        removeTokenFromStorage('access_token')
-        removeTokenFromStorage('refresh_token')
-        if (tokenStorage) {
-          await tokenStorage.clearTokens()
-        }
-
-        if (typeof window !== 'undefined') {
-          const isAdminRoute = window.location.pathname.startsWith('/admin')
-          const redirectUrl = isAdminRoute ? '/admin/login' : '/login'
-          safeRedirect(redirectUrl)
-        }
-        return Promise.reject(refreshError)
+      // Redirigir al login apropiado
+      if (typeof window !== 'undefined') {
+        const isAdminRoute = window.location.pathname.startsWith('/admin')
+        const redirectUrl = isAdminRoute ? '/admin/login' : '/login'
+        safeRedirect(redirectUrl)
       }
     }
 

@@ -1,52 +1,42 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { cookies } from 'next/headers'
-import { rateLimit, RATE_LIMITS } from '@/lib/rateLimit'
+import { backendHttpClient } from '@/lib/api/backendClient'
 
-const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:3001'
-
+/**
+ * GET /api/admin/seo/stats
+ * 
+ * Proxy para obtener estadísticas SEO.
+ * ✅ Requiere autenticación admin
+ * ✅ Proxy al backend
+ */
 export async function GET(request: NextRequest) {
   try {
-    // Rate limiting
-    const rateLimitResult = rateLimit(request, RATE_LIMITS.ADMIN)
-    if (rateLimitResult) {
-      return rateLimitResult
-    }
+    // Obtener access token de cookies
+    const accessToken = request.cookies.get('@radio-app:access_token')?.value
 
-    // Get token from HttpOnly cookie
-    const cookieStore = await cookies()
-    const token = cookieStore.get('auth_token')?.value
-
-    if (!token) {
+    if (!accessToken) {
       return NextResponse.json(
-        { error: 'Authentication required' },
+        { error: 'Unauthorized' },
         { status: 401 }
       )
     }
 
-    // Forward request to backend with auth token
-    const backendResponse = await fetch(`${BACKEND_URL}/admin/seo/stats`, {
-      method: 'GET',
+    // ✅ Proxy al backend con authorization header
+    const data = await backendHttpClient.get('/admin/seo/stats', {
       headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
       },
     })
 
-    if (!backendResponse.ok) {
-      const errorText = await backendResponse.text()
-      return NextResponse.json(
-        { error: errorText || 'Failed to fetch SEO stats' },
-        { status: backendResponse.status }
-      )
-    }
-
-    const data = await backendResponse.json()
-    return NextResponse.json(data)
+    return NextResponse.json(data, { status: 200 })
   } catch (error: any) {
+    console.error('Failed to fetch SEO stats:', error)
 
     return NextResponse.json(
-      { error: error.message || 'Internal server error' },
-      { status: 500 }
+      {
+        error: 'Failed to fetch SEO stats',
+        message: error.message,
+      },
+      { status: error.status || 500 }
     )
   }
 }

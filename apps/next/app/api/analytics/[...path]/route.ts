@@ -1,59 +1,57 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { cookies } from 'next/headers'
-
-const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api/v1'
+import { backendHttpClient } from '@/lib/api/backendClient'
 
 /**
- * Analytics API Proxy
- * Handles all /api/analytics/* requests and forwards them to the backend
- * with the access_token from HttpOnly cookies
+ * GET /api/analytics/[...path]
+ * 
+ * Catch-all route for analytics endpoints.
+ * Proxies all analytics requests to backend.
+ * 
+ * Examples:
+ * - /api/analytics/users/active → /analytics/users/active
+ * - /api/analytics/stations/popular → /analytics/stations/popular
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ path: string[] }> }
+  { params }: { params: { path: string[] } }
 ) {
   try {
-    const cookieStore = await cookies()
-    const accessToken = cookieStore.get('@radio-app:access_token')?.value
+    const accessToken = request.cookies.get('@radio-app:access_token')?.value
 
     if (!accessToken) {
       return NextResponse.json(
-        { error: 'No access token found' },
+        { error: 'Unauthorized - Analytics access requires authentication' },
         { status: 401 }
       )
     }
 
-    // Await params in Next.js 15
+    // Construct backend path from dynamic segments
+    // ✅ Next.js 15: params must be awaited
     const { path } = await params
+    const backendPath = `/analytics/${path.join('/')}`
 
-    // Build backend URL from path segments
-    const pathString = path.join('/')
-    const searchParams = request.nextUrl.searchParams.toString()
-    const backendUrl = `${BACKEND_URL}/analytics/${pathString}${searchParams ? `?${searchParams}` : ''}`
+    // Get query params from request
+    const { searchParams } = new URL(request.url)
+    const queryString = searchParams.toString()
+    const fullPath = queryString ? `${backendPath}?${queryString}` : backendPath
 
-    // Forward request to backend with Authorization header
-    const response = await fetch(backendUrl, {
-      method: 'GET',
+    // Proxy to backend
+    const data = await backendHttpClient.get(fullPath, {
       headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
       },
     })
 
-    if (!response.ok) {
-      const errorText = await response.text()
-      return NextResponse.json(
-        { error: 'Backend request failed', details: errorText },
-        { status: response.status }
-      )
-    }
-
-    const data = await response.json()
-    return NextResponse.json(data)
+    return NextResponse.json(data, { status: 200 })
   } catch (error: any) {
+    console.error('Analytics API error:', error)
+
     return NextResponse.json(
-      { error: 'Internal server error', message: error.message },
-      { status: 500 }
+      {
+        error: 'Failed to fetch analytics data',
+        message: error.message,
+      },
+      { status: error.status || 500 }
     )
   }
 }

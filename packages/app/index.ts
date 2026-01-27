@@ -1,4 +1,20 @@
+// HTTP Client Infrastructure
+export type { IHttpClient, RequestOptions } from './domain/repositories/IHttpClient'
+export {
+  HttpError,
+  NetworkError,
+  TimeoutError,
+  UnauthorizedError,
+  ForbiddenError,
+  NotFoundError,
+  BadRequestError,
+  ServerError,
+} from './domain/repositories/IHttpClient'
+export { FetchHttpClientAdapter } from './infrastructure/http/FetchHttpClientAdapter'
+export { MakeHttpRequest } from './application/useCases/http/MakeHttpRequest'
+
 // Domain Entities
+
 export { Station } from './domain/entities/Station'
 export type { StationDTO, SEOMetadata } from './domain/entities/Station'
 export { User } from './domain/entities/User'
@@ -211,9 +227,9 @@ export { NextIntlAdapter } from './infrastructure/i18n/NextIntlAdapter'
 export { LocaleFormatter } from './infrastructure/i18n/LocaleFormatter'
 
 // Infrastructure - Security Helpers
-export { 
-  isSafeInternalRedirect, 
-  safeRedirect, 
+export {
+  isSafeInternalRedirect,
+  safeRedirect,
   sanitizeErrorMessage,
   isValidEmail,
   validatePasswordStrength,
@@ -276,10 +292,10 @@ export type { JWTPayload } from './infrastructure/utils/jwtHelpers'
 
 // Infrastructure - Session Validation
 export { SessionValidator } from './infrastructure/auth/SessionValidator'
-export type { 
-  SessionMetadata, 
-  TokenValidationResult, 
-  SessionInfo 
+export type {
+  SessionMetadata,
+  TokenValidationResult,
+  SessionInfo
 } from './infrastructure/auth/SessionValidator'
 
 // Infrastructure - Validation Schemas
