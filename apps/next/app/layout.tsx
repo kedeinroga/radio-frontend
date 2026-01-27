@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
-import Script from 'next/script'
 import './globals.css'
 import { Providers } from './providers'
 import '@/lib/env' // ✅ Validate environment variables at app startup
@@ -43,13 +42,12 @@ export default function RootLayout({
   return (
     <html lang="es" suppressHydrationWarning data-scroll-behavior="smooth">
       <head>
-        {/* Google AdSense */}
+        {/* Google AdSense - Using standard script tag to avoid data-nscript error */}
         {process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_ID && (
-          <Script
+          <script
             async
             src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_ID}`}
             crossOrigin="anonymous"
-            strategy="lazyOnload"
           />
         )}
       </head>
