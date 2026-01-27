@@ -145,8 +145,18 @@ export async function middleware(request: NextRequest) {
 
   // If locale is present and valid, continue
   if (localeInPath) {
-    const response = NextResponse.next()
-    // Add locale to response headers for server components
+    // Clone request headers to pass nonce to server components
+    const requestHeaders = new Headers(request.headers)
+    requestHeaders.set('x-nonce', nonce)
+    requestHeaders.set('x-locale', localeInPath)
+
+    const response = NextResponse.next({
+      request: {
+        headers: requestHeaders,
+      },
+    })
+
+    // Add locale to response headers for server components (legacy/client access)
     response.headers.set('x-locale', localeInPath)
     // Add CSP nonce to response headers
     response.headers.set('x-nonce', nonce)
