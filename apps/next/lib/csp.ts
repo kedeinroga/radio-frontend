@@ -136,13 +136,14 @@ export function buildCSPDirectives(nonce: string): Record<string, string[]> {
       "'strict-dynamic'",
     ],
 
-    // Styles: Allow inline styles with nonce, trusted domains
-    // Note: In development, we don't use nonce for styles to avoid blocking Next.js HMR styles
-    // In production, 'unsafe-inline' is ignored when nonce is present, which is more secure
+    // Styles: Allow inline styles, trusted domains
+    // Note: We don't use nonce for styles to allow third-party services like AdSense
+    // to apply inline styles. This is an acceptable security trade-off since:
+    // 1. Style injection is less dangerous than script injection
+    // 2. script-src remains strict with nonces
+    // 3. AdSense and other third-party scripts need to apply dynamic inline styles
     'style-src': [
       TRUSTED_DOMAINS.self,
-      // Only add nonce in production for explicit nonce-tagged styles
-      ...(isProduction ? [`'nonce-${nonce}'`] : []),
       "'unsafe-inline'", // Required for Next.js, Tailwind, CSS-in-JS libraries, and AdSense
       ...TRUSTED_DOMAINS.stripe,
       ...TRUSTED_DOMAINS.cdn,
