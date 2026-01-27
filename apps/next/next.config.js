@@ -147,19 +147,19 @@ const nextConfig = {
             value: 'max-age=63072000; includeSubDomains; preload',
           },
           // Content Security Policy
-          // Using report-only mode to monitor violations without blocking
+          // Enforcing mode for production security
           {
-            key: 'Content-Security-Policy-Report-Only',
+            key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://pagead2.googlesyndication.com https://*.google.com https://*.doubleclick.net https://googleads.g.doubleclick.net", // Next.js requires unsafe-eval and unsafe-inline, Google AdSense domains
-              "style-src 'self' 'unsafe-inline'", // Required for styled-components/emotion
+              "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://pagead2.googlesyndication.com https://*.google.com https://*.doubleclick.net https://googleads.g.doubleclick.net https://adservice.google.com https://partner.googleadservices.com", // Next.js requires unsafe-eval and unsafe-inline, Google AdSense domains
+              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com", // Required for styled-components/emotion and Google Fonts
               "img-src 'self' data: https: http: blob:", // Allow images from any HTTPS/HTTP source
-              "font-src 'self' data:",
-              "connect-src 'self' https://api.rradio.online https://api.rradio.online/api/v1 https://radio-backend-296736956418.us-central1.run.app http://localhost:8080 http://localhost:8080/api/v1 ws://localhost:3000 https://pagead2.googlesyndication.com https://*.google.com https://*.doubleclick.net", // Allow API, WebSocket, and Google AdSense
+              "font-src 'self' data: https://fonts.gstatic.com",
+              "connect-src 'self' https://api.rradio.online https://api.rradio.online/api/v1 https://radio-backend-296736956418.us-central1.run.app http://localhost:8080 http://localhost:8080/api/v1 ws://localhost:3000 https://pagead2.googlesyndication.com https://*.google.com https://*.doubleclick.net https://googleads.g.doubleclick.net https://adservice.google.com", // Allow API, WebSocket, and Google AdSense
               "media-src 'self' https: http: blob:", // Allow audio streaming from HTTP/HTTPS
               "object-src 'none'",
-              "frame-src https://googleads.g.doubleclick.net https://tpc.googlesyndication.com", // Allow AdSense iframes
+              "frame-src https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://*.google.com", // Allow AdSense iframes
               "frame-ancestors 'none'",
               "base-uri 'self'",
               "form-action 'self'",
