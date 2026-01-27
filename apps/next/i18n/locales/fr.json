@@ -491,5 +491,78 @@
     "banner": {
       "dismiss": "Fermer la bannière"
     }
-  }
+  },
+    "radioOnline": {
+      "title": "Radio en Ligne Gratuite - Écoutez 30,000+ Stations | Guide Complet 2026",
+      "description": "Découvrez la meilleure plateforme de radio en ligne gratuite. Connectez-vous à la culture locale de plus de 200 pays. Musique, actualités, sports en direct.",
+      "h1": "Radio en Ligne: Votre Fenêtre sur le Monde",
+      "subtitle": "Écoutez plus de 30,000 stations de radio du monde entier. Gratuit, sans téléchargement, en direct.",
+      "intro": {
+        "title": "Qu'est-ce que la Radio en Ligne?",
+        "content": "La **radio en ligne** est bien plus qu'un service de streaming audio. C'est votre connexion directe avec l'authenticité culturelle de n'importe quel endroit du monde. Alors que les playlists générées par IA vous offrent de la musique prévisible, la radio en ligne vous plonge dans l'expérience réelle d'être là-bas.\n\nÉcouter une radio locale de Buenos Aires, Tokyo ou Paris vous transporte instantanément. Vous entendez les mêmes publicités que les habitants, les mêmes nouvelles de dernière minute, le même DJ qui accompagne des millions de personnes dans leur routine quotidienne. **Ce n'est pas juste de la musique, c'est une connexion humaine en temps réel**."
+      },
+      "benefits": {
+        "title": "Pourquoi la Radio en Ligne Surpasse les Playlists IA",
+        "items": {
+            "authenticity": {
+                "title": "🌍 Authenticité Culturelle Réelle",
+                "description": "Pas d'algorithmes. Écoutez ce qui joue vraiment dans les rues de Madrid, New York ou Tokyo. Connectez-vous authentiquement à la culture locale."
+            },
+            "human": {
+                "title": "🎙️ Contenu Humain, Pas de Robots",
+                "description": "De vrais DJs, des animateurs passionnés, des débats en direct. La radio en ligne vous connecte avec des personnes, pas avec des algorithmes froids."
+            },
+            "discovery": {
+                "title": "📻 Découverte Authentique",
+                "description": "Trouvez de la musique que vous ne chercheriez jamais. Les DJs locaux vous présentent des artistes émergents avant Spotify ou YouTube."
+            },
+            "free": {
+                "title": "🆓 100% Gratuit, Sans Limites",
+                "description": "Contrairement aux services de streaming premium, la radio en ligne est entièrement gratuite. Pas d'abonnements, pas de publicités invasives."
+            }
+        }
+      },
+      "how": {
+        "title": "Comment Fonctionne la Radio en Ligne",
+        "content": "La technologie derrière la radio en ligne est étonnamment simple mais puissante. Les stations diffusent leur signal audio sur internet en utilisant des protocoles de streaming comme HLS, Icecast ou Shoutcast.\n\n**Avantages techniques:**\n- Qualité audio supérieure (jusqu'à 320kbps, meilleure que la FM)\n- Pas d'interférences ni de bruit statique\n- Accès mondial depuis n'importe quel appareil\n- Compatible avec les navigateurs modernes, aucune application nécessaire\n\nTout ce dont vous avez besoin est une connexion internet et l'envie d'explorer le monde à travers le son."
+      },
+      "cultural": {
+        "title": "La Radio Comme Pont Culturel",
+        "content": "Chez Rradio, nous croyons que la radio en ligne est la façon la plus authentique de vivre une culture étrangère sans quitter votre maison.\n\n**Cas d'usage réels:**\n\n- **Apprentissage des langues**: Écoutez la radio française en cuisinant. C'est plus efficace que n'importe quelle application linguistique car c'est du contenu réel, pas des scripts pédagogiques.\n\n- **Expatriés et nostalgie**: Des milliers d'utilisateurs écoutent la radio de leur pays d'origine pour se sentir plus proches. L'accent familier, les nouvelles locales, la musique avec laquelle vous avez grandi.\n\n- **Voyageurs virtuels**: Planifiez votre prochain voyage en écoutant la radio locale. Découvrez quelle musique est tendance, quels événements sont discutés, comment ce lieu sonne vraiment.\n\nLa radio en ligne ne transmet pas seulement de l'audio, elle transmet **l'atmosphère, l'émotion et la culture dans sa forme la plus pure**."
+      },
+      "genres": {
+        "title": "Explorer par Genre Musical",
+        "description": "Du rock classique à la musique électronique expérimentale. Trouvez le son parfait pour chaque moment."
+      },
+      "countries": {
+        "title": "Radio en Ligne par Pays",
+        "description": "Voyagez soniquement autour du monde. Chaque pays a sa propre identité musicale et culturelle."
+      },
+      "faq": {
+        "title": "Questions Fréquemment Posées",
+        "items": {
+            "free": {
+                "q": "Est-ce vraiment gratuit d'écouter la radio en ligne?",
+                "a": "Oui, 100% gratuit. Contrairement à Spotify ou Apple Music, la radio en ligne ne nécessite pas d'abonnement premium. Les stations sont financées par la publicité locale, pas par votre argent."
+            },
+            "app": {
+                "q": "Dois-je télécharger une application?",
+                "a": "Non. Rradio fonctionne directement dans votre navigateur web. Cependant, vous pouvez installer notre PWA pour un accès plus rapide."
+            },
+            "countries": {
+                "q": "Puis-je écouter la radio d'autres pays?",
+                "a": "Bien sûr! C'est la magie de la radio en ligne. Écoutez des stations de plus de 200 pays. Sans frontières, sans restrictions."
+            },
+            "spotify": {
+                "q": "Quelle est la différence entre la radio en ligne et Spotify?",
+                "a": "Spotify utilise des algorithmes pour créer des playlists personnalisées. La radio en ligne vous connecte avec du contenu humain réel: DJs, actualités en direct, événements locaux. C'est la différence entre un restaurant avec un chef et un micro-ondes."
+            }
+        }
+      },
+      "cta": {
+        "title": "Commencez Votre Voyage Sonore",
+        "description": "Explorez plus de 30,000 stations de radio du monde entier. Gratuit, sans inscription.",
+        "button": "Explorer les Stations Populaires"
+      }
+    }
 }

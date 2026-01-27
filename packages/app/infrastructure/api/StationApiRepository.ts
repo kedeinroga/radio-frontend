@@ -87,8 +87,9 @@ export class StationApiRepository implements IStationRepository {
   }
 
   async getByCountry(country: string, limit: number = 20): Promise<Station[]> {
-    // Use getPopular with country filter
-    return this.getPopular(limit, country)
+    // Use search with country as query, as requested by user
+    // This calls /api/stations/search?q=country&limit=20
+    return this.search(country, limit)
   }
 
   /**

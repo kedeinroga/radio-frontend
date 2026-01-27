@@ -491,5 +491,78 @@
     "banner": {
       "dismiss": "Banner schließen"
     }
-  }
+  },
+  "radioOnline": {
+      "title": "Kostenloses Online-Radio - Hören Sie 30,000+ Sender | Vollständiger Leitfaden 2026",
+      "description": "Entdecken Sie die beste kostenlose Online-Radio-Plattform. Verbinden Sie sich mit lokaler Kultur aus über 200 Ländern. Musik, Nachrichten, Live-Sport.",
+      "h1": "Online-Radio: Ihr Fenster zur Welt",
+      "subtitle": "Hören Sie über 30,000 Radiosender aus der ganzen Welt. Kostenlos, ohne Downloads, live.",
+      "intro": {
+        "title": "Was ist Online-Radio?",
+        "content": "Das **Online-Radio** ist viel mehr als ein Audio-Streaming-Dienst. Es ist Ihre direkte Verbindung zur kulturellen Authentizität jeden Ortes der Welt. Während KI-generierte Playlists Ihnen vorhersehbare Musik bieten, taucht Sie Online-Radio in die echte Erfahrung ein, dort zu sein.\n\nDas Hören eines lokalen Radios aus Buenos Aires, Tokio oder Paris versetzt Sie sofort. Sie hören dieselben Werbungen wie die Einheimischen, dieselben aktuellen Nachrichten, denselben DJ, der Millionen in ihrer täglichen Routine begleitet. **Es ist nicht nur Musik, es ist menschliche Verbindung in Echtzeit**."
+      },
+      "benefits": {
+        "title": "Warum Online-Radio KI-Playlists Schlägt",
+        "items": {
+            "authenticity": {
+                "title": "🌍 Echte Kulturelle Authentizität",
+                "description": "Keine Algorithmen. Hören Sie, was wirklich auf den Straßen von Madrid, New York oder Tokio läuft. Verbinden Sie sich authentisch mit lokaler Kultur."
+            },
+            "human": {
+                "title": "🎙️ Menschlicher Inhalt, Keine Roboter",
+                "description": "Echte DJs, leidenschaftliche Moderatoren, Live-Debatten. Online-Radio verbindet Sie mit Menschen, nicht mit kalten Algorithmen."
+            },
+            "discovery": {
+                "title": "📻 Echte Entdeckung",
+                "description": "Finden Sie Musik, nach der Sie nie suchen würden. Lokale DJs stellen Ihnen aufstrebende Künstler vor Spotify oder YouTube vor."
+            },
+            "free": {
+                "title": "🆓 100% Kostenlos, Unbegrenzt",
+                "description": "Im Gegensatz zu Premium-Streaming-Diensten ist Online-Radio völlig kostenlos. Keine Abonnements, keine aufdringliche Werbung."
+            }
+        }
+      },
+      "how": {
+        "title": "Wie Online-Radio Funktioniert",
+        "content": "Die Technologie hinter Online-Radio ist überraschend einfach, aber leistungsstark. Sender übertragen ihr Audiosignal über das Internet mit Streaming-Protokollen wie HLS, Icecast oder Shoutcast.\n\n**Technische Vorteile:**\n- Überlegene Audioqualität (bis zu 320kbps, besser als FM)\n- Keine Interferenzen oder statisches Rauschen\n- Globaler Zugriff von jedem Gerät\n- Kompatibel mit modernen Browsern, keine Apps erforderlich\n\nAlles, was Sie brauchen, ist eine Internetverbindung und den Wunsch, die Welt durch Klang zu erkunden."
+      },
+      "cultural": {
+        "title": "Radio als Kulturelle Brücke",
+        "content": "Bei Rradio glauben wir, dass Online-Radio der authentischste Weg ist, eine fremde Kultur zu erleben, ohne Ihr Zuhause zu verlassen.\n\n**Reale Anwendungsfälle:**\n\n- **Sprachenlernen**: Hören Sie französisches Radio beim Kochen. Es ist effektiver als jede Sprach-App, weil es echter Inhalt ist, keine pädagogischen Skripte.\n\n- **Expatriates und Nostalgie**: Tausende Nutzer hören Radio aus ihrem Heimatland, um sich näher zu fühlen. Der vertraute Akzent, lokale Nachrichten, die Musik, mit der Sie aufgewachsen sind.\n\n- **Virtuelle Reisende**: Planen Sie Ihre nächste Reise, indem Sie lokales Radio hören. Entdecken Sie, welche Musik im Trend ist, welche Ereignisse diskutiert werden, wie dieser Ort wirklich klingt.\n\nOnline-Radio überträgt nicht nur Audio, es überträgt **Atmosphäre, Emotion und Kultur in ihrer reinsten Form**."
+      },
+      "genres": {
+        "title": "Nach Musikgenre Erkunden",
+        "description": "Von klassischem Rock bis experimenteller elektronischer Musik. Finden Sie den perfekten Sound für jeden Moment."
+      },
+      "countries": {
+        "title": "Online-Radio Nach Land",
+        "description": "Reisen Sie klanglich um die Welt. Jedes Land hat seine eigene musikalische und kulturelle Identität."
+      },
+      "faq": {
+        "title": "Häufig Gestellte Fragen",
+        "items": {
+            "free": {
+                "q": "Ist es wirklich kostenlos, Online-Radio zu hören?",
+                "a": "Ja, 100% kostenlos. Im Gegensatz zu Spotify oder Apple Music benötigt Online-Radio kein Premium-Abonnement. Sender werden durch lokale Werbung finanziert, nicht durch Ihr Geld."
+            },
+            "app": {
+                "q": "Muss ich eine App herunterladen?",
+                "a": "Nein. Rradio funktioniert direkt in Ihrem Webbrowser. Sie können jedoch unsere PWA für schnelleren Zugriff installieren."
+            },
+            "countries": {
+                "q": "Kann ich Radio aus anderen Ländern hören?",
+                "a": "Natürlich! Das ist die Magie von Online-Radio. Hören Sie Sender aus über 200 Ländern. Keine Grenzen, keine Einschränkungen."
+            },
+            "spotify": {
+                "q": "Was ist der Unterschied zwischen Online-Radio und Spotify?",
+                "a": "Spotify verwendet Algorithmen, um personalisierte Playlists zu erstellen. Online-Radio verbindet Sie mit echtem menschlichem Inhalt: DJs, Live-Nachrichten, lokale Ereignisse. Es ist der Unterschied zwischen einem Restaurant mit Koch und einer Mikrowelle."
+            }
+        }
+      },
+      "cta": {
+        "title": "Beginnen Sie Ihre Klangreise",
+        "description": "Erkunden Sie über 30,000 Radiosender aus der ganzen Welt. Kostenlos, ohne Registrierung.",
+        "button": "Beliebte Sender Erkunden"
+      }
+    }
 }
