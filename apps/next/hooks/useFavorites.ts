@@ -1,79 +1,88 @@
-import { useCallback } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Station } from '@radio-app/app'
 
 const FAVORITES_KEY = 'radio-app-favorites'
 
 export const useFavorites = () => {
-  const getFavorites = useCallback((): Station[] => {
-    if (typeof window === 'undefined') return []
+  const [favorites, setFavorites] = useState<Station[]>([])
+  const [isInitialized, setIsInitialized] = useState(false)
 
+  // Initialize on mount (Client only) - avoids hydration mismatch
+  useEffect(() => {
     try {
       const stored = localStorage.getItem(FAVORITES_KEY)
-      if (!stored) return []
-
-      const parsed = JSON.parse(stored)
-      return parsed.map((data: any) =>
-        new Station(
-          data.id,
-          data.name,
-          data.streamUrl,
-          data.slug || data.id, // Use slug if available, fallback to id
-          data.tags || [],
-          data.seoMetadata,
-          data.imageUrl,
-          data.country,
-          data.genre,
-          data.isPremium || false,
-          data.description,
-          data.bitrate,
-          data.votes
+      if (stored) {
+        const parsed = JSON.parse(stored)
+        const stations = parsed.map((data: any) =>
+          new Station(
+            data.id,
+            data.name,
+            data.streamUrl,
+            data.slug || data.id,
+            data.tags || [],
+            data.seoMetadata,
+            data.imageUrl,
+            data.country,
+            data.genre,
+            data.isPremium || false,
+            data.description,
+            data.bitrate,
+            data.votes
+          )
         )
-      )
+        setFavorites(stations)
+      }
     } catch (error) {
-      return []
+      console.error('Error loading favorites:', error)
+    } finally {
+      setIsInitialized(true)
     }
   }, [])
 
+  // Persist to localStorage whenever favorites change
+  useEffect(() => {
+    if (!isInitialized) return
+    try {
+      localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites))
+    } catch (error) {
+      console.error('Error saving favorites:', error)
+    }
+  }, [favorites, isInitialized])
+
+  // Get favorites is now just returning the state
+  const getFavorites = useCallback((): Station[] => {
+    return favorites
+  }, [favorites])
+
   const isFavorite = useCallback((stationId: string): boolean => {
-    const favorites = getFavorites()
     return favorites.some(s => s.id === stationId)
-  }, [getFavorites])
+  }, [favorites])
 
   const addFavorite = useCallback((station: Station): void => {
-    const favorites = getFavorites()
-
-    // Don't add if already exists
-    if (favorites.some(s => s.id === station.id)) return
-
-    const updated = [...favorites, station]
-
-    try {
-      localStorage.setItem(FAVORITES_KEY, JSON.stringify(updated))
-    } catch (error) {
-      // Silent fail
-    }
-  }, [getFavorites])
+    setFavorites(prev => {
+      if (prev.some(s => s.id === station.id)) return prev
+      return [...prev, station]
+    })
+  }, [])
 
   const removeFavorite = useCallback((stationId: string): void => {
-    const favorites = getFavorites()
-    const updated = favorites.filter(s => s.id !== stationId)
-
-    try {
-      localStorage.setItem(FAVORITES_KEY, JSON.stringify(updated))
-    } catch (error) {
-      // Silent fail
-    }
-  }, [getFavorites])
+    setFavorites(prev => prev.filter(s => s.id !== stationId))
+  }, [])
 
   const toggleFavorite = useCallback((station: Station): void => {
-    if (isFavorite(station.id)) {
-      removeFavorite(station.id)
-    } else {
-      addFavorite(station)
-    }
-  }, [isFavorite, removeFavorite, addFavorite])
+    setFavorites(prev => {
+      const exists = prev.some(s => s.id === station.id)
+      if (exists) {
+        return prev.filter(s => s.id !== station.id)
+      } else {
+        return [...prev, station]
+      }
+    })
+  }, [])
 
   return {
+    favorites, // Expose raw list if needed
+    isInitialized, // Expose loading state
     getFavorites,
     isFavorite,
     addFavorite,

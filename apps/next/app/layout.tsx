@@ -56,6 +56,29 @@ export default async function RootLayout({
             nonce={nonce}
           />
         )}
+        {/* Schema.org Organization Global */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'Organization',
+              name: 'Rradio',
+              url: BASE_URL,
+              logo: `${BASE_URL}/icon-512.png`,
+              sameAs: [
+                'https://twitter.com/radioapp',
+                'https://facebook.com/radioapp',
+                'https://instagram.com/radioapp'
+              ],
+              contactPoint: {
+                '@type': 'ContactPoint',
+                contactType: 'customer support',
+                email: 'support@rradio.online'
+              }
+            })
+          }}
+        />
       </head>
       <body className={inter.className}>
         <a href="#main-content" className="skip-to-content">

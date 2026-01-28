@@ -9,19 +9,16 @@ import { useFavorites } from '@/hooks/useFavorites'
 import { useAppTranslation } from '@/hooks/useAppTranslation'
 
 export default function FavoritesPage() {
-  const [favorites, setFavorites] = useState<any[]>([])
   const { play, togglePlayPause, currentStation, playerState } = usePlayer()
-  const { getFavorites, removeFavorite } = useFavorites()
+  const { favorites, isInitialized, removeFavorite } = useFavorites()
   const { t } = useAppTranslation()
 
-  // Load favorites on mount and when they change
-  useEffect(() => {
-    setFavorites(getFavorites())
-  }, [])
-
-  const handleRemove = (stationId: string) => {
-    removeFavorite(stationId)
-    setFavorites(getFavorites()) // Refresh list
+  if (!isInitialized) {
+    return (
+      <main className="min-h-screen bg-gray-50 dark:bg-gray-950 p-6 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500"></div>
+      </main>
+    )
   }
 
   const handlePlay = (station: any) => {
@@ -66,7 +63,7 @@ export default function FavoritesPage() {
                 
                 {/* Remove button */}
                 <button
-                  onClick={() => handleRemove(station.id)}
+                  onClick={() => removeFavorite(station.id)}
                   className="absolute top-2 right-2 p-2 bg-red-500 hover:bg-red-600 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
                   aria-label={t('favorites.removeFavorite', { name: station.name })}
                   title={t('favorites.removeFromFavoritesShort')}

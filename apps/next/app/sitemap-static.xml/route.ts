@@ -36,6 +36,7 @@ export default async function sitemapStatic(): Promise<MetadataRoute.Sitemap> {
   // Static pages - generate for each locale
   const staticPaths = [
     { path: '', priority: 1.0, changeFrequency: 'daily' as const },
+    { path: '/radio-online', priority: 0.9, changeFrequency: 'weekly' as const },
     { path: '/search', priority: 0.8, changeFrequency: 'daily' as const },
     { path: '/favorites', priority: 0.7, changeFrequency: 'weekly' as const }
   ]

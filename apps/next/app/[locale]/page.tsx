@@ -165,6 +165,52 @@ export default async function HomePage({ params }: PageProps) {
           <FAQSection />
         </section>
       </div>
+      {/* SEO Footer with Internal Links */}
+      <footer className="mt-20 border-t border-gray-200 dark:border-gray-800 pt-10 pb-20">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+          <div>
+            <h3 className="font-bold text-lg mb-4 text-neutral-900 dark:text-white">Rradio</h3>
+            <p className="text-neutral-600 dark:text-neutral-400 text-sm leading-relaxed">
+              {t.radioOnline?.description || 'La mejor plataforma de radio online gratis.'}
+            </p>
+          </div>
+          <div>
+            <h3 className="font-bold text-lg mb-4 text-neutral-900 dark:text-white">Explorar</h3>
+            <ul className="space-y-2 text-sm text-neutral-600 dark:text-neutral-400">
+              <li>
+                <a href={`/${locale}/radio-online`} className="hover:text-purple-600 transition-colors">
+                  {t.radioOnline?.h1 || 'Radio Online'}
+                </a>
+              </li>
+              <li>
+                <a href={`/${locale}/search`} className="hover:text-purple-600 transition-colors">
+                  {t.navigation?.search || 'Buscar Estaciones'}
+                </a>
+              </li>
+              <li>
+                <a href={`/${locale}/genres`} className="hover:text-purple-600 transition-colors">
+                  {t.navigation?.genres || 'Géneros'}
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 className="font-bold text-lg mb-4 text-neutral-900 dark:text-white">Legal</h3>
+            <ul className="space-y-2 text-sm text-neutral-600 dark:text-neutral-400">
+              <li>
+                <a href="#" className="hover:text-purple-600 transition-colors">Privacidad</a>
+              </li>
+              <li>
+                <a href="#" className="hover:text-purple-600 transition-colors">Términos</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div className="mt-10 pt-6 border-t border-gray-100 dark:border-gray-800 text-center text-xs text-neutral-500">
+          © {new Date().getFullYear()} Rradio. All rights reserved.
+        </div>
+      </footer>
     </main>
   )
 }
+
