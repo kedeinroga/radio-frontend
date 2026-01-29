@@ -4,6 +4,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import { Providers } from './providers'
 import '@/lib/env' // ✅ Validate environment variables at app startup
+import { WebVitals } from '@/components/WebVitals'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -86,6 +87,7 @@ export default async function RootLayout({
         </a>
         <Providers>
           {children}
+          <WebVitals />
         </Providers>
       </body>
     </html>
