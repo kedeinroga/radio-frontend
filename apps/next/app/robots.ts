@@ -18,21 +18,25 @@ export default function robots(): MetadataRoute.Robots {
         disallow: [
           '/api/',           // Don't index API routes
           '/admin/',         // Don't index admin pages
-          '/_next/',         // Don't index Next.js internals
           '/private/',       // Don't index private content
         ],
       },
       {
         userAgent: 'Googlebot',
         allow: '/',
-        disallow: ['/api/', '/admin/', '/_next/', '/private/'],
+        disallow: ['/api/', '/admin/', '/private/'],
         crawlDelay: 0,     // No delay for Google
       },
       {
         userAgent: 'Bingbot',
         allow: '/',
-        disallow: ['/api/', '/admin/', '/_next/', '/private/'],
+        disallow: ['/api/', '/admin/', '/private/'],
         crawlDelay: 1,     // Slight delay for Bing
+      },
+      {
+        userAgent: ['GPTBot', 'ClaudeBot', 'CCBot'],
+        allow: '/',
+        disallow: ['/api/', '/admin/', '/private/'],
       }
     ],
     sitemap: `${BASE_URL}/sitemap.xml`,
