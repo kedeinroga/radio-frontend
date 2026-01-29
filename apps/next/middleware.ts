@@ -218,6 +218,6 @@ export const config = {
      * - public files (public folder)
      * - .webmanifest files (PWA manifest)
      */
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|webmanifest|ico|css|js)$).*)',
+    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|webmanifest|ico|css|js|txt)$).*)',
   ],
 }

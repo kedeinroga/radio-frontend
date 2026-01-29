@@ -57,27 +57,44 @@ export default async function RootLayout({
             nonce={nonce}
           />
         )}
-        {/* Schema.org Organization Global */}
+        {/* Schema.org Organization & WebSite Global */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              '@context': 'https://schema.org',
-              '@type': 'Organization',
-              name: 'Rradio',
-              url: BASE_URL,
-              logo: `${BASE_URL}/icon-512.png`,
-              sameAs: [
-                'https://twitter.com/radioapp',
-                'https://facebook.com/radioapp',
-                'https://instagram.com/radioapp'
-              ],
-              contactPoint: {
-                '@type': 'ContactPoint',
-                contactType: 'customer support',
-                email: 'support@rradio.online'
+            __html: JSON.stringify([
+              {
+                '@context': 'https://schema.org',
+                '@type': 'Organization',
+                name: 'Rradio',
+                url: BASE_URL,
+                logo: `${BASE_URL}/icon-512.png`,
+                sameAs: [
+                  'https://twitter.com/radioapp',
+                  'https://facebook.com/radioapp',
+                  'https://instagram.com/radioapp'
+                ],
+                contactPoint: {
+                  '@type': 'ContactPoint',
+                  contactType: 'customer support',
+                  email: 'support@rradio.online'
+                }
+              },
+              {
+                '@context': 'https://schema.org',
+                '@type': 'WebSite',
+                name: 'Rradio',
+                alternateName: ['Rradio Online', 'RadioApp'],
+                url: BASE_URL,
+                potentialAction: {
+                  '@type': 'SearchAction',
+                  target: {
+                    '@type': 'EntryPoint',
+                    urlTemplate: `${BASE_URL}/es/search?q={search_term_string}`
+                  },
+                  'query-input': 'required name=search_term_string'
+                }
               }
-            })
+            ])
           }}
         />
       </head>

@@ -164,8 +164,49 @@ export default async function HomePage({ params }: PageProps) {
           
           <FAQSection />
         </section>
+
+        {/* Schema.org WebPage & Service */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify([
+              {
+                '@context': 'https://schema.org',
+                '@type': 'WebPage',
+                name: seoTitle,
+                description: t.app.subtitle,
+                url: `${process.env.NEXT_PUBLIC_BASE_URL || 'https://rradio.online'}/${locale}`,
+                inLanguage: locale,
+                isPartOf: {
+                  '@type': 'WebSite',
+                  name: 'Rradio',
+                  url: process.env.NEXT_PUBLIC_BASE_URL || 'https://rradio.online'
+                }
+              },
+              {
+                '@context': 'https://schema.org',
+                '@type': 'Service',
+                name: 'Rradio Streaming',
+                provider: {
+                  '@type': 'Organization',
+                  name: 'Rradio',
+                  url: process.env.NEXT_PUBLIC_BASE_URL || 'https://rradio.online'
+                },
+                serviceType: 'Radio Streaming',
+                offers: {
+                  '@type': 'Offer',
+                  price: '0',
+                  priceCurrency: 'USD',
+                  availability: 'https://schema.org/InStock'
+                },
+                areaServed: 'World'
+              }
+            ])
+          }}
+        />
       </div>
       {/* SEO Footer with Internal Links */}
+
       <footer className="mt-20 border-t border-gray-200 dark:border-gray-800 pt-10 pb-20">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
           <div>

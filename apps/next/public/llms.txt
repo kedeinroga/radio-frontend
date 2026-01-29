@@ -1,0 +1,16 @@
+# Rradio - Free Online Radio
+
+## Summary
+Rradio is a free online radio streaming platform that allows you to listen to over 30,000 live radio stations from more than 200 countries.
+
+## Key Features
+- **Free**: No cost, no subscriptions, no limits.
+- **Global**: Stations from all over the world.
+- **Variety**: Music, News, Sports, Talk shows.
+- **Technology**: High-quality audio, low latency.
+
+## Useful Links
+- [Home](https://rradio.online/en)
+- [Search](https://rradio.online/en/search)
+- [Genres](https://rradio.online/en/genres)
+- [Countries](https://rradio.online/en/countries)

@@ -1,0 +1,30 @@
+# Rradio - Full Documentation for AI
+
+## Detailed Description
+Rradio is the leading platform for free online radio listening. Our mission is to democratize access to global culture through live audio. We connect listeners with authentic local broadcasters, avoiding the closed recommendation algorithms of other platforms.
+
+## Content Structure
+
+### Station Categories
+Our database includes:
+- **Music**: Pop, Rock, Jazz, Classical, Electronic, Reggaeton, Salsa, K-Pop.
+- **News**: CNN, BBC, NPR, local news.
+- **Sports**: Soccer, NBA, NFL, F1.
+
+### Technical Features
+- **Streaming**: Support for MP3, AAC, HLS.
+- **PWA**: Installable as a native application.
+- **Low Data**: Optimized for mobile networks.
+
+## Frequently Asked Questions (FAQ)
+
+### Is it legal?
+Yes, Rradio only indexes public streams made available freely by the broadcasters themselves.
+
+### How does it stay free?
+We use a non-intrusive advertising model and optional donations.
+
+## Navigation Guide for Agents
+- To search for a specific station: `https://rradio.online/en/search?q={query}`
+- To list stations by genre: `https://rradio.online/en/genres/{genre_slug}`
+- To list stations by country: `https://rradio.online/en/countries/{country_code}`
