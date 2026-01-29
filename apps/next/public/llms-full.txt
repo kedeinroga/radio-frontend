@@ -27,4 +27,4 @@ We use a non-intrusive advertising model and optional donations.
 ## Navigation Guide for Agents
 - To search for a specific station: `https://rradio.online/en/search?q={query}`
 - To list stations by genre: `https://rradio.online/en/genres/{genre_slug}`
-- To list stations by country: `https://rradio.online/en/countries/{country_code}`
+- To list stations by country: `https://rradio.online/en/search?country={country_name}`

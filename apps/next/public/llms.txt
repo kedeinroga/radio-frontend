@@ -12,5 +12,9 @@ Rradio is a free online radio streaming platform that allows you to listen to ov
 ## Useful Links
 - [Home](https://rradio.online/en)
 - [Search](https://rradio.online/en/search)
-- [Genres](https://rradio.online/en/genres)
-- [Countries](https://rradio.online/en/countries)
+- [Genres](https://rradio.online/en/genres/{genre_slug})
+- [Countries](https://rradio.online/en/search?country={country_name})
+  - Example: https://rradio.online/en/search?country=Germany
+
+## Full Documentation
+- [Detailed AI Context](https://rradio.online/llms-full.txt)
