@@ -38,10 +38,10 @@ function getTranslations(locale: string): Record<string, any> {
  */
 function getSEOTitle(locale: string): string {
   const seoTitles: Record<string, string> = {
-    es: 'Radio Online Gratis - Escucha las Mejores Estaciones en Vivo',
-    en: 'Free Online Radio - Listen to the Best Live Stations',
-    fr: 'Radio en Ligne Gratuite - Écoutez les Meilleures Stations en Direct',
-    de: 'Kostenloses Online-Radio - Hören Sie die Besten Live-Sender',
+    es: 'Radio Online Gratis',
+    en: 'Free Online Radio',
+    fr: 'Radio en Ligne Gratuite',
+    de: 'Kostenloses Online-Radio',
   }
   
   return seoTitles[locale] || seoTitles.es

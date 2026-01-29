@@ -46,80 +46,82 @@ export async function generateMetadata({
     es: {
       title: {
         template: '%s | Rradio - Escucha Radio Online',
-        default: 'Rradio - Las Mejores Estaciones de Radio en Vivo',
+        default: 'Rradio - Radio Online Gratis - Escucha Música en Vivo',
       },
-      description: 'Descubre y escucha más de 30,000 estaciones de radio de todo el mundo. Rock, Pop, Jazz, Noticias y más. Gratis y en alta calidad.',
+      description: 'Escucha radio online gratis. Más de 30,000 estaciones de radio en vivo. Música, noticias y deportes. Sin cortes y en alta calidad.',
       keywords: [
-        'rradio',
         'radio online',
-        'streaming radio',
-        'música en vivo',
         'radio gratis',
-        'estaciones de radio',
-        'radio por internet',
+        'radio en vivo',
+        'emisoras de radio',
         'escuchar radio',
-        'radio mundial'
+        'radio por internet',
+        'rradio',
+        'radio mundial',
+        'musica gratis'
       ],
       ogTitle: 'Rradio - Radio Online Gratis',
-      ogDescription: 'Escucha más de 30,000 estaciones de radio en vivo de todo el mundo',
+      ogDescription: 'La mejor forma de escuchar radio online gratis. Más de 30,000 estaciones en vivo.',
     },
     en: {
       title: {
         template: '%s | Rradio - Listen to Radio Online',
-        default: 'Rradio - Best Live Radio Stations',
+        default: 'Rradio - Free Online Radio - Live Music Stations',
       },
-      description: 'Discover and listen to over 30,000 radio stations from around the world. Rock, Pop, Jazz, News and more. Free and high quality.',
+      description: 'Listen to free online radio. Over 30,000 live radio stations. Music, news, and sports. Free and high quality streaming.',
       keywords: [
-        'rradio',
         'online radio',
-        'streaming radio',
-        'live music',
         'free radio',
+        'live radio',
         'radio stations',
         'internet radio',
-        'listen radio',
-        'world radio'
+        'listen to radio',
+        'rradio',
+        'world radio',
+        'free music'
       ],
       ogTitle: 'Rradio - Free Online Radio',
-      ogDescription: 'Listen to over 30,000 live radio stations from around the world',
+      ogDescription: 'The best way to listen to free online radio. Over 30,000 live stations.',
     },
     fr: {
       title: {
         template: '%s | RadioApp - Écoutez la Radio en Ligne',
-        default: 'RadioApp - Meilleures Stations de Radio en Direct',
+        default: 'RadioApp - Radio en Ligne Gratuite - Musique en Direct',
       },
-      description: 'Découvrez et écoutez des milliers de stations de radio du monde entier. Rock, Pop, Jazz, Actualités et plus. Gratuit et haute qualité.',
+      description: 'Écoutez la radio en ligne gratuitement. Plus de 30 000 stations de radio en direct. Musique, actualités et sports. Gratuit et haute qualité.',
       keywords: [
         'radio en ligne',
-        'streaming radio',
-        'musique en direct',
         'radio gratuite',
+        'radio en direct',
         'stations de radio',
         'radio internet',
-        'écouter radio',
-        'radio mondiale'
+        'écouter la radio',
+        'rradio',
+        'radio mondiale',
+        'musique gratuite'
       ],
       ogTitle: 'RadioApp - Radio en Ligne Gratuite',
-      ogDescription: 'Écoutez des milliers de stations de radio en direct du monde entier',
+      ogDescription: 'La meilleure façon d\'écouter la radio en ligne gratuitement. Plus de 30 000 stations en direct.',
     },
     de: {
       title: {
         template: '%s | RadioApp - Radio Online Hören',
-        default: 'RadioApp - Beste Live-Radiosender',
+        default: 'RadioApp - Kostenloses Online-Radio - Live-Musik',
       },
-      description: 'Entdecken und hören Sie Tausende von Radiosendern aus der ganzen Welt. Rock, Pop, Jazz, Nachrichten und mehr. Kostenlos und in hoher Qualität.',
+      description: 'Hören Sie kostenloses Online-Radio. Über 30.000 Live-Radiosender. Musik, Nachrichten und Sport. Kostenlos und in hoher Qualität.',
       keywords: [
         'online radio',
-        'streaming radio',
-        'live musik',
         'kostenloses radio',
+        'live radio',
         'radiosender',
         'internet radio',
         'radio hören',
-        'weltradio'
+        'rradio',
+        'weltradio',
+        'kostenlose musik'
       ],
       ogTitle: 'RadioApp - Kostenloses Online-Radio',
-      ogDescription: 'Hören Sie Tausende von Live-Radiosendern aus der ganzen Welt',
+      ogDescription: 'Der beste Weg, kostenloses Online-Radio zu hören. Über 30.000 Live-Sender.',
     },
   }
 
@@ -146,6 +148,15 @@ export async function generateMetadata({
       address: false,
       telephone: false,
     },
+    icons: {
+      icon: '/icon-192.png',
+      shortcut: '/icon-192.png',
+      apple: '/icon-192.png',
+      other: {
+        rel: 'apple-touch-icon-precomposed',
+        url: '/icon-512.png',
+      },
+    },
     openGraph: {
       type: 'website',
       locale: ogLocaleMap[locale] || 'es_ES',
@@ -155,10 +166,10 @@ export async function generateMetadata({
       description: localeMetadata.ogDescription,
       images: [
         {
-          url: '/og-image.png',
+          url: `${BASE_URL}/og-image.png`, // Force absolute URL
           width: 1200,
           height: 630,
-          alt: 'RadioApp',
+          alt: 'Rradio - Radio Online Gratis',
         }
       ],
     },
