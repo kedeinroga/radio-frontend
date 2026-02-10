@@ -1,5 +1,4 @@
 import { StationApiRepository, Station } from '@radio-app/app'
-import { LanguageSelector } from '@/components/LanguageSelector'
 import { FAQSection } from '@/components/FAQSection'
 import { PopularStations } from '@/components/PopularStations'
 
@@ -95,19 +94,14 @@ export default async function HomePage({ params }: PageProps) {
   return (
     <main id="main-content" className="min-h-screen p-8">
       <div className="max-w-6xl mx-auto">
-        {/* Header with Language Selector */}
-        <header className="mb-8 flex items-start justify-between">
-          <div className="flex-1">
-            <h1 className="text-4xl font-bold text-neutral-900 dark:text-white mb-2">
-              {seoTitle}
-            </h1>
-            <p className="text-lg text-neutral-600 dark:text-neutral-400">
-              {t.app.subtitle}
-            </p>
-          </div>
-          <div className="ml-4">
-            <LanguageSelector />
-          </div>
+        {/* Header */}
+        <header className="mb-8">
+          <h1 className="text-4xl font-bold text-neutral-900 dark:text-white mb-2">
+            {seoTitle}
+          </h1>
+          <p className="text-lg text-neutral-600 dark:text-neutral-400">
+            {t.app.subtitle}
+          </p>
         </header>
 
         {/* Popular Stations - Client Component with SSR data */}
@@ -239,10 +233,24 @@ export default async function HomePage({ params }: PageProps) {
             <h3 className="font-bold text-lg mb-4 text-neutral-900 dark:text-white">Legal</h3>
             <ul className="space-y-2 text-sm text-neutral-600 dark:text-neutral-400">
               <li>
-                <a href="#" className="hover:text-purple-600 transition-colors">Privacidad</a>
+                <a href={`/${locale}/privacy`} className="hover:text-purple-600 transition-colors">
+                  {t.legal?.privacy || 'Privacidad'}
+                </a>
               </li>
               <li>
-                <a href="#" className="hover:text-purple-600 transition-colors">Términos</a>
+                <a href={`/${locale}/terms`} className="hover:text-purple-600 transition-colors">
+                  {t.legal?.terms || 'Términos'}
+                </a>
+              </li>
+              <li>
+                <a href={`/${locale}/about`} className="hover:text-purple-600 transition-colors">
+                  {t.legal?.about || 'Acerca de'}
+                </a>
+              </li>
+              <li>
+                <a href={`/${locale}/contact`} className="hover:text-purple-600 transition-colors">
+                  {t.legal?.contact || 'Contacto'}
+                </a>
               </li>
             </ul>
           </div>
