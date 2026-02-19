@@ -218,6 +218,11 @@ export default async function HomePage({ params }: PageProps) {
                 </a>
               </li>
               <li>
+                <a href={`/${locale}/blog`} className="hover:text-purple-600 transition-colors">
+                  {t.navigation?.blog || 'Blog'}
+                </a>
+              </li>
+              <li>
                 <a href={`/${locale}/search`} className="hover:text-purple-600 transition-colors">
                   {t.navigation?.search || 'Buscar Estaciones'}
                 </a>

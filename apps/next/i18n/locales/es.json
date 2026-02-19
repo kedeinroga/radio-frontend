@@ -36,6 +36,7 @@
     "favorites": "Favoritas",
     "search": "Buscar",
     "discover": "Descubrir",
+    "blog": "Blog",
     "admin": "Admin",
     "login": "Iniciar Sesión",
     "logout": "Cerrar Sesión",
@@ -667,12 +668,8 @@
         "title": "10. Modificaciones a los Términos",
         "content": "Nos reservamos el derecho de modificar estos términos en cualquier momento. Los cambios significativos se notificarán mediante un aviso en el sitio.\n\nEl uso continuado del servicio después de cambios constituye aceptación de los nuevos términos."
       },
-      "governing": {
-        "title": "11. Ley Aplicable",
-        "content": "Estos términos se rigen por las leyes de [TU JURISDICCIÓN]. Cualquier disputa se resolverá en los tribunales de [TU JURISDICCIÓN]."
-      },
       "contact": {
-        "title": "12. Contacto",
+        "title": "11. Contacto",
         "content": "Si tienes preguntas sobre estos términos, contáctanos:\n\n**Email:** legal@rradio.online\n**Email general:** support@rradio.online"
       }
     }
@@ -694,7 +691,7 @@
     },
     "team": {
       "title": "El Equipo",
-      "content": "Somos un equipe pequeño pero apasionado de desarrolladores y amantes de la radio. Creemos en el código abierto, la privacidad del usuario, y en crear productos que realmente aporten valor.\n\nSi quieres unirte o colaborar, contáctanos: team@rradio.online"
+      "content": "Somos un equipo pequeño pero apasionado de desarrolladores y amantes de la radio. Creemos en el código abierto, la privacidad del usuario, y en crear productos que realmente aporten valor.\n\nSi quieres unirte o colaborar, contáctanos: team@rradio.online"
     },
     "values": {
       "title": "Nuestros Valores",
