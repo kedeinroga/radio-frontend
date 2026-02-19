@@ -4,6 +4,7 @@ import { usePlayer } from '@/hooks/usePlayer'
 import { useRouter, usePathname } from 'next/navigation'
 import { useState } from 'react'
 import { useAppTranslation } from '@/hooks/useAppTranslation'
+import { Play, Pause, Square, Volume2, Volume1, VolumeX } from 'lucide-react'
 
 export function PlayerBar() {
   const { t } = useAppTranslation()
@@ -76,8 +77,10 @@ export function PlayerBar() {
             >
               {playerState.isBuffering ? (
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              ) : playerState.isPlaying ? (
+                <Pause className="w-5 h-5" aria-hidden="true" />
               ) : (
-                <span className="text-xl">{playerState.isPlaying ? '⏸' : '▶'}</span>
+                <Play className="w-5 h-5" aria-hidden="true" />
               )}
             </button>
 
@@ -87,7 +90,7 @@ export function PlayerBar() {
               aria-label={t('player.stop')}
               className="w-10 h-10 bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700 rounded-full flex items-center justify-center transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
             >
-              <span className="text-lg">⏹</span>
+              <Square className="w-4 h-4" aria-hidden="true" />
             </button>
 
             {/* Volume Control - Hidden on mobile devices */}
@@ -97,9 +100,13 @@ export function PlayerBar() {
                 aria-label={(playerState.volume ?? 0.7) === 0 ? t('player.unmute') : t('player.mute')}
                 className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 rounded"
               >
-                <span className="text-xl">
-                  {(playerState.volume ?? 0.7) === 0 ? '🔇' : (playerState.volume ?? 0.7) < 0.5 ? '🔉' : '🔊'}
-                </span>
+                {(playerState.volume ?? 0.7) === 0 ? (
+                  <VolumeX className="w-5 h-5" aria-hidden="true" />
+                ) : (playerState.volume ?? 0.7) < 0.5 ? (
+                  <Volume1 className="w-5 h-5" aria-hidden="true" />
+                ) : (
+                  <Volume2 className="w-5 h-5" aria-hidden="true" />
+                )}
               </button>
               <input
                 type="range"
