@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next'
-import { SEOApiRepository } from '@radio-app/app'
+import { getAllBlogPosts } from '@/lib/blog-posts'
 
 // Force dynamic generation
 export const dynamic = 'force-dynamic'
@@ -10,7 +10,7 @@ const SUPPORTED_LOCALES = ['es', 'en', 'fr', 'de'] as const
 
 /**
  * Static Pages Sitemap
- * Includes: home, search, favorites for all locales
+ * Includes: home, search, favorites for all locales + blog (es only)
  */
 export default async function sitemapStatic(): Promise<MetadataRoute.Sitemap> {
   // CRITICAL: Skip during build to prevent worker crash
@@ -50,6 +50,27 @@ export default async function sitemapStatic(): Promise<MetadataRoute.Sitemap> {
         priority,
         alternates: generateAlternates(path)
       })
+    })
+  })
+
+  // Blog pages - Spanish only
+  const blogPosts = getAllBlogPosts()
+
+  // Blog index page
+  sitemapEntries.push({
+    url: `${BASE_URL}/es/blog`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly',
+    priority: 0.8,
+  })
+
+  // Individual blog articles
+  blogPosts.forEach(post => {
+    sitemapEntries.push({
+      url: `${BASE_URL}/es/blog/${post.slug}`,
+      lastModified: new Date(post.updatedAt),
+      changeFrequency: 'monthly',
+      priority: 0.7,
     })
   })
 
