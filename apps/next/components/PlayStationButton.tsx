@@ -2,6 +2,7 @@
 
 import { usePlayer } from '@/hooks/usePlayer'
 import { useAppTranslation } from '@/hooks/useAppTranslation'
+import { Square, Volume2, Volume1, VolumeX } from 'lucide-react'
 
 // Minimal station info needed for playing
 interface StationPlayData {
@@ -73,7 +74,7 @@ export function PlayStationButton({ station }: PlayStationButtonProps) {
             aria-label={t('player.stop')}
             className="w-full sm:w-auto px-6 py-2 bg-neutral-200 dark:bg-neutral-700 hover:bg-neutral-300 dark:hover:bg-neutral-600 text-neutral-900 dark:text-white font-medium rounded-lg transition-colors flex items-center justify-center gap-2 flex-shrink-0"
           >
-            <span className="text-lg">⏹</span>
+            <Square className="w-4 h-4" aria-hidden="true" />
             {t('player.stop')}
           </button>
 
@@ -84,9 +85,13 @@ export function PlayStationButton({ station }: PlayStationButtonProps) {
               aria-label={(playerState.volume ?? 0.7) === 0 ? t('player.unmute') : t('player.mute')}
               className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 rounded p-2 flex-shrink-0"
             >
-              <span className="text-2xl">
-                {(playerState.volume ?? 0.7) === 0 ? '🔇' : (playerState.volume ?? 0.7) < 0.5 ? '🔉' : '🔊'}
-              </span>
+              {(playerState.volume ?? 0.7) === 0 ? (
+                <VolumeX className="w-5 h-5" aria-hidden="true" />
+              ) : (playerState.volume ?? 0.7) < 0.5 ? (
+                <Volume1 className="w-5 h-5" aria-hidden="true" />
+              ) : (
+                <Volume2 className="w-5 h-5" aria-hidden="true" />
+              )}
             </button>
             <div className="flex-1 flex items-center gap-2 min-w-0">
               <input
