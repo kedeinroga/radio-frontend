@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { backendHttpClient, BackendError } from '@/lib/api/backendClient'
+import { rateLimit, RATE_LIMITS } from '@/lib/rateLimit'
 
 /**
  * GET /api/stations/popular
@@ -8,11 +9,21 @@ import { backendHttpClient, BackendError } from '@/lib/api/backendClient'
  * ✅ El cliente llama a /api/stations/popular
  * ✅ Este route hace proxy al backend (oculto del cliente)
  * ✅ El backend URL y la API_SECRET_KEY solo existen en process.env (server-side)
+ * ✅ Rate limiting aplicado
+ * ✅ Input validation en parámetros
  */
 export async function GET(request: NextRequest) {
+  // 🔒 Rate limiting
+  const rateLimitResult = rateLimit(request, RATE_LIMITS.API)
+  if (rateLimitResult) return rateLimitResult
+
   try {
     const { searchParams } = new URL(request.url)
-    const limit = searchParams.get('limit') || '20'
+
+    // 🔒 Validar y sanitizar limit (1–100, default 20)
+    const rawLimit = parseInt(searchParams.get('limit') ?? '20', 10)
+    const limit = isNaN(rawLimit) || rawLimit < 1 || rawLimit > 100 ? 20 : rawLimit
+
     const country = searchParams.get('country')
     const lang = searchParams.get('lang') || 'es'
 
@@ -29,32 +40,26 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(data, { status: 200 })
   } catch (error: unknown) {
     if (error instanceof BackendError) {
-      // 401 — La clave secreta fue rechazada o está desactualizada.
       if (error.isUnauthorized) {
         console.error('[GET /api/stations/popular] Backend rejected X-Rradio-Secret (401).')
         return NextResponse.json(
           { error: 'Service temporarily unavailable. Please try again later.' },
-          { status: 503 } // No exponer al cliente que es un 401 de auth interna
+          { status: 503 }
         )
       }
-
-      // 5xx — Error interno del backend.
       if (error.isServerError) {
         console.error(`[GET /api/stations/popular] Backend server error (${error.status}).`)
         return NextResponse.json(
           { error: 'The radio service is experiencing issues. Please try again later.' },
-          { status: 502 } // Bad Gateway — el servidor upstream falló
+          { status: 502 }
         )
       }
-
-      // Otros errores HTTP del backend (4xx genérico).
       return NextResponse.json(
-        { error: 'Failed to fetch popular stations.', status: error.status },
+        { error: 'Failed to fetch popular stations.' },
         { status: error.status }
       )
     }
 
-    // Error de red, timeout, etc.
     const message = error instanceof Error ? error.message : 'Unknown error'
     console.error('[GET /api/stations/popular] Unexpected error:', message)
     return NextResponse.json(
@@ -63,4 +68,3 @@ export async function GET(request: NextRequest) {
     )
   }
 }
-

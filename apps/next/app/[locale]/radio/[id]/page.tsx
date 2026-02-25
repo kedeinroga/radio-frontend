@@ -1,12 +1,12 @@
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { 
-  StationApiRepository,
+import {
   GetRelatedStations,
   RadioStationSchema,
   RelatedStations,
   Station
 } from '@radio-app/app'
+import { StationServerRepository } from '@/lib/repositories/StationServerRepository'
 import { StationDetails } from '@/components/StationDetails'
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://rradio.online'
@@ -63,7 +63,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const texts = getLocalizedText(locale)
   
   try {
-    const repository = new StationApiRepository()
+    const repository = new StationServerRepository()
     const station = await repository.findById(id)
     
     if (!station) {
@@ -123,7 +123,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function RadioStationPage({ params }: PageProps) {
   const { id } = await params
   
-  const repository = new StationApiRepository()
+  const repository = new StationServerRepository()
   let station
   try {
     station = await repository.findById(id)

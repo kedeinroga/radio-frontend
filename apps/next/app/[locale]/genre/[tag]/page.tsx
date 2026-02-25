@@ -1,13 +1,13 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { 
-  StationApiRepository,
+import {
   SEOApiRepository,
   GetPopularTags,
   Breadcrumbs,
   WebSiteSchema,
   Station
 } from '@radio-app/app'
+import { StationServerRepository } from '@/lib/repositories/StationServerRepository'
 import { StationGridItem } from '@/components/StationGridItem'
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://rradio.online'
@@ -121,7 +121,7 @@ export default async function GenrePage({ params }: PageProps) {
     )
   }
   
-  const repository = new StationApiRepository()
+  const repository = new StationServerRepository()
   const genreName = decodeURIComponent(tag).replace(/-/g, ' ')
   const displayName = genreName.charAt(0).toUpperCase() + genreName.slice(1)
   

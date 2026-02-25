@@ -1,15 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { backendHttpClient } from '@/lib/api/backendClient'
+import { backendHttpClient, BackendError } from '@/lib/api/backendClient'
+import { getTokenRole, isTokenExpired } from '@radio-app/app'
+import { rateLimit, RATE_LIMITS } from '@/lib/rateLimit'
 
 /**
  * Dynamic catch-all admin route
- * 
+ *
  * Handles all admin API requests not covered by specific routes.
  * Proxies requests to backend with authentication.
- * 
- * Examples:
- * - /api/admin/users → /admin/users
- * - /api/admin/reports/monthly → /admin/reports/monthly
+ *
+ * 🔒 Security layers:
+ * - Rate limiting
+ * - JWT presence check
+ * - JWT expiry check (client-side, fast-fail before hitting backend)
+ * - Role verification: only 'admin' tokens are allowed
+ * - Generic error messages (no internal details leak to client)
  */
 export async function GET(
   request: NextRequest,
@@ -44,18 +49,41 @@ async function handleAdminRequest(
   params: { path: string[] },
   method: 'GET' | 'POST' | 'PUT' | 'DELETE'
 ) {
+  // 🔒 Rate limiting (admins tienen límite más estricto)
+  const rateLimitResult = rateLimit(request, RATE_LIMITS.ADMIN)
+  if (rateLimitResult) return rateLimitResult
+
   try {
     const accessToken = request.cookies.get('@radio-app:access_token')?.value
 
+    // 🔒 Verificar que existe un token
     if (!accessToken) {
       return NextResponse.json(
-        { error: 'Unauthorized - Admin access required' },
+        { error: 'Unauthorized' },
         { status: 401 }
       )
     }
 
+    // 🔒 Verificar que el token no está expirado (fast-fail antes de llamar al backend)
+    if (isTokenExpired(accessToken)) {
+      return NextResponse.json(
+        { error: 'Unauthorized — session expired' },
+        { status: 401 }
+      )
+    }
+
+    // 🔒 Verificar que el rol del token es 'admin'
+    // NOTA: el backend también valida esto — esta es una defensa adicional (defense in depth)
+    const role = getTokenRole(accessToken)
+    if (role !== 'admin') {
+      console.warn(`[Admin proxy] Access denied — role "${role}" is not admin.`)
+      return NextResponse.json(
+        { error: 'Forbidden' },
+        { status: 403 }
+      )
+    }
+
     // Construct backend path from dynamic segments
-    // ✅ Next.js 15: params must be awaited
     const { path } = await params
     const backendPath = `/admin/${path.join('/')}`
 
@@ -68,36 +96,46 @@ async function handleAdminRequest(
       Authorization: `Bearer ${accessToken}`,
     }
 
-    let data: any
+    let data: unknown
 
-    // Handle different HTTP methods
     switch (method) {
       case 'GET':
         data = await backendHttpClient.get(fullPath, { headers })
         break
-      case 'POST':
+      case 'POST': {
         const postBody = await request.json().catch(() => ({}))
         data = await backendHttpClient.post(backendPath, postBody, { headers })
         break
-      case 'PUT':
+      }
+      case 'PUT': {
         const putBody = await request.json().catch(() => ({}))
         data = await backendHttpClient.put(backendPath, putBody, { headers })
         break
+      }
       case 'DELETE':
         data = await backendHttpClient.delete(fullPath, { headers })
         break
     }
 
     return NextResponse.json(data, { status: 200 })
-  } catch (error: any) {
-    console.error(`Admin API error (${method}):`, error)
+  } catch (error: unknown) {
+    if (error instanceof BackendError) {
+      // No exponer detalles internos al cliente
+      console.error(`[Admin proxy] BackendError ${error.status} (${method}):`, error.body)
+      if (error.isUnauthorized) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      }
+      if (error.isServerError) {
+        return NextResponse.json({ error: 'Admin service is unavailable. Please try again later.' }, { status: 502 })
+      }
+      return NextResponse.json({ error: 'Request failed.' }, { status: error.status })
+    }
 
+    const message = error instanceof Error ? error.message : 'Unknown error'
+    console.error(`[Admin proxy] Unexpected error (${method}):`, message)
     return NextResponse.json(
-      {
-        error: `Failed to ${method} admin resource`,
-        message: error.message,
-      },
-      { status: error.status || 500 }
+      { error: 'An unexpected error occurred.' },
+      { status: 500 }
     )
   }
 }
