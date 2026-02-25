@@ -1,4 +1,4 @@
-import { StationApiRepository, Station } from '@radio-app/app'
+import { Station } from '@radio-app/app'
 import { FAQSection } from '@/components/FAQSection'
 import { PopularStations } from '@/components/PopularStations'
 
@@ -8,7 +8,9 @@ import enTranslations from '@/i18n/locales/en.json'
 import frTranslations from '@/i18n/locales/fr.json'
 import deTranslations from '@/i18n/locales/de.json'
 
-const stationRepo = new StationApiRepository()
+import { StationServerRepository } from '@/lib/repositories/StationServerRepository'
+
+const stationRepo = new StationServerRepository()
 
 // ISR: Revalidate every hour for fresh content
 export const revalidate = 3600
