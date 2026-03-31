@@ -54,9 +54,12 @@ export function PopularStations({ initialStations }: PopularStationsProps) {
 
   return (
     <section>
-      <h2 className="text-2xl font-bold text-neutral-900 dark:text-white mb-4">
-        {t('stations.popular')}
-      </h2>
+      <div className="flex items-center gap-4 mb-5">
+        <h2 className="font-broadcast text-[11px] tracking-[0.2em] uppercase text-neutral-500 whitespace-nowrap">
+          {t('stations.popular')}
+        </h2>
+        <div className="flex-1 h-px bg-white/[0.06]" aria-hidden="true" />
+      </div>
 
       {isLoading && <LoadingSpinner message={t('stations.loadingStations')} />}
 

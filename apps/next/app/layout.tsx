@@ -20,10 +20,7 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#0ea5e9' },
-    { media: '(prefers-color-scheme: dark)', color: '#1e293b' }
-  ],
+  themeColor: '#0D0D12',
 }
 
 /**
@@ -46,7 +43,7 @@ export default async function RootLayout({
   const nonce = headersList.get('x-nonce') || undefined
 
   return (
-    <html lang="es" suppressHydrationWarning data-scroll-behavior="smooth">
+    <html lang="es" className="dark" suppressHydrationWarning data-scroll-behavior="smooth">
       <head>
         {/* Google AdSense - Using standard script tag to avoid data-nscript error */}
         {process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_ID && (

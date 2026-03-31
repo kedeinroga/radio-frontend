@@ -20,25 +20,33 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   onAction,
 }) => {
   const text = message || description || ''
-  
-  return (
-    <div className="flex flex-col items-center justify-center p-8">
-      <span className="text-6xl mb-4" role="img" aria-label={icon}>
-        {icon}
-      </span>
 
-      <h2 className="text-xl font-bold text-neutral-900 dark:text-white text-center mb-2">
+  return (
+    <div className="flex flex-col items-center justify-center py-16 px-8">
+      {/* Icon container */}
+      <div
+        className="w-16 h-16 rounded-2xl bg-white/[0.04] border border-white/[0.07] flex items-center justify-center mb-5"
+        aria-hidden="true"
+      >
+        <span className="text-2xl" role="img">
+          {icon}
+        </span>
+      </div>
+
+      <h2 className="font-display text-xl font-semibold text-white text-center mb-2">
         {title}
       </h2>
 
-      <p className="text-base text-neutral-600 dark:text-neutral-400 text-center mb-6">
-        {text}
-      </p>
+      {text && (
+        <p className="font-broadcast text-[11px] text-neutral-500 text-center mb-8 max-w-xs leading-relaxed">
+          {text}
+        </p>
+      )}
 
       {actionLabel && onAction && (
         <button
           onClick={onAction}
-          className="px-6 py-3 bg-primary-500 hover:bg-primary-600 text-white font-semibold rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+          className="px-6 py-2.5 bg-amber-500 hover:bg-amber-400 text-neutral-900 font-broadcast text-xs font-bold tracking-[0.1em] uppercase rounded-xl transition-all focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 focus:ring-offset-neutral-950"
         >
           {actionLabel}
         </button>

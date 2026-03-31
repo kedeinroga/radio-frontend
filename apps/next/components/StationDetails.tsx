@@ -8,6 +8,7 @@ import { StationImage } from './StationImage'
 import { PlayStationButton } from './PlayStationButton'
 import { useAppTranslation } from '@/hooks/useAppTranslation'
 import { useFavorites } from '@/hooks/useFavorites'
+import { ArrowLeft, Heart, MapPin, Wifi, Star, Radio } from 'lucide-react'
 
 interface StationDetailsProps {
   station: StationDTO
@@ -20,7 +21,6 @@ export function StationDetails({ station }: StationDetailsProps) {
   const [isFav, setIsFav] = useState(false)
   const [isClient, setIsClient] = useState(false)
 
-  // Sincronizar el estado de favorito después de la hidratación
   useEffect(() => {
     setIsClient(true)
     setIsFav(isFavorite(station.id))
@@ -46,169 +46,228 @@ export function StationDetails({ station }: StationDetailsProps) {
     setIsFav(!isFav)
   }
 
-  const handleBack = () => {
-    router.back()
-  }
-
   return (
-    <>
-      {/* Back and Favorite Buttons */}
-      <div className="flex justify-between items-center mb-6">
+    <div className="min-h-screen">
+
+      {/* ── Top navigation ─────────────────────────────────── */}
+      <div
+        className="flex justify-between items-center mb-5 animate-fade-in"
+        style={{ animationDelay: '0ms' }}
+      >
         <button
-          onClick={handleBack}
-          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+          onClick={() => router.back()}
+          className="inline-flex items-center gap-2 px-4 py-2 font-broadcast text-xs text-neutral-400 hover:text-white bg-white/[0.05] hover:bg-white/[0.09] border border-white/[0.07] rounded-xl transition-all duration-200 focus:outline-none"
           aria-label={t('common.back')}
         >
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M15 19l-7-7 7-7"
-            />
-          </svg>
+          <ArrowLeft className="w-3.5 h-3.5" aria-hidden="true" />
           {t('common.back')}
         </button>
 
         {isClient && (
           <button
             onClick={handleToggleFavorite}
-            className={`inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
-              isFav
-                ? 'text-red-700 dark:text-red-400 bg-red-50 dark:bg-red-900/20 border border-red-300 dark:border-red-800 hover:bg-red-100 dark:hover:bg-red-900/30'
-                : 'text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'
-            }`}
+            className={`
+              inline-flex items-center gap-2 px-4 py-2 font-broadcast text-xs rounded-xl border transition-all duration-200 focus:outline-none
+              ${isFav
+                ? 'text-rose-400 bg-rose-500/[0.10] border-rose-500/25 hover:bg-rose-500/[0.18]'
+                : 'text-neutral-400 hover:text-white bg-white/[0.05] hover:bg-white/[0.09] border-white/[0.07]'
+              }
+            `}
             aria-label={isFav ? t('favorites.removeFromFavorites') : t('favorites.addToFavorites')}
           >
-            <svg
-              className="w-5 h-5"
-              fill={isFav ? 'currentColor' : 'none'}
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-              />
-            </svg>
+            <Heart
+              className={`w-3.5 h-3.5 transition-all ${isFav ? 'fill-rose-500 text-rose-500' : ''}`}
+              aria-hidden="true"
+            />
             {isFav ? t('favorites.removeFromFavorites') : t('favorites.addToFavorites')}
           </button>
         )}
       </div>
 
-      {/* Station Hero Section */}
-      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-6 md:p-8 mb-8">
-        <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
-          {/* Station Image */}
-          <div className="flex-shrink-0">
+      {/* ── Hero stage ─────────────────────────────────────── */}
+      <div
+        className="relative overflow-hidden rounded-3xl mb-5 animate-fade-in"
+        style={{ animationDelay: '50ms' }}
+      >
+        {/* Atmospheric blurred backdrop from station art */}
+        {station.imageUrl && (
+          <div
+            className="absolute inset-0 scale-125"
+            style={{
+              backgroundImage: `url(${station.imageUrl})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              filter: 'blur(56px) saturate(1.6) brightness(0.7)',
+            }}
+            aria-hidden="true"
+          />
+        )}
+
+        {/* Dark vignette overlay */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              'linear-gradient(180deg, rgba(13,13,18,0.45) 0%, rgba(13,13,18,0.7) 35%, rgba(13,13,18,0.97) 100%)',
+          }}
+          aria-hidden="true"
+        />
+
+        {/* Subtle decorative signal SVG — top right */}
+        <svg
+          className="absolute top-5 right-6 opacity-[0.07]"
+          width="72"
+          height="48"
+          viewBox="0 0 72 48"
+          fill="none"
+          aria-hidden="true"
+        >
+          <line x1="0" y1="24" x2="72" y2="24" stroke="white" strokeWidth="1" />
+          <line x1="0" y1="14" x2="48" y2="14" stroke="white" strokeWidth="1" strokeDasharray="5 4" />
+          <line x1="0" y1="34" x2="60" y2="34" stroke="white" strokeWidth="1" strokeDasharray="7 5" />
+          <circle cx="64" cy="24" r="3" stroke="white" strokeWidth="1" />
+        </svg>
+
+        {/* Hero content — centered */}
+        <div className="relative z-10 flex flex-col items-center text-center px-6 pt-12 pb-10">
+
+          {/* Station logo */}
+          <div
+            className="w-28 h-28 md:w-36 md:h-36 rounded-2xl overflow-hidden mb-6 shadow-[0_12px_48px_rgba(0,0,0,0.7)] ring-2 ring-white/[0.09] animate-fade-up"
+            style={{ animationDelay: '120ms' }}
+          >
             <StationImage
               src={station.imageUrl}
               alt={station.name}
-              className="w-32 h-32 md:w-40 md:h-40 rounded-xl object-cover shadow-md"
+              width={160}
+              height={160}
+              priority
+              className="w-full h-full object-cover"
+              sizes="160px"
             />
           </div>
 
-          {/* Station Info */}
-          <div className="flex-1 min-w-0">
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-2">
-              {station.name}
-            </h1>
-            
-            {station.seoMetadata?.description && (
-              <p className="text-lg text-gray-600 dark:text-gray-400 mb-4">
-                {station.seoMetadata.description}
-              </p>
+          {/* Station name */}
+          <h1
+            className="font-display text-4xl md:text-5xl font-bold text-white leading-tight mb-3 animate-fade-up"
+            style={{ animationDelay: '170ms' }}
+          >
+            {station.name}
+          </h1>
+
+          {/* Metadata strip */}
+          <div
+            className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 mb-4 animate-fade-up"
+            style={{ animationDelay: '210ms' }}
+          >
+            {station.country && (
+              <span className="flex items-center gap-1.5 font-broadcast text-[11px] text-neutral-400">
+                <MapPin className="w-3 h-3 text-amber-500 flex-shrink-0" aria-hidden="true" />
+                {station.country}
+              </span>
             )}
-
-            {/* Metadata Badges */}
-            <div className="flex flex-wrap gap-2 mb-4">
-              {station.country && (
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">
-                  📍 {station.country}
-                </span>
-              )}
-              {station.bitrate && (
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200">
-                  🎵 {station.bitrate}kbps
-                </span>
-              )}
-              {station.votes && station.votes > 0 && (
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200">
-                  ⭐ {station.votes} {station.votes === 1 ? t('stations.vote') : t('stations.votes')}
-                </span>
-              )}
-            </div>
-
-            {/* Genre Tags */}
-            {station.tags.length > 0 && (
-              <div className="flex flex-wrap gap-2">
-                {station.tags.map((tag: string) => (
-                  <a
-                    key={tag}
-                    href={`/genre/${tag.toLowerCase()}`}
-                    className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-                  >
-                    #{tag}
-                  </a>
-                ))}
-              </div>
+            {station.bitrate && (
+              <span className="flex items-center gap-1.5 font-broadcast text-[11px] text-neutral-400">
+                <Wifi className="w-3 h-3 text-amber-500 flex-shrink-0" aria-hidden="true" />
+                {station.bitrate} kbps
+              </span>
+            )}
+            {station.votes != null && station.votes > 0 && (
+              <span className="flex items-center gap-1.5 font-broadcast text-[11px] text-neutral-400">
+                <Star className="w-3 h-3 text-amber-500 flex-shrink-0" aria-hidden="true" />
+                {station.votes.toLocaleString()}
+              </span>
             )}
           </div>
-        </div>
 
-        {/* Play Button Section */}
-        <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
-          <PlayStationButton station={{
-            id: station.id,
-            name: station.name,
-            streamUrl: station.streamUrl,
-            slug: station.slug,
-            imageUrl: station.imageUrl,
-            country: station.country
-          }} />
-          <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-            {t('stations.clickToListen')}
-          </p>
+          {/* Description */}
+          {station.seoMetadata?.description && (
+            <p
+              className="text-sm text-neutral-400 max-w-md leading-relaxed mb-7 animate-fade-up"
+              style={{ animationDelay: '250ms' }}
+            >
+              {station.seoMetadata.description}
+            </p>
+          )}
+
+          {/* Play button */}
+          <div
+            className="w-full max-w-xs animate-fade-up"
+            style={{ animationDelay: '290ms' }}
+          >
+            <PlayStationButton
+              station={{
+                id: station.id,
+                name: station.name,
+                streamUrl: station.streamUrl,
+                slug: station.slug,
+                imageUrl: station.imageUrl,
+                country: station.country,
+              }}
+            />
+          </div>
         </div>
       </div>
 
-      {/* Alternate Names (if available) */}
+      {/* ── Genre tags ─────────────────────────────────────── */}
+      {station.tags.length > 0 && (
+        <div
+          className="flex flex-wrap gap-2 mb-8 animate-fade-up"
+          style={{ animationDelay: '340ms' }}
+        >
+          {station.tags.map((tag: string) => (
+            <a
+              key={tag}
+              href={`/genre/${tag.toLowerCase()}`}
+              className="font-broadcast text-[11px] px-3 py-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.09] border border-white/[0.07] hover:border-amber-500/30 text-neutral-500 hover:text-amber-400 transition-all duration-200"
+            >
+              #{tag}
+            </a>
+          ))}
+        </div>
+      )}
+
+      {/* ── Also known as ──────────────────────────────────── */}
       {station.seoMetadata?.alternateNames && station.seoMetadata.alternateNames.length > 0 && (
-        <div className="bg-blue-50 dark:bg-blue-950 rounded-lg p-4 mb-8">
-          <p className="text-sm text-gray-700 dark:text-gray-300">
-            <strong>{t('stations.alsoKnownAs')}:</strong>{' '}
-            {station.seoMetadata.alternateNames.join(', ')}
+        <div
+          className="flex items-start gap-3 bg-white/[0.03] border border-white/[0.05] rounded-xl px-4 py-3 mb-8 animate-fade-up"
+          style={{ animationDelay: '380ms' }}
+        >
+          <Radio className="w-3.5 h-3.5 text-amber-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
+          <p className="font-broadcast text-[11px] text-neutral-500 leading-relaxed">
+            <span className="text-neutral-400">{t('stations.alsoKnownAs')}:</span>{' '}
+            {station.seoMetadata.alternateNames.join(' · ')}
           </p>
         </div>
       )}
 
-      {/* Additional SEO Content */}
-      <div className="mt-8 prose dark:prose-invert max-w-none">
-        <h2>{t('stations.about', { name: station.name })}</h2>
-        <p>
-          {station.name} {t('stations.isA')} {station.country ? `${t('stations.from')} ${station.country}` : t('stations.international')}
-          {station.primaryGenre && ` ${t('stations.specializedIn')} ${station.primaryGenre}`}.{' '}
-          {t('stations.listen24h')} {station.bitrate ? `${station.bitrate}kbps` : t('stations.premium')}.
-        </p>
-        
-        {station.tags.length > 0 && (
-          <>
-            <h3>{t('stations.genresAndCategories')}</h3>
+      {/* ── About section ──────────────────────────────────── */}
+      <div
+        className="animate-fade-up"
+        style={{ animationDelay: '420ms' }}
+      >
+        <h2 className="font-display text-2xl font-semibold text-white mb-4">
+          {t('stations.about', { name: station.name })}
+        </h2>
+        <div className="space-y-4 text-sm text-neutral-500 leading-relaxed">
+          <p>
+            {station.name}{' '}
+            {t('stations.isA')}{' '}
+            {station.country
+              ? `${t('stations.from')} ${station.country}`
+              : t('stations.international')}
+            {station.primaryGenre && ` ${t('stations.specializedIn')} ${station.primaryGenre}`}.{' '}
+            {t('stations.listen24h')}{' '}
+            {station.bitrate ? `${station.bitrate}kbps` : t('stations.premium')}.
+          </p>
+          {station.tags.length > 0 && (
             <p>
+              <span className="text-neutral-400">{t('stations.genresAndCategories')}:</span>{' '}
               {t('stations.genresDescription', { genres: station.tags.join(', ') })}
             </p>
-          </>
-        )}
+          )}
+        </div>
       </div>
-    </>
+    </div>
   )
 }

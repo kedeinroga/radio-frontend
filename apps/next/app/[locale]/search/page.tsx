@@ -141,111 +141,104 @@ export default function SearchPage() {
   }
 
   return (
-    <main id="main-content" className="min-h-screen bg-gray-50 dark:bg-gray-950 p-6">
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="mb-6">
-          <div className="flex items-center gap-3 mb-2">
-            <SearchIcon className="w-8 h-8 text-primary-500" />
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+    <main id="main-content" className="min-h-screen p-6">
+      <div className="max-w-2xl mx-auto">
+
+        {/* ── Page header ──────────────────────────────── */}
+        <header className="flex items-center gap-3 mb-7 animate-fade-in">
+          <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center flex-shrink-0">
+            <SearchIcon className="w-5 h-5 text-amber-500" aria-hidden="true" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <h1 className="font-display text-2xl font-bold text-white">
               {t('search.title')}
             </h1>
+            {(genreParam || countryParam) && (
+              <p className="font-broadcast text-[10px] text-amber-500/70 mt-0.5 truncate tracking-wide uppercase">
+                {genreParam ?? countryParam}
+              </p>
+            )}
           </div>
-          
-          {/* Active Filter Badge */}
-          {(genreParam || countryParam) && (
-            <div className="flex items-center gap-2 mt-2">
-              <span className="text-sm text-gray-600 dark:text-gray-400">
-                {t('common.filter')}:
-              </span>
-              <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 text-sm font-medium">
-                {genreParam ? `🎵 ${genreParam}` : `🌍 ${countryParam}`}
-              </span>
-            </div>
-          )}
-        </div>
+        </header>
 
-        {/* Search Input */}
-        <div className="mb-8 relative">
+        {/* ── Search input ─────────────────────────────── */}
+        <div className="mb-7 animate-fade-in" style={{ animationDelay: '50ms' }}>
           <div className="relative">
-            <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <SearchIcon
+              className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-600 pointer-events-none"
+              aria-hidden="true"
+            />
             <input
               type="search"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder={t('search.placeholder')}
               disabled={!!(genreParam || countryParam)}
-              className="w-full pl-12 pr-12 py-4 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-lg disabled:opacity-50 disabled:cursor-not-allowed"
+              className="
+                w-full pl-11 pr-11 py-3.5 rounded-xl
+                bg-white/[0.05] border border-white/[0.08]
+                text-white placeholder-neutral-600
+                font-broadcast text-sm
+                focus:outline-none focus:border-amber-500/40 focus:bg-white/[0.08]
+                disabled:opacity-40 disabled:cursor-not-allowed
+                transition-all duration-200
+              "
               aria-label={t('search.searchStations')}
             />
             {query && (
               <button
                 onClick={handleClear}
-                className="absolute right-4 top-1/2 -translate-y-1/2 p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full transition-colors"
+                className="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full flex items-center justify-center hover:bg-white/10 transition-colors focus:outline-none"
                 aria-label={t('search.clearSearch')}
               >
-                <X className="w-5 h-5 text-gray-400" />
+                <X className="w-3.5 h-3.5 text-neutral-500" aria-hidden="true" />
               </button>
             )}
           </div>
-          
-          {/* Search hint - hide when filters are active */}
+
+          {/* Hints */}
           {!query && !genreParam && !countryParam && (
-            <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-              💡 {t('search.hint')}
-            </p>
-          )}
-          
-          {/* Filter hint */}
-          {(genreParam || countryParam) && (
-            <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-              {genreParam 
-                ? `🎵 ${t('common.search')} ${genreParam}...`
-                : `🌍 ${t('common.search')} ${countryParam}...`
-              }
+            <p className="font-broadcast text-[10px] text-neutral-600 mt-2 tracking-wide">
+              {t('search.hint')}
             </p>
           )}
         </div>
 
-        {/* Results */}
+        {/* ── Results ──────────────────────────────────── */}
         {isLoading ? (
-          <div className="flex flex-col items-center justify-center py-12">
-            <LoadingSpinner size="large" />
-            <p className="mt-4 text-sm text-gray-600 dark:text-gray-400">
-              {t('search.searching')}
-            </p>
+          <div className="py-8">
+            <LoadingSpinner message={t('search.searching')} />
             {isSlowSearch && (
-              <div className="mt-4 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg max-w-md">
-                <p className="text-sm text-yellow-800 dark:text-yellow-200">
-                  ⏳ {t('search.slowSearch')}
-                </p>
-              </div>
+              <p className="font-broadcast text-[10px] text-amber-500/60 text-center mt-2 tracking-wide">
+                {t('search.slowSearch')}
+              </p>
             )}
           </div>
         ) : searchError ? (
-          <EmptyState
-            icon="⚠️"
-            title={t('search.errorTitle')}
-            message={searchError}
-          />
+          <EmptyState icon="⚠️" title={t('search.errorTitle')} message={searchError} />
         ) : stations.length > 0 ? (
           <div>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-              {stations.length === 1 
-                ? t('search.resultsCount', { count: stations.length }) 
+            <p className="font-broadcast text-[10px] text-neutral-600 mb-4 tracking-wide">
+              {stations.length === 1
+                ? t('search.resultsCount', { count: stations.length })
                 : t('search.resultsCount_other', { count: stations.length })}
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {stations.map((station) => (
-                <StationCard
+            <div className="space-y-2">
+              {stations.map((station, i) => (
+                <div
                   key={station.id}
-                  station={station}
-                  onPlay={() => handlePlay(station)}
-                  isPlaying={currentStation?.id === station.id && playerState.isPlaying}
-                  isBuffering={currentStation?.id === station.id && playerState.isBuffering}
-                  isFavorite={isFavorite(station.id)}
-                  onFavorite={() => handleToggleFavorite(station)}
-                />
+                  className="animate-fade-up"
+                  style={{ animationDelay: `${i * 35}ms` }}
+                >
+                  <StationCard
+                    station={station}
+                    onPlay={() => handlePlay(station)}
+                    isPlaying={currentStation?.id === station.id && playerState.isPlaying}
+                    isBuffering={currentStation?.id === station.id && playerState.isBuffering}
+                    isFavorite={isFavorite(station.id)}
+                    onFavorite={() => handleToggleFavorite(station)}
+                  />
+                </div>
               ))}
             </div>
           </div>

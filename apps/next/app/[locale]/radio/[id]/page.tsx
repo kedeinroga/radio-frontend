@@ -3,11 +3,11 @@ import { notFound } from 'next/navigation'
 import {
   GetRelatedStations,
   RadioStationSchema,
-  RelatedStations,
   Station
 } from '@radio-app/app'
 import { StationServerRepository } from '@/lib/repositories/StationServerRepository'
 import { StationDetails } from '@/components/StationDetails'
+import { RelatedStations } from '@/components/RelatedStations'
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://rradio.online'
 
@@ -154,8 +154,8 @@ export default async function RadioStationPage({ params }: PageProps) {
       {/* JSON-LD Schema for Google Rich Results */}
       <RadioStationSchema station={station} baseUrl={BASE_URL} />
 
-      <main className="min-h-screen bg-gray-50 dark:bg-gray-950">
-        <div className="container mx-auto px-4 py-8 max-w-6xl">
+      <main className="min-h-screen dark:bg-surface-950">
+        <div className="container mx-auto px-4 py-8 max-w-2xl">
           {/* Station Details */}
           <StationDetails station={stationData} />
 
