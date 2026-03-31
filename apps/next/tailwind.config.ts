@@ -24,6 +24,22 @@ const config: Config = {
           800: '#075985',
           900: '#0c4a6e',
         },
+        amber: {
+          300: '#FCD34D',
+          400: '#FBBF24',
+          500: '#F5A30A',
+          600: '#D97706',
+          700: '#B45309',
+        },
+        surface: {
+          800: '#22222E',
+          900: '#1A1A24',
+          950: '#0D0D12',
+        },
+      },
+      fontFamily: {
+        display: ['"Playfair Display"', 'Georgia', 'serif'],
+        broadcast: ['"Space Mono"', 'Menlo', 'monospace'],
       },
     },
   },

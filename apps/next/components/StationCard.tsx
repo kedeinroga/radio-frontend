@@ -4,6 +4,20 @@ import React from 'react'
 import { useRouter } from 'next/navigation'
 import { Station } from '@radio-app/app'
 import { useAppTranslation } from '@/hooks/useAppTranslation'
+import { Heart, Play, Pause, Radio } from 'lucide-react'
+
+/** Animated waveform for playing state */
+const WaveformBars = () => (
+  <div className="flex items-end gap-[2px] h-4 w-7 flex-shrink-0" aria-hidden="true">
+    {[1, 2, 3, 4, 5].map((i) => (
+      <span
+        key={i}
+        className="wave-bar flex-1 rounded-[1px] bg-amber-500"
+        style={{ height: '100%' }}
+      />
+    ))}
+  </div>
+)
 
 export interface StationCardProps {
   station: Station
@@ -24,10 +38,9 @@ export const StationCard: React.FC<StationCardProps> = ({
 }) => {
   const router = useRouter()
   const { t } = useAppTranslation()
+  const [imgError, setImgError] = React.useState(false)
 
   const handleCardClick = () => {
-    // On small screens, clicking the card plays/pauses the station
-    // On larger screens, it navigates to the station detail page
     if (window.innerWidth < 640) {
       onPlay()
     } else {
@@ -35,16 +48,40 @@ export const StationCard: React.FC<StationCardProps> = ({
     }
   }
 
-  const [imgError, setImgError] = React.useState(false)
-
   return (
-    <div 
+    <div
       onClick={handleCardClick}
-      className="bg-white dark:bg-neutral-900 rounded-xl p-4 mb-3 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+      className={`
+        relative group cursor-pointer rounded-xl overflow-hidden
+        transition-all duration-300
+        bg-neutral-900 dark:bg-surface-900
+        border
+        ${isPlaying
+          ? 'border-amber-500/30 shadow-[0_0_24px_-4px_rgba(245,163,10,0.2)]'
+          : 'border-white/[0.06] hover:border-white/[0.12] hover:shadow-lg hover:shadow-black/20'
+        }
+      `}
     >
-      <div className="flex items-center gap-4">
-        {/* Station Image */}
-        <div className="w-20 h-20 rounded-lg bg-neutral-200 dark:bg-neutral-800 flex items-center justify-center overflow-hidden flex-shrink-0">
+      {/* Left accent strip */}
+      <div
+        className={`
+          absolute left-0 top-0 bottom-0 w-[3px] rounded-full transition-all duration-300
+          ${isPlaying ? 'bg-amber-500' : 'bg-transparent group-hover:bg-white/10'}
+        `}
+      />
+
+      <div className="flex items-center gap-4 px-4 py-3 pl-5">
+        {/* Station image */}
+        <div
+          className={`
+            relative w-14 h-14 rounded-lg flex-shrink-0 overflow-hidden
+            transition-all duration-300
+            ${isPlaying
+              ? 'ring-2 ring-amber-500/70 ring-offset-2 ring-offset-surface-900'
+              : 'ring-1 ring-white/[0.06]'
+            }
+          `}
+        >
           {!imgError && station.imageUrl ? (
             <img
               src={station.imageUrl}
@@ -53,73 +90,107 @@ export const StationCard: React.FC<StationCardProps> = ({
               onError={() => setImgError(true)}
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-400 to-primary-600">
-              <span className="text-3xl text-white">📻</span>
+            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-neutral-700 to-neutral-800">
+              <Radio className="w-6 h-6 text-neutral-500" aria-hidden="true" />
             </div>
           )}
         </div>
 
-        {/* Station Info */}
+        {/* Station info */}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
-            <h3 className="text-lg font-bold text-neutral-900 dark:text-white truncate">
+            <h3
+              className={`
+                font-display text-base font-semibold truncate transition-colors duration-200
+                ${isPlaying
+                  ? 'text-amber-400'
+                  : 'text-neutral-100 group-hover:text-white'
+                }
+              `}
+            >
               {station.name}
             </h3>
             {station.isPremium && (
-              <span className="bg-warning px-2 py-0.5 rounded text-xs font-semibold text-white flex-shrink-0">
+              <span className="flex-shrink-0 bg-amber-500/15 text-amber-400 px-1.5 py-0.5 rounded text-[9px] font-broadcast font-bold tracking-widest border border-amber-500/25">
                 PRO
               </span>
             )}
           </div>
 
-          <p className="text-sm text-neutral-600 dark:text-neutral-400 truncate">
-            {station.country || t('stations.unknownCountry')}
-          </p>
+          <div className="flex items-center gap-2">
+            {isPlaying ? (
+              <>
+                <WaveformBars />
+                <span className="font-broadcast text-[11px] text-neutral-500 truncate">
+                  {station.country || 'Live'}
+                </span>
+              </>
+            ) : (
+              <p className="font-broadcast text-[11px] text-neutral-500 truncate">
+                {station.country || t('stations.unknownCountry')}
+              </p>
+            )}
+          </div>
         </div>
 
-        {/* Action Buttons */}
-        <div className="flex gap-2 flex-shrink-0" onClick={(e) => e.stopPropagation()}>
-          {/* Play Button - Hidden on small screens */}
+        {/* Action buttons */}
+        <div
+          className="flex items-center gap-1.5 flex-shrink-0"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Play button — hidden on mobile */}
           <button
             onClick={(e) => {
               e.stopPropagation()
               onPlay()
             }}
             disabled={isBuffering}
-            aria-label={isPlaying ? t('player.pauseStation', { name: station.name }) : t('player.playStation', { name: station.name })}
-            className="hidden sm:flex w-12 h-12 bg-primary-500 hover:bg-primary-600 disabled:bg-primary-300 rounded-full items-center justify-center text-white transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+            aria-label={
+              isPlaying
+                ? t('player.pauseStation', { name: station.name })
+                : t('player.playStation', { name: station.name })
+            }
+            className={`
+              hidden sm:flex w-10 h-10 rounded-full items-center justify-center
+              transition-all duration-200 focus:outline-none
+              focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 focus:ring-offset-neutral-900
+              ${isPlaying
+                ? 'bg-amber-500 hover:bg-amber-400 text-neutral-900 shadow-[0_0_14px_rgba(245,163,10,0.45)]'
+                : 'bg-white/[0.07] hover:bg-white/[0.14] text-neutral-300 border border-white/10'
+              }
+            `}
           >
             {isBuffering ? (
-              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+            ) : isPlaying ? (
+              <Pause className="w-4 h-4" aria-hidden="true" />
             ) : (
-              <span className="text-xl">{isPlaying ? '⏸' : '▶'}</span>
+              <Play className="w-4 h-4 ml-0.5" aria-hidden="true" />
             )}
           </button>
 
-          {/* Favorite Button - Only show if onFavorite is provided */}
+          {/* Favorite button */}
           {onFavorite && (
             <button
               onClick={(e) => {
                 e.stopPropagation()
                 onFavorite()
               }}
-              aria-label={isFavorite ? t('favorites.removeFromFavorites') : t('favorites.addToFavorites')}
-              className="w-12 h-12 flex items-center justify-center transition-colors focus:outline-none"
+              aria-label={
+                isFavorite
+                  ? t('favorites.removeFromFavorites')
+                  : t('favorites.addToFavorites')
+              }
+              className="w-10 h-10 flex items-center justify-center focus:outline-none rounded-full"
             >
-              <svg
-                className="w-6 h-6 text-red-500 hover:scale-110 transition-transform"
-                fill={isFavorite ? 'currentColor' : 'none'}
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                />
-              </svg>
+              <Heart
+                className={`w-4 h-4 transition-all duration-200 ${
+                  isFavorite
+                    ? 'text-rose-500 fill-rose-500 scale-110'
+                    : 'text-neutral-600 hover:text-rose-400 hover:scale-110'
+                }`}
+                aria-hidden="true"
+              />
             </button>
           )}
         </div>
