@@ -6,6 +6,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://rradio.online'
 
 interface PageProps {
   params: Promise<{ locale: string }> | { locale: string }
+  searchParams?: Promise<{ category?: string }> | { category?: string }
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -29,13 +30,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 }
 
-export default async function BlogListPage({ params }: PageProps) {
+export default async function BlogListPage({ params, searchParams }: PageProps) {
   const resolvedParams = await Promise.resolve(params)
+  const resolvedSearch = await Promise.resolve(searchParams ?? {})
   const locale = resolvedParams.locale || 'es'
-  const posts = getAllBlogPosts()
+  const activeCategory = (resolvedSearch as { category?: string }).category ?? 'Todos'
 
-  // Group posts by category
-  const categories = Array.from(new Set(posts.map((p) => p.category)))
+  const allPosts = getAllBlogPosts()
+  const categories = Array.from(new Set(allPosts.map((p) => p.category)))
+  const posts = activeCategory === 'Todos'
+    ? allPosts
+    : allPosts.filter((p) => p.category === activeCategory)
 
   return (
     <main className="min-h-screen bg-gray-50 dark:bg-gray-950">
@@ -59,16 +64,28 @@ export default async function BlogListPage({ params }: PageProps) {
 
         {/* Category filter */}
         <div className="flex flex-wrap gap-3 mb-10">
-          <span className="px-4 py-2 rounded-full bg-purple-600 text-white text-sm font-medium">
+          <Link
+            href={`/${locale}/blog`}
+            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+              activeCategory === 'Todos'
+                ? 'bg-purple-600 text-white'
+                : 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:border-purple-400 dark:hover:border-purple-500'
+            }`}
+          >
             Todos
-          </span>
+          </Link>
           {categories.map((cat) => (
-            <span
+            <Link
               key={cat}
-              className="px-4 py-2 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300"
+              href={`/${locale}/blog?category=${encodeURIComponent(cat)}`}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                activeCategory === cat
+                  ? 'bg-purple-600 text-white'
+                  : 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:border-purple-400 dark:hover:border-purple-500'
+              }`}
             >
               {cat}
-            </span>
+            </Link>
           ))}
         </div>
 
@@ -167,7 +184,7 @@ export default async function BlogListPage({ params }: PageProps) {
                 url: `${BASE_URL}/icon-512.png`,
               },
             },
-            blogPost: posts.map((post) => ({
+            blogPost: allPosts.map((post) => ({
               '@type': 'BlogPosting',
               headline: post.title,
               description: post.description,
