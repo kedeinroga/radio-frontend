@@ -40,9 +40,25 @@ export async function POST(request: NextRequest) {
     }
 
     // 2. ✅ Obtener información del usuario
-    const userInfo = await backendHttpClient.get<{ user?: any; id?: string; email?: string; user_type?: string; role?: string }>('/auth/me', {
-      headers: { Authorization: `Bearer ${access_token}` },
+    // ⚠️ Fetch directo sin backendHttpClient para NO enviar X-Rradio-Secret junto al Bearer token.
+    //    El backend en producción devuelve 500 si recibe ambas cabeceras simultáneamente.
+    const meRes = await fetch(`${process.env.API_URL}/auth/me`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${access_token}`,
+      },
     })
+
+    if (!meRes.ok) {
+      const errBody = await meRes.text()
+      console.error('[auth/login] /auth/me error:', meRes.status, errBody)
+      return NextResponse.json(
+        { error: { code: 'profile_error', message: 'Could not retrieve user profile.' } },
+        { status: 502 }
+      )
+    }
+
+    const userInfo = await meRes.json() as { user?: any; id?: string; email?: string; user_type?: string; role?: string }
 
     // Extraer y mapear datos del usuario
     const user = userInfo.user || userInfo
