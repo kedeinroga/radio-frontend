@@ -4,7 +4,8 @@ import { usePlayer } from '@/hooks/usePlayer'
 import { useRouter, usePathname } from 'next/navigation'
 import { useState } from 'react'
 import { useAppTranslation } from '@/hooks/useAppTranslation'
-import { Play, Pause, Square, Volume2, VolumeX, Radio } from 'lucide-react'
+import { Play, Pause, Square, Volume2, VolumeX } from 'lucide-react'
+import Image from 'next/image'
 
 /** Compact waveform visualizer */
 const MiniWaveform = ({ isPlaying }: { isPlaying: boolean }) => (
@@ -90,9 +91,13 @@ export function PlayerBar() {
                     onError={() => setImgError(true)}
                   />
                 ) : (
-                  <div className="w-full h-full bg-gradient-to-br from-neutral-700 to-neutral-800 flex items-center justify-center">
-                    <Radio className="w-4 h-4 text-neutral-500" aria-hidden="true" />
-                  </div>
+                  <Image
+                    src="/icon-192.png"
+                    alt="Rradio"
+                    width={40}
+                    height={40}
+                    className="w-full h-full object-cover"
+                  />
                 )}
 
                 {/* Live dot */}

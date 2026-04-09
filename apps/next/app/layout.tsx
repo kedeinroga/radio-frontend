@@ -5,6 +5,7 @@ import './globals.css'
 import { Providers } from './providers'
 import '@/lib/env' // ✅ Validate environment variables at app startup
 import { WebVitals } from '@/components/WebVitals'
+import { AdSenseLoader } from '@/components/AdSenseLoader'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -45,15 +46,6 @@ export default async function RootLayout({
   return (
     <html lang="es" className="dark" suppressHydrationWarning data-scroll-behavior="smooth">
       <head>
-        {/* Google AdSense - Using standard script tag to avoid data-nscript error */}
-        {process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_ID && (
-          <script
-            async
-            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_ID}`}
-            crossOrigin="anonymous"
-            nonce={nonce}
-          />
-        )}
         {/* Schema.org Organization & WebSite Global */}
         <script
           type="application/ld+json"
@@ -102,6 +94,8 @@ export default async function RootLayout({
         <Providers>
           {children}
           <WebVitals />
+          {/* AdSense loads ONLY after the user accepts advertising cookies */}
+          <AdSenseLoader />
         </Providers>
       </body>
     </html>

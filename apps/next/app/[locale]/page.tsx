@@ -227,6 +227,7 @@ export default async function HomePage({ params }: PageProps) {
               {[
                 { href: `/${locale}/privacy`, label: t.legal?.privacy || 'Privacidad' },
                 { href: `/${locale}/terms`,   label: t.legal?.terms   || 'Términos' },
+                { href: `/${locale}/dmca`,    label: 'DMCA' },
                 { href: `/${locale}/about`,   label: t.legal?.about   || 'Acerca de' },
                 { href: `/${locale}/contact`, label: t.legal?.contact || 'Contacto' },
               ].map(({ href, label }) => (
