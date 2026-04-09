@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 
 interface PageProps {
   params: Promise<{ locale: string }> | { locale: string }
@@ -150,12 +151,12 @@ export default async function DmcaPage({ params }: PageProps) {
         </div>
 
         <footer className="mt-12 pt-6 border-t border-gray-200 dark:border-gray-700">
-          <a
+          <Link
             href={`/${locale}`}
             className="text-purple-600 hover:text-purple-700 dark:text-purple-400 font-medium inline-flex items-center gap-2"
           >
             ← {t.back}
-          </a>
+          </Link>
         </footer>
       </article>
     </main>

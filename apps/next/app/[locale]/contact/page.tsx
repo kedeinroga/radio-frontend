@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 
 interface PageProps {
   params: Promise<{ locale: string }> | { locale: string }
@@ -148,12 +149,12 @@ export default async function ContactPage({ params }: PageProps) {
 
         {/* Back Link */}
         <footer className="text-center">
-          <a
+          <Link
             href={`/${locale}`}
             className="text-purple-600 hover:text-purple-700 dark:text-purple-400 font-medium inline-flex items-center gap-2"
           >
             ← {t.common?.back || 'Volver al inicio'}
-          </a>
+          </Link>
         </footer>
       </div>
     </main>

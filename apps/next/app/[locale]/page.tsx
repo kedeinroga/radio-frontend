@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { Station } from '@radio-app/app'
 import { FAQSection } from '@/components/FAQSection'
 import { PopularStations } from '@/components/PopularStations'
@@ -214,9 +215,9 @@ export default async function HomePage({ params }: PageProps) {
                 { href: `/${locale}/genres`,       label: t.navigation?.genres || 'Géneros' },
               ].map(({ href, label }) => (
                 <li key={href}>
-                  <a href={href} className="font-broadcast text-[11px] text-neutral-500 hover:text-amber-400 transition-colors">
+                  <Link href={href} className="font-broadcast text-[11px] text-neutral-500 hover:text-amber-400 transition-colors">
                     {label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -232,9 +233,9 @@ export default async function HomePage({ params }: PageProps) {
                 { href: `/${locale}/contact`, label: t.legal?.contact || 'Contacto' },
               ].map(({ href, label }) => (
                 <li key={href}>
-                  <a href={href} className="font-broadcast text-[11px] text-neutral-500 hover:text-amber-400 transition-colors">
+                  <Link href={href} className="font-broadcast text-[11px] text-neutral-500 hover:text-amber-400 transition-colors">
                     {label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>

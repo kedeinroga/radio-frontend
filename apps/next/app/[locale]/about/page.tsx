@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 
 interface PageProps {
   params: Promise<{ locale: string }> | { locale: string }
@@ -107,22 +108,22 @@ export default async function AboutPage({ params }: PageProps) {
           <p className="text-purple-100 mb-6">
             {t.about?.contact_cta?.description || 'Estamos aquí para ayudarte. Contáctanos en cualquier momento.'}
           </p>
-          <a
+          <Link
             href={`/${locale}/contact`}
             className="inline-block px-6 py-3 bg-white text-purple-600 font-semibold rounded-lg hover:bg-gray-100 transition-colors"
           >
             {t.about?.contact_cta?.button || 'Ir a Contacto'}
-          </a>
+          </Link>
         </section>
 
         {/* Back Link */}
         <footer className="mt-8 text-center">
-          <a
+          <Link
             href={`/${locale}`}
             className="text-purple-600 hover:text-purple-700 dark:text-purple-400 font-medium inline-flex items-center gap-2"
           >
             ← {t.common?.back || 'Volver al inicio'}
-          </a>
+          </Link>
         </footer>
       </article>
     </main>
