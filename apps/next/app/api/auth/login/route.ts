@@ -2,6 +2,18 @@ import { NextRequest, NextResponse } from 'next/server'
 import { backendHttpClient, BackendError } from '@/lib/api/backendClient'
 import { rateLimit, RATE_LIMITS } from '@/lib/rateLimit'
 
+/** Decode JWT payload without verifying signature (claims are verified by the backend). */
+function decodeJwt(token: string): Record<string, any> | null {
+  try {
+    const part = token.split('.')[1]
+    if (!part) return null
+    const json = Buffer.from(part, 'base64url').toString('utf-8')
+    return JSON.parse(json)
+  } catch {
+    return null
+  }
+}
+
 /**
  * POST /api/auth/login
  * 
@@ -39,33 +51,21 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // 2. ✅ Obtener información del usuario
-    // ⚠️ Fetch directo sin backendHttpClient para NO enviar X-Rradio-Secret junto al Bearer token.
-    //    El backend en producción devuelve 500 si recibe ambas cabeceras simultáneamente.
-    const meRes = await fetch(`${process.env.API_URL}/auth/me`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${access_token}`,
-      },
-    })
-
-    if (!meRes.ok) {
-      const errBody = await meRes.text()
-      console.error('[auth/login] /auth/me error:', meRes.status, errBody)
+    // 2. Extraer datos del usuario directamente del JWT.
+    //    El token ya contiene id, email y role en su payload — no hace falta llamar a /auth/me.
+    const jwtPayload = decodeJwt(access_token)
+    if (!jwtPayload) {
+      console.error('[auth/login] Could not decode JWT payload')
       return NextResponse.json(
-        { error: { code: 'profile_error', message: 'Could not retrieve user profile.' } },
-        { status: 502 }
+        { error: { code: 'invalid_token', message: 'Could not decode authentication token.' } },
+        { status: 500 }
       )
     }
 
-    const userInfo = await meRes.json() as { user?: any; id?: string; email?: string; user_type?: string; role?: string }
-
-    // Extraer y mapear datos del usuario
-    const user = userInfo.user || userInfo
     const mappedUser = {
-      id: user.id,
-      email: user.email,
-      role: user.user_type || user.role, // user_type del backend se mapea a role
+      id: jwtPayload.sub || jwtPayload.id,
+      email: jwtPayload.email,
+      role: jwtPayload.user_type || jwtPayload.role,
     }
 
     // 3. Crear response con cookies HttpOnly
