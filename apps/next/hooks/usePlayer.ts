@@ -77,7 +77,27 @@ export function usePlayer() {
   const playStation = async (station: any) => {
     play(station)
     updateMediaSession(station, true)
-    await playerInstance?.play(station.streamUrl)
+
+    // Registra el play en el backend y obtiene la URL del stream.
+    // Para usuarios autenticados el backend devuelve una URL proxiada con token.
+    // Para guests devuelve la URL directa. En ambos casos llena station_plays.
+    let streamUrl: string = station.streamUrl
+    try {
+      const res = await fetch('/api/stream/start', {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ station_id: station.id, ad_id: null }),
+      })
+      if (res.ok) {
+        const json = await res.json()
+        if (json.stream_url) streamUrl = json.stream_url
+      }
+    } catch {
+      // Si falla el tracking, la reproducción continúa con la URL original
+    }
+
+    await playerInstance?.play(streamUrl)
 
     // Wire OS media control buttons
     if ('mediaSession' in navigator) {
