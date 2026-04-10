@@ -49,10 +49,10 @@ export default function AdminDashboard() {
       ])
 
       setStats({
-        activeUsers: activeUsersRes.data?.count || 0,
-        guestUsers: guestUsersRes.data?.count || 0,
-        popularStations: popularStationsRes.data || [],
-        trendingSearches: trendingSearchesRes.data || [],
+        activeUsers: activeUsersRes.data?.data?.count || 0,
+        guestUsers: guestUsersRes.data?.data?.count || 0,
+        popularStations: popularStationsRes.data?.data || [],
+        trendingSearches: trendingSearchesRes.data?.data || [],
       })
     } catch (err: any) {
 
