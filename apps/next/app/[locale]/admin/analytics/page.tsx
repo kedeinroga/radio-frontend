@@ -46,10 +46,10 @@ export default function AnalyticsPage() {
         clientAdminApi.getTrendingSearches(timeRange, 20),
       ])
 
-      setActiveUsers(usersRes.data?.count || 0)
-      setGuestUsers(guestRes.data?.count || 0)
-      setPopularStations(stationsRes.data || [])
-      setTrendingSearches(searchesRes.data || [])
+      setActiveUsers(usersRes.data?.data?.count || 0)
+      setGuestUsers(guestRes.data?.data?.count || 0)
+      setPopularStations(stationsRes.data?.data || [])
+      setTrendingSearches(searchesRes.data?.data || [])
     } catch (err: any) {
 
       setError(err.response?.data?.message || err.message || 'Failed to load analytics')
