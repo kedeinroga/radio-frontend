@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import { SecurityMetrics } from '@/components/SecurityMetrics'
 import { SecurityLogs } from '@/components/SecurityLogs'
+import { SuspiciousSources } from '@/components/SuspiciousSources'
 
 export const metadata: Metadata = {
   title: 'Security Dashboard - Admin',
@@ -17,9 +18,13 @@ export default function SecurityPage() {
             Monitor authentication events, track security metrics, and review activity logs
           </p>
         </div>
-        
+
         <SecurityMetrics />
-        
+
+        <div className="border-t border-gray-200 dark:border-gray-700 pt-6 sm:pt-8">
+          <SuspiciousSources />
+        </div>
+
         <div className="border-t border-gray-200 dark:border-gray-700 pt-6 sm:pt-8">
           <SecurityLogs />
         </div>

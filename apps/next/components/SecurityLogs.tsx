@@ -5,7 +5,7 @@ import { Search, AlertCircle, CheckCircle, XCircle, Info, Loader2 } from 'lucide
 
 interface SecurityLog {
   id: string
-  event_type: 'login_success' | 'login_failed' | 'logout' | 'session_revoked' | 'token_refresh' | 'password_change'
+  event_type: 'login_success' | 'login_failed' | 'logout' | 'session_revoked' | 'token_refresh' | 'password_change' | 'suspicious_request_source'
   timestamp: string
   user_id: string
   username: string
@@ -32,6 +32,7 @@ const EVENT_TYPE_CONFIG = {
   session_revoked: { label: 'Session Revoked', icon: AlertCircle, color: 'text-orange-600 bg-orange-50 dark:text-orange-400 dark:bg-orange-900/30' },
   token_refresh: { label: 'Token Refresh', icon: CheckCircle, color: 'text-gray-600 bg-gray-50 dark:text-gray-400 dark:bg-gray-700' },
   password_change: { label: 'Password Change', icon: AlertCircle, color: 'text-purple-600 bg-purple-50 dark:text-purple-400 dark:bg-purple-900/30' },
+  suspicious_request_source: { label: 'Suspicious Source', icon: AlertCircle, color: 'text-red-700 bg-red-100 dark:text-red-300 dark:bg-red-900/40' },
 }
 
 export function SecurityLogs() {
@@ -161,6 +162,7 @@ export function SecurityLogs() {
           <option value="session_revoked">Session Revoked</option>
           <option value="token_refresh">Token Refresh</option>
           <option value="password_change">Password Change</option>
+          <option value="suspicious_request_source">Suspicious Source</option>
         </select>
         
         <button
@@ -224,7 +226,7 @@ export function SecurityLogs() {
                         <div className="text-xs sm:text-sm text-gray-900 dark:text-white truncate max-w-[120px] sm:max-w-none">
                           {log.username}
                         </div>
-                        <div className="text-xs text-gray-500 dark:text-gray-400">{log.user_id.substring(0, 8)}...</div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400">{log.user_id ? `${log.user_id.substring(0, 8)}...` : '-'}</div>
                       </td>
                       <td className="hidden md:table-cell px-3 sm:px-6 py-4 whitespace-nowrap">
                         <div className="text-xs sm:text-sm text-gray-900 dark:text-white">
