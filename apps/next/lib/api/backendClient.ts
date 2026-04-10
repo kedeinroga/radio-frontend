@@ -57,6 +57,8 @@ export class BackendError extends Error {
 interface BackendRequestOptions {
   headers?: Record<string, string>
   timeout?: number
+  /** When true, omits X-Rradio-Secret. Use for user-authenticated requests (Bearer token). */
+  skipSecret?: boolean
 }
 
 /**
@@ -114,14 +116,19 @@ export class BackendHttpClient {
     try {
       const url = `${this.baseURL}${endpoint}`
 
+      const baseHeaders: Record<string, string> = {
+        'Content-Type': 'application/json',
+      }
+
+      // Omitir X-Rradio-Secret cuando la request lleva Authorization del usuario.
+      // El backend interpreta ambas cabeceras como conflictivas y devuelve 401/500.
+      if (!options?.skipSecret) {
+        baseHeaders['X-Rradio-Secret'] = API_SECRET_KEY
+      }
+
       const response = await fetch(url, {
         method,
-        headers: {
-          'Content-Type': 'application/json',
-          // ✅ Clave secreta enviada SOLO desde el servidor — nunca expuesta al cliente
-          'X-Rradio-Secret': API_SECRET_KEY,
-          ...options?.headers,
-        },
+        headers: { ...baseHeaders, ...options?.headers },
         body: data ? JSON.stringify(data) : undefined,
         signal: controller.signal,
       })

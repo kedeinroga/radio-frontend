@@ -24,9 +24,8 @@ export async function GET(
     const data = await backendHttpClient.get(
       `/admin/translations/${stationId}/${lang}`,
       {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
+        headers: { Authorization: `Bearer ${accessToken}` },
+        skipSecret: true,
       }
     )
 
@@ -69,9 +68,8 @@ export async function PUT(
       `/admin/translations/${stationId}/${lang}`,
       body,
       {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
+        headers: { Authorization: `Bearer ${accessToken}` },
+        skipSecret: true,
       }
     )
 
@@ -112,9 +110,8 @@ export async function DELETE(
     const data = await backendHttpClient.delete(
       `/admin/translations/${stationId}/${lang}`,
       {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
+        headers: { Authorization: `Bearer ${accessToken}` },
+        skipSecret: true,
       }
     )
 

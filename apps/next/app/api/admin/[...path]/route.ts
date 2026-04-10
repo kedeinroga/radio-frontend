@@ -92,28 +92,31 @@ async function handleAdminRequest(
     const queryString = searchParams.toString()
     const fullPath = queryString ? `${backendPath}?${queryString}` : backendPath
 
-    const headers = {
-      Authorization: `Bearer ${accessToken}`,
+    // skipSecret: el backend autentica con el Bearer token del usuario,
+    // enviar X-Rradio-Secret simultáneamente causa "session validation failed"
+    const reqOptions = {
+      headers: { Authorization: `Bearer ${accessToken}` },
+      skipSecret: true,
     }
 
     let data: unknown
 
     switch (method) {
       case 'GET':
-        data = await backendHttpClient.get(fullPath, { headers })
+        data = await backendHttpClient.get(fullPath, reqOptions)
         break
       case 'POST': {
         const postBody = await request.json().catch(() => ({}))
-        data = await backendHttpClient.post(backendPath, postBody, { headers })
+        data = await backendHttpClient.post(backendPath, postBody, reqOptions)
         break
       }
       case 'PUT': {
         const putBody = await request.json().catch(() => ({}))
-        data = await backendHttpClient.put(backendPath, putBody, { headers })
+        data = await backendHttpClient.put(backendPath, putBody, reqOptions)
         break
       }
       case 'DELETE':
-        data = await backendHttpClient.delete(fullPath, { headers })
+        data = await backendHttpClient.delete(fullPath, reqOptions)
         break
     }
 

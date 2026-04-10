@@ -22,9 +22,8 @@ export async function GET(
     const { stationId } = params
 
     const data = await backendHttpClient.get(`/admin/translations/${stationId}`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
+      headers: { Authorization: `Bearer ${accessToken}` },
+      skipSecret: true,
     })
 
     return NextResponse.json(data)

@@ -22,9 +22,8 @@ export async function DELETE(
     const { sessionId } = params
 
     await backendHttpClient.delete(`/auth/sessions/${sessionId}`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
+      headers: { Authorization: `Bearer ${accessToken}` },
+      skipSecret: true,
     })
 
     return NextResponse.json({

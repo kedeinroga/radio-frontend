@@ -35,11 +35,10 @@ export async function GET(
     const queryString = searchParams.toString()
     const fullPath = queryString ? `${backendPath}?${queryString}` : backendPath
 
-    // Proxy to backend
+    // Proxy to backend — skipSecret porque el backend autentica con el Bearer token del usuario
     const data = await backendHttpClient.get(fullPath, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
+      headers: { Authorization: `Bearer ${accessToken}` },
+      skipSecret: true,
     })
 
     return NextResponse.json(data, { status: 200 })

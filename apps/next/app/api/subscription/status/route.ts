@@ -17,9 +17,8 @@ export async function GET(request: NextRequest) {
     }
 
     const data = await backendHttpClient.get('/subscription/status', {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
+      headers: { Authorization: `Bearer ${accessToken}` },
+      skipSecret: true,
     })
 
     return NextResponse.json(data)

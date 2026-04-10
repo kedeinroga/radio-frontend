@@ -19,9 +19,8 @@ export async function POST(request: NextRequest) {
     const body = await request.json().catch(() => ({}))
 
     const data = await backendHttpClient.post('/subscription/cancel', body, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
+      headers: { Authorization: `Bearer ${accessToken}` },
+      skipSecret: true,
     })
 
     return NextResponse.json(data)

@@ -21,6 +21,7 @@ export async function POST(request: NextRequest) {
     // Proxy to backend
     const data = await backendHttpClient.post('/ads/track/click', body, {
       headers,
+      skipSecret: accessToken ? true : false,
     })
 
     return NextResponse.json(data, { status: 200 })

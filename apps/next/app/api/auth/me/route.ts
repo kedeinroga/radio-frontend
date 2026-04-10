@@ -21,9 +21,8 @@ export async function GET(request: NextRequest) {
 
     // ✅ Proxy al backend con authorization
     const data = await backendHttpClient.get('/auth/me', {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
+      headers: { Authorization: `Bearer ${accessToken}` },
+      skipSecret: true,
     })
 
     return NextResponse.json(data, { status: 200 })

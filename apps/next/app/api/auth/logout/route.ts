@@ -16,9 +16,8 @@ export async function POST(request: NextRequest) {
     if (accessToken) {
       try {
         await backendHttpClient.post('/auth/logout', {}, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
+          headers: { Authorization: `Bearer ${accessToken}` },
+          skipSecret: true,
         })
       } catch (error) {
         // Continuar aunque falle el logout en backend
