@@ -111,6 +111,41 @@ export class ClientAdminApiRepository {
     return { data, status: response.status }
   }
 
+  // ========== SECURITY CONTROLS ==========
+
+  /**
+   * Get guest IP rate limit status
+   */
+  async getGuestRateLimitStatus(): Promise<ApiResponse> {
+    const response = await fetch(`${ADMIN_BASE}/security/guest-rate-limit`, {
+      credentials: 'include',
+    })
+
+    if (!response.ok) {
+      throw new Error(`Failed to get guest rate limit status: ${response.statusText}`)
+    }
+
+    const data = await response.json()
+    return { data, status: response.status }
+  }
+
+  /**
+   * Toggle guest IP rate limiter on/off
+   */
+  async toggleGuestRateLimit(): Promise<ApiResponse> {
+    const response = await fetch(`${ADMIN_BASE}/security/guest-rate-limit/toggle`, {
+      method: 'POST',
+      credentials: 'include',
+    })
+
+    if (!response.ok) {
+      throw new Error(`Failed to toggle guest rate limit: ${response.statusText}`)
+    }
+
+    const data = await response.json()
+    return { data, status: response.status }
+  }
+
   // ========== SEO ==========
   
   /**

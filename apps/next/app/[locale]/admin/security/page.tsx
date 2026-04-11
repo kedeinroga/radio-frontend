@@ -2,6 +2,7 @@ import { Metadata } from 'next'
 import { SecurityMetrics } from '@/components/SecurityMetrics'
 import { SecurityLogs } from '@/components/SecurityLogs'
 import { SuspiciousSources } from '@/components/SuspiciousSources'
+import { GuestRateLimitControl } from '@/components/GuestRateLimitControl'
 
 export const metadata: Metadata = {
   title: 'Security Dashboard - Admin',
@@ -20,6 +21,13 @@ export default function SecurityPage() {
         </div>
 
         <SecurityMetrics />
+
+        <div className="border-t border-gray-200 dark:border-gray-700 pt-6 sm:pt-8">
+          <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-4">
+            Security Controls
+          </h2>
+          <GuestRateLimitControl />
+        </div>
 
         <div className="border-t border-gray-200 dark:border-gray-700 pt-6 sm:pt-8">
           <SuspiciousSources />
