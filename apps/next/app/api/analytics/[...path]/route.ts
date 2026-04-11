@@ -41,7 +41,10 @@ export async function GET(
       skipSecret: true,
     })
 
-    return NextResponse.json(data, { status: 200 })
+    return NextResponse.json(data, {
+      status: 200,
+      headers: { 'Cache-Control': 'no-store' },
+    })
   } catch (error: any) {
     console.error('Analytics API error:', error)
 
