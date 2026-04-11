@@ -5,8 +5,8 @@ import { backendHttpClient } from '@/lib/api/backendClient'
  * POST /api/stream/start
  * Proxy a /stream/start del backend.
  *
- * - Autenticado: reenvía Authorization: Bearer + omite X-Rradio-Secret
- * - Guest:       usa X-Rradio-Secret (sin token de usuario)
+ * - Autenticado: reenvía Authorization: Bearer + X-Rradio-Secret
+ * - Guest:       usa solo X-Rradio-Secret (sin token de usuario)
  *
  * Body: { station_id: string, ad_id: string | null }
  * Response: { stream_url: string, session_id: string | null, expires_at: string | null }
@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
     const accessToken = request.cookies.get('@radio-app:access_token')?.value
 
     const options = accessToken
-      ? { headers: { Authorization: `Bearer ${accessToken}` }, skipSecret: true as const }
+      ? { headers: { Authorization: `Bearer ${accessToken}` } }
       : {}
 
     const data = await backendHttpClient.post('/stream/start', body, options)
