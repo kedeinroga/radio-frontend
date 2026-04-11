@@ -12,8 +12,7 @@ const nextConfig = {
   ],
   reactStrictMode: true,
 
-  // Skip type checking and linting during build in Vercel
-  // This helps avoid issues with monorepo workspace dependencies
+  // Skip type checking and linting during build
   typescript: {
     ignoreBuildErrors: true, // Skip TypeScript errors during build
   },
@@ -34,8 +33,6 @@ const nextConfig = {
   // CRITICAL: Increase timeout for page generation to prevent worker crashes
   staticPageGenerationTimeout: 180, // 3 minutes (increased from 120)
 
-  // CRITICAL: Use standalone output for optimal Vercel deployment
-  // This creates a minimal production build
   output: 'standalone',
 
   // Webpack configuration to resolve path aliases
@@ -73,15 +70,9 @@ const nextConfig = {
     return config;
   },
 
-  // Performance optimizations for Vercel free tier
-  compress: true, // Enable gzip compression
-  poweredByHeader: false, // Remove X-Powered-By header
-
-  // Production optimizations
-  productionBrowserSourceMaps: false, // Disable source maps in production to save space
-
-  // Output configuration
-  output: 'standalone', // Optimize for serverless
+  compress: true,
+  poweredByHeader: false,
+  productionBrowserSourceMaps: false,
 
   images: {
     remotePatterns: [
@@ -96,7 +87,7 @@ const nextConfig = {
     ],
     // Optimize for Vercel free tier
     formats: ['image/avif', 'image/webp'],
-    minimumCacheTTL: 60,
+    minimumCacheTTL: 3600,
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048],
     imageSizes: [16, 32, 48, 64, 96, 128, 256],
     dangerouslyAllowSVG: false, // Disable SVG to prevent XSS
@@ -104,15 +95,21 @@ const nextConfig = {
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
   env: {
-    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api/v1',
-    // Production: https://api.rradio.online/api/v1
-    // Tell the app we're in build mode to skip data fetching
     IS_BUILD_TIME: isBuild ? 'true' : 'false',
   },
 
-  // Security Headers
   async headers() {
     return [
+      {
+        // Immutable cache for fingerprinted static assets
+        source: '/_next/static/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
       {
         source: '/:path*',
         headers: [
@@ -146,7 +143,6 @@ const nextConfig = {
             key: 'Strict-Transport-Security',
             value: 'max-age=63072000; includeSubDomains; preload',
           },
-          // Content Security Policy is handled by vercel.json to avoid conflicts
         ],
       },
     ]
