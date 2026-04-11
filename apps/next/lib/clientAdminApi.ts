@@ -72,6 +72,26 @@ export class ClientAdminApiRepository {
   }
 
   /**
+   * Get guest user details by IP
+   */
+  async getGuestUserDetails(
+    range: 'hour' | 'day' | 'week' | 'month' = 'day',
+    limit: number = 50
+  ): Promise<ApiResponse> {
+    const response = await fetch(
+      `${ANALYTICS_BASE}/users/guest/details?range=${range}&limit=${limit}`,
+      { credentials: 'include' }
+    )
+
+    if (!response.ok) {
+      throw new Error(`Failed to get guest user details: ${response.statusText}`)
+    }
+
+    const data = await response.json()
+    return { data, status: response.status }
+  }
+
+  /**
    * Get trending searches
    */
   async getTrendingSearches(

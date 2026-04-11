@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { clientAdminApi } from '@/lib/clientAdminApi'
 import { LoadingSpinner } from '@/components/LoadingSpinner'
 
@@ -21,12 +21,30 @@ interface TrendingSearch {
   percentage?: number
 }
 
+interface GuestEndpoint {
+  method: string
+  path: string
+  count: number
+}
+
+interface GuestUserDetail {
+  ip_address: string
+  total_requests: number
+  unique_endpoints: number
+  user_agent?: string
+  first_seen: string
+  last_seen: string
+  endpoints: GuestEndpoint[]
+}
+
 export default function AnalyticsPage() {
   const [timeRange, setTimeRange] = useState<TimeRange>('day')
   const [activeUsers, setActiveUsers] = useState<number>(0)
   const [guestUsers, setGuestUsers] = useState<number>(0)
   const [popularStations, setPopularStations] = useState<PopularStation[]>([])
   const [trendingSearches, setTrendingSearches] = useState<TrendingSearch[]>([])
+  const [guestDetails, setGuestDetails] = useState<GuestUserDetail[]>([])
+  const [expandedIPs, setExpandedIPs] = useState<Set<string>>(new Set())
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -39,17 +57,19 @@ export default function AnalyticsPage() {
       setLoading(true)
       setError(null)
 
-      const [usersRes, guestRes, stationsRes, searchesRes] = await Promise.all([
+      const [usersRes, guestRes, stationsRes, searchesRes, guestDetailsRes] = await Promise.all([
         clientAdminApi.getActiveUsers(),
         clientAdminApi.getGuestUsers(),
         clientAdminApi.getPopularStations(timeRange, 20),
         clientAdminApi.getTrendingSearches(timeRange, 20),
+        clientAdminApi.getGuestUserDetails(timeRange, 100),
       ])
 
       setActiveUsers(usersRes.data?.data?.count || 0)
       setGuestUsers(guestRes.data?.data?.count || 0)
       setPopularStations(stationsRes.data?.data || [])
       setTrendingSearches(searchesRes.data?.data || [])
+      setGuestDetails(guestDetailsRes.data?.data || [])
     } catch (err: any) {
 
       setError(err.response?.data?.message || err.message || 'Failed to load analytics')
@@ -297,6 +317,126 @@ export default function AnalyticsPage() {
                 <tr>
                   <td colSpan={3} className="px-3 sm:px-6 py-8 text-center text-sm text-gray-500 dark:text-gray-400">
                     No data available for the selected time range
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Guest User Details Table */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <div className="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700">
+          <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">
+            Guest User Details
+          </h2>
+          <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1">
+            Request details per IP address — click a row to expand endpoint breakdown
+          </p>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead className="bg-gray-50 dark:bg-gray-700">
+              <tr>
+                <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">IP Address</th>
+                <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Requests</th>
+                <th className="hidden sm:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Endpoints</th>
+                <th className="hidden lg:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">First Seen</th>
+                <th className="hidden lg:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Last Seen</th>
+                <th className="hidden xl:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">User Agent</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+              {guestDetails.length > 0 ? (
+                guestDetails.map((guest, index) => {
+                  const isExpanded = expandedIPs.has(guest.ip_address)
+                  return (
+                    <Fragment key={guest.ip_address || index}>
+                      <tr
+                        onClick={() => setExpandedIPs(prev => {
+                          const next = new Set(prev)
+                          isExpanded ? next.delete(guest.ip_address) : next.add(guest.ip_address)
+                          return next
+                        })}
+                        className="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer select-none"
+                      >
+                        <td className="px-3 sm:px-6 py-4 whitespace-nowrap">
+                          <div className="flex items-center gap-2">
+                            <span className="text-gray-400 dark:text-gray-500 text-xs">{isExpanded ? '▼' : '▶'}</span>
+                            <span className="text-xs sm:text-sm font-mono text-gray-900 dark:text-white">
+                              {guest.ip_address}
+                            </span>
+                          </div>
+                        </td>
+                        <td className="px-3 sm:px-6 py-4 whitespace-nowrap">
+                          <div className="text-xs sm:text-sm font-semibold text-gray-900 dark:text-white">
+                            {(guest.total_requests || 0).toLocaleString()}
+                          </div>
+                          <div className="w-16 sm:w-24 bg-gray-200 dark:bg-gray-700 rounded-full h-1 mt-1">
+                            <div
+                              className="bg-indigo-600 dark:bg-indigo-500 h-1 rounded-full transition-all"
+                              style={{
+                                width: `${Math.min(100, ((guest.total_requests || 0) / (guestDetails[0]?.total_requests || 1)) * 100)}%`
+                              }}
+                            />
+                          </div>
+                        </td>
+                        <td className="hidden sm:table-cell px-3 sm:px-6 py-4 whitespace-nowrap">
+                          <div className="text-xs sm:text-sm text-gray-700 dark:text-gray-300">
+                            {guest.unique_endpoints}
+                          </div>
+                        </td>
+                        <td className="hidden lg:table-cell px-3 sm:px-6 py-4 whitespace-nowrap">
+                          <div className="text-xs text-gray-500 dark:text-gray-400">
+                            {new Date(guest.first_seen).toLocaleString()}
+                          </div>
+                        </td>
+                        <td className="hidden lg:table-cell px-3 sm:px-6 py-4 whitespace-nowrap">
+                          <div className="text-xs text-gray-500 dark:text-gray-400">
+                            {new Date(guest.last_seen).toLocaleString()}
+                          </div>
+                        </td>
+                        <td className="hidden xl:table-cell px-3 sm:px-6 py-4 max-w-xs">
+                          <div className="text-xs text-gray-500 dark:text-gray-400 truncate" title={guest.user_agent}>
+                            {guest.user_agent || '—'}
+                          </div>
+                        </td>
+                      </tr>
+                      {isExpanded && guest.endpoints?.length > 0 && (
+                        <tr className="bg-gray-50 dark:bg-gray-900/40">
+                          <td colSpan={6} className="px-6 sm:px-10 py-3">
+                            <div className="space-y-1">
+                              {guest.endpoints.map((ep, i) => (
+                                <div key={i} className="flex items-center gap-3 text-xs">
+                                  <span className={`font-mono font-bold w-12 text-center rounded px-1 py-0.5 ${
+                                    ep.method === 'GET'
+                                      ? 'bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400'
+                                      : ep.method === 'POST'
+                                      ? 'bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-400'
+                                      : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400'
+                                  }`}>
+                                    {ep.method}
+                                  </span>
+                                  <span className="font-mono text-gray-700 dark:text-gray-300 flex-1 truncate">
+                                    {ep.path}
+                                  </span>
+                                  <span className="text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                                    {ep.count.toLocaleString()} req
+                                  </span>
+                                </div>
+                              ))}
+                            </div>
+                          </td>
+                        </tr>
+                      )}
+                    </Fragment>
+                  )
+                })
+              ) : (
+                <tr>
+                  <td colSpan={6} className="px-3 sm:px-6 py-8 text-center text-sm text-gray-500 dark:text-gray-400">
+                    No guest activity in the selected time range
                   </td>
                 </tr>
               )}
