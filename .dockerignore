@@ -1,0 +1,17 @@
+node_modules
+apps/expo
+apps/next/.next
+apps/next/node_modules
+packages/*/node_modules
+.git
+.claude
+.agents
+dist
+coverage
+*.log
+.env.local
+.env.*.local
+firebase-dist
+infra
+scripts
+MIGRATION_VERCEL_TO_GCP.md

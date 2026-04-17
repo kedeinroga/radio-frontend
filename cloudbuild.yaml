@@ -1,0 +1,109 @@
+steps:
+  # ── Step 1: Parse JSON secret → extract NEXT_PUBLIC_* → /workspace/build.env
+  # Runs immediately (waitFor: ['-'] means no dependencies).
+  - name: 'python:3.12-slim'
+    id: parse-secrets
+    waitFor: ['-']
+    entrypoint: python3
+    args:
+      - '-c'
+      - |
+        import json, os
+        secrets = json.loads(os.environ['APP_SECRETS'])
+        with open('/workspace/build.env', 'w') as f:
+          for k, v in secrets.items():
+            if k.startswith('NEXT_PUBLIC_'):
+              f.write(f'{k}={v}\n')
+    secretEnv: ['APP_SECRETS']
+
+  # ── Step 2: Pull previous cache layer (parallel with step 1)
+  - name: 'gcr.io/cloud-builders/docker'
+    id: pull-cache
+    waitFor: ['-']
+    entrypoint: bash
+    args: ['-c', 'docker pull $_AR_IMAGE:cache || true']
+
+  # ── Step 3: Build Docker image (waits for steps 1 and 2)
+  # NEXT_PUBLIC_* vars are sourced from build.env and passed as --build-arg.
+  - name: 'gcr.io/cloud-builders/docker'
+    id: build
+    waitFor: ['parse-secrets', 'pull-cache']
+    entrypoint: bash
+    args:
+      - '-c'
+      - |
+        set -a; source /workspace/build.env; set +a
+        docker build \
+          --cache-from $_AR_IMAGE:cache \
+          --build-arg NEXT_PUBLIC_APP_URL \
+          --build-arg NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY \
+          --build-arg NEXT_PUBLIC_GOOGLE_ADSENSE_ID \
+          --tag $_AR_IMAGE:$COMMIT_SHA \
+          --tag $_AR_IMAGE:latest \
+          --tag $_AR_IMAGE:cache \
+          .
+
+  # ── Step 4: Push all tags to Artifact Registry (parallel with step 5)
+  - name: 'gcr.io/cloud-builders/docker'
+    id: push
+    waitFor: ['build']
+    args: ['push', '--all-tags', '$_AR_IMAGE']
+
+  # ── Step 5: Extract _next/static/ + public/ from built image (parallel with push)
+  # Files land in /workspace/firebase-dist/ which firebase.json points to.
+  - name: 'gcr.io/cloud-builders/docker'
+    id: extract-statics
+    waitFor: ['build']
+    entrypoint: bash
+    args:
+      - '-c'
+      - |
+        mkdir -p /workspace/firebase-dist/_next/static
+        docker create --name tmp $_AR_IMAGE:$COMMIT_SHA
+        docker cp tmp:/app/apps/next/.next/static/. /workspace/firebase-dist/_next/static/
+        docker cp tmp:/app/apps/next/public/. /workspace/firebase-dist/
+        docker rm tmp
+
+  # ── Step 6: Deploy static assets to Firebase Hosting CDN
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    id: deploy-hosting
+    waitFor: ['extract-statics']
+    entrypoint: bash
+    args:
+      - '-c'
+      - |
+        npm install -g firebase-tools --silent
+        firebase deploy --only hosting --project=$PROJECT_ID
+
+  # ── Step 7: Deploy new image to Cloud Run (waits for push)
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    id: deploy-cloudrun
+    waitFor: ['push']
+    entrypoint: gcloud
+    args:
+      - run
+      - deploy
+      - $_SERVICE_NAME
+      - --image
+      - $_AR_IMAGE:$COMMIT_SHA
+      - --region
+      - $_REGION
+      - --platform
+      - managed
+      - --quiet
+
+# Secret Manager secret read as a single JSON string into APP_SECRETS env var.
+# Cloud Build SA must have roles/secretmanager.secretAccessor on this secret.
+availableSecrets:
+  secretManager:
+    - versionName: projects/$PROJECT_ID/secrets/radio-front-secrets/versions/latest
+      env: 'APP_SECRETS'
+
+substitutions:
+  _REGION: us-central1
+  _SERVICE_NAME: radio-front
+  _AR_IMAGE: us-central1-docker.pkg.dev/$PROJECT_ID/radio-front/radio-front
+
+options:
+  machineType: E2_HIGHCPU_8
+  logging: CLOUD_LOGGING_ONLY
