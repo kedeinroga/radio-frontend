@@ -116,7 +116,7 @@ const nextConfig = {
       // Consolidar la ruta client-side (legacy, mala para SEO) en la canónica
       // server-rendered /radio/[id]. permanent => 308 (equivalente SEO a 301).
       {
-        source: '/:locale/stations/:id',
+        source: '/:locale(es|en|fr|de)/stations/:id',
         destination: '/:locale/radio/:id',
         permanent: true,
       },
