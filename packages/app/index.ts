@@ -17,6 +17,8 @@ export { MakeHttpRequest } from './application/useCases/http/MakeHttpRequest'
 
 export { Station } from './domain/entities/Station'
 export type { StationDTO, SEOMetadata } from './domain/entities/Station'
+export type { StationTrack } from './domain/entities/StationTrack'
+export { mapToStationTrack } from './domain/entities/StationTrack'
 export { User } from './domain/entities/User'
 export { PopularCountry } from './domain/entities/PopularCountry'
 export { PopularTag } from './domain/entities/PopularTag'

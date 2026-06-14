@@ -5,8 +5,10 @@ import {
   RadioStationSchema,
   Station
 } from '@radio-app/app'
+import type { StationTrack } from '@radio-app/app'
 import { StationServerRepository } from '@/lib/repositories/StationServerRepository'
 import { StationDetails } from '@/components/StationDetails'
+import { NowPlaying } from '@/components/NowPlaying'
 import { RelatedStations } from '@/components/RelatedStations'
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://rradio.online'
@@ -136,14 +138,23 @@ export default async function RadioStationPage({ params }: PageProps) {
     notFound()
   }
 
-  // Fetch related stations for internal linking
+  // Fetch related stations + now-playing data in parallel for internal linking and unique content
   const relatedStationsUseCase = new GetRelatedStations(repository)
   let relatedStations: Station[] = []
+  let nowPlaying: StationTrack | null = null
+  let recentTracks: StationTrack[] = []
   try {
-    relatedStations = await relatedStationsUseCase.execute(station, 6)
+    [relatedStations, nowPlaying, recentTracks] = await Promise.all([
+      relatedStationsUseCase.execute(station, 6).catch((error) => {
+        console.error('[RadioStationPage] Error fetching related stations:', error)
+        return [] as Station[]
+      }),
+      repository.getNowPlaying(id),
+      repository.getRecentTracks(id, 8),
+    ])
   } catch (error) {
-    console.error('[RadioStationPage] Error fetching related stations:', error)
-    // Continue without related stations
+    console.error('[RadioStationPage] Error fetching station extras:', error)
+    // Continue without extras — the page still renders
   }
 
   // Convert station entity to plain object for client component
@@ -154,10 +165,39 @@ export default async function RadioStationPage({ params }: PageProps) {
       {/* JSON-LD Schema for Google Rich Results */}
       <RadioStationSchema station={station} baseUrl={BASE_URL} />
 
+      {/* JSON-LD MusicRecording for the currently playing track (unique structured content) */}
+      {nowPlaying && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'MusicRecording',
+              name: nowPlaying.title,
+              ...(nowPlaying.artist
+                ? { byArtist: { '@type': 'MusicGroup', name: nowPlaying.artist } }
+                : {}),
+              isPartOf: {
+                '@type': 'RadioStation',
+                name: station.name,
+                url: `${BASE_URL}/radio/${id}`,
+              },
+            }),
+          }}
+        />
+      )}
+
       <main className="min-h-screen dark:bg-surface-950">
         <div className="container mx-auto px-4 py-8 max-w-2xl">
           {/* Station Details */}
           <StationDetails station={stationData} />
+
+          {/* Now Playing / Recently Played - unique ICY-derived content */}
+          <NowPlaying
+            stationId={id}
+            initialNowPlaying={nowPlaying}
+            initialRecent={recentTracks}
+          />
 
           {/* Related Stations - Internal Linking for SEO */}
           <RelatedStations stations={relatedStations.map(s => s.toJSON())} />

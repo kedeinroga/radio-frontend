@@ -72,6 +72,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title: localizedText.title,
     description: localizedText.description,
     keywords: localizedText.keywords,
+    // noindex temporal: estas páginas agregan datos de terceros con texto plantilla.
+    // Se reactivará el indexado cuando muestren datos únicos.
+    robots: { index: false, follow: true },
     openGraph: {
       title: localizedText.ogTitle,
       description: localizedText.ogDescription,

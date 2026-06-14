@@ -1,4 +1,5 @@
 import { Station } from '../entities/Station'
+import { StationTrack } from '../entities/StationTrack'
 
 /**
  * Station Repository Interface
@@ -29,4 +30,15 @@ export interface IStationRepository {
    * Get stations by country
    */
   getByCountry(country: string, limit?: number): Promise<Station[]>
+
+  /**
+   * Get the track currently playing on a station ("now playing").
+   * Returns null when there is no data available.
+   */
+  getNowPlaying(stationId: string): Promise<StationTrack | null>
+
+  /**
+   * Get the recently played tracks of a station, newest first.
+   */
+  getRecentTracks(stationId: string, limit?: number): Promise<StationTrack[]>
 }

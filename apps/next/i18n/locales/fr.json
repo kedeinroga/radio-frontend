@@ -67,6 +67,11 @@
     "error": "Erreur de lecture de la station",
     "errorRetry": "Impossible de lire. Réessayer"
   },
+  "nowPlaying": {
+    "title": "En écoute",
+    "live": "En direct",
+    "recentlyPlayed": "Joué récemment"
+  },
   "stations": {
     "popular": "Stations Populaires",
     "recent": "Récentes",

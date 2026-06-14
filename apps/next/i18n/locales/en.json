@@ -67,6 +67,11 @@
     "error": "Error playing station",
     "errorRetry": "Could not play. Retry"
   },
+  "nowPlaying": {
+    "title": "Now playing",
+    "live": "Live",
+    "recentlyPlayed": "Recently played"
+  },
   "stations": {
     "popular": "Popular Stations",
     "recent": "Recent",

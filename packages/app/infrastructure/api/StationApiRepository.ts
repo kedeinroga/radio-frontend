@@ -1,6 +1,7 @@
 import apiClient from '../api/apiClient'
 import { IStationRepository } from '../../domain/repositories/IStationRepository'
 import { Station, SEOMetadata } from '../../domain/entities/Station'
+import { StationTrack, mapToStationTrack } from '../../domain/entities/StationTrack'
 
 /**
  * Station API Repository
@@ -90,6 +91,31 @@ export class StationApiRepository implements IStationRepository {
     // Use search with country as query, as requested by user
     // This calls /api/stations/search?q=country&limit=20
     return this.search(country, limit)
+  }
+
+  async getNowPlaying(stationId: string): Promise<StationTrack | null> {
+    try {
+      const response = await apiClient.get(`/stations/${stationId}/now-playing`)
+      // 204 No Content -> axios returns empty data
+      if (!response.data || !response.data.station_id) {
+        return null
+      }
+      return mapToStationTrack(response.data)
+    } catch {
+      // Now-playing is best-effort: never break the page on failure
+      return null
+    }
+  }
+
+  async getRecentTracks(stationId: string, limit: number = 10): Promise<StationTrack[]> {
+    try {
+      const response = await apiClient.get(`/stations/${stationId}/recent-tracks`, {
+        params: { limit },
+      })
+      return (response.data?.data || []).map(mapToStationTrack)
+    } catch {
+      return []
+    }
   }
 
   /**

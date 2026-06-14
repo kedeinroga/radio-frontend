@@ -1,6 +1,7 @@
 import type { IStationRepository } from '@radio-app/app'
 import { Station } from '@radio-app/app'
-import type { SEOMetadata } from '@radio-app/app'
+import type { SEOMetadata, StationTrack } from '@radio-app/app'
+import { mapToStationTrack } from '@radio-app/app'
 import { backendHttpClient, BackendError } from '@/lib/api/backendClient'
 
 
@@ -113,6 +114,36 @@ export class StationServerRepository implements IStationRepository {
   async findBySlugOrId(slugOrId: string): Promise<Station | null> {
     if (this.isUUID(slugOrId)) return this.findById(slugOrId)
     return this.findBySlug(slugOrId)
+  }
+
+  async getNowPlaying(stationId: string): Promise<StationTrack | null> {
+    try {
+      // Backend returns 204 (-> undefined) when there is no data.
+      const data = await backendHttpClient.get<{
+        station_id: string
+        raw_title: string
+        artist?: string
+        title: string
+        played_at: string
+      } | undefined>(`/stations/${stationId}/now-playing`)
+
+      if (!data || !data.station_id) return null
+      return mapToStationTrack(data)
+    } catch {
+      // Best-effort: never break SSR on now-playing failure
+      return null
+    }
+  }
+
+  async getRecentTracks(stationId: string, limit: number = 10): Promise<StationTrack[]> {
+    try {
+      const data = await backendHttpClient.get<{ data: any[] }>(
+        `/stations/${stationId}/recent-tracks?limit=${limit}`
+      )
+      return (data?.data || []).map(mapToStationTrack)
+    } catch {
+      return []
+    }
   }
 
   private isUUID(str: string): boolean {

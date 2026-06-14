@@ -68,6 +68,11 @@
     "error": "Error al reproducir la estación",
     "errorRetry": "No se pudo reproducir. Reintentar"
   },
+  "nowPlaying": {
+    "title": "Sonando ahora",
+    "live": "En directo",
+    "recentlyPlayed": "Sonó antes"
+  },
   "stations": {
     "popular": "Estaciones Populares",
     "recent": "Recientes",

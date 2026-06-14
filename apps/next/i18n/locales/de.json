@@ -67,6 +67,11 @@
     "error": "Fehler beim Abspielen des Senders",
     "errorRetry": "Abspielen fehlgeschlagen. Erneut versuchen"
   },
+  "nowPlaying": {
+    "title": "Läuft gerade",
+    "live": "Live",
+    "recentlyPlayed": "Zuletzt gespielt"
+  },
   "stations": {
     "popular": "Beliebte Sender",
     "recent": "Kürzlich",

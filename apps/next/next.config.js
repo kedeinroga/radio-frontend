@@ -110,6 +110,19 @@ const nextConfig = {
     IS_BUILD_TIME: isBuild ? 'true' : 'false',
   },
 
+  // Permanent redirects
+  async redirects() {
+    return [
+      // Consolidar la ruta client-side (legacy, mala para SEO) en la canónica
+      // server-rendered /radio/[id]. permanent => 308 (equivalente SEO a 301).
+      {
+        source: '/:locale/stations/:id',
+        destination: '/:locale/radio/:id',
+        permanent: true,
+      },
+    ]
+  },
+
   // Security Headers
   async headers() {
     return [
