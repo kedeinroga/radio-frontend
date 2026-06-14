@@ -5,11 +5,11 @@ import './globals.css'
 import { Providers } from './providers'
 import '@/lib/env' // ✅ Validate environment variables at app startup
 import { WebVitals } from '@/components/WebVitals'
-import { AdSenseLoader } from '@/components/AdSenseLoader'
 
 const inter = Inter({ subsets: ['latin'] })
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://rradio.online'
+const ADSENSE_ID = process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_ID
 
 // REMOVED: export const dynamic = 'force-dynamic' 
 // This was causing Next.js to try to pre-render ALL pages during build,
@@ -46,6 +46,18 @@ export default async function RootLayout({
   return (
     <html lang="es" className="dark" suppressHydrationWarning data-scroll-behavior="smooth">
       <head>
+        {/* Google AdSense — must be present unconditionally for site verification & ad serving.
+            Nonce is required because CSP uses 'strict-dynamic'. Consent for personalized ads
+            is handled by Google Consent Mode / the CMP, not by withholding the script. */}
+        {ADSENSE_ID && (
+          <script
+            async
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_ID}`}
+            crossOrigin="anonymous"
+            nonce={nonce}
+          />
+        )}
+
         {/* Schema.org Organization & WebSite Global */}
         <script
           type="application/ld+json"
@@ -94,8 +106,6 @@ export default async function RootLayout({
         <Providers>
           {children}
           <WebVitals />
-          {/* AdSense loads ONLY after the user accepts advertising cookies */}
-          <AdSenseLoader />
         </Providers>
       </body>
     </html>

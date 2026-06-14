@@ -4,6 +4,8 @@ import type { SEOMetadata, StationTrack } from '@radio-app/app'
 import { mapToStationTrack } from '@radio-app/app'
 import { backendHttpClient, BackendError } from '@/lib/api/backendClient'
 
+const PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://rradio.online'
+
 
 /**
  * Station Server Repository
@@ -156,7 +158,10 @@ export class StationServerRepository implements IStationRepository {
         title: data.seo_metadata.title || '',
         description: data.seo_metadata.description || '',
         keywords: data.seo_metadata.keywords || [],
-        canonicalUrl: data.seo_metadata.canonical_url || '',
+        // Ignore the backend's canonical_url (it can carry the backend's own host,
+        // e.g. localhost in misconfigured envs). The public canonical is always
+        // derived from the frontend's base URL.
+        canonicalUrl: `${PUBLIC_BASE_URL}/radio/${data.id}`,
         imageUrl: data.seo_metadata.image_url || '',
         alternateNames: data.seo_metadata.alternate_names || [],
         lastModified: data.seo_metadata.last_modified || new Date().toISOString(),
