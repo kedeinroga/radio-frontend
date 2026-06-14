@@ -40,7 +40,8 @@ export function rateLimit(
   const { maxRequests, windowMs, keyPrefix = 'global' } = options
   
   // Get client identifier (IP address or user ID from cookie)
-  const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() 
+  const ip = request.headers.get('cf-connecting-ip')
+    || request.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
     || request.headers.get('x-real-ip')
     || 'unknown'
   
@@ -106,10 +107,11 @@ export function getRateLimitHeaders(
 ): Record<string, string> {
   const { maxRequests, keyPrefix = 'global' } = options
   
-  const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() 
+  const ip = request.headers.get('cf-connecting-ip')
+    || request.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
     || request.headers.get('x-real-ip')
     || 'unknown'
-  
+
   const userId = request.cookies.get('@radio-app:user_id')?.value || ''
   const identifier = userId || ip
   const key = `${keyPrefix}:${identifier}`
