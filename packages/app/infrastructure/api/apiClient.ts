@@ -129,11 +129,15 @@ apiClient.interceptors.request.use(
       config.headers['Accept-Language'] = currentLocale.code
     }
 
-    // ⚠️ Legacy: Try to get token from localStorage for backwards compatibility
-    // Solo en cliente
-    if (!isServer) {
+    if (isServer) {
+      // Server-to-backend: inject secret so the backend accepts the request
+      const secret = process.env.API_SECRET_KEY
+      if (secret && config.headers) {
+        config.headers['X-Rradio-Secret'] = secret
+      }
+    } else {
+      // ⚠️ Legacy: Try to get token from localStorage for backwards compatibility
       const token = getTokenFromStorage('access_token')
-
       if (token && config.headers) {
         config.headers.Authorization = `Bearer ${token}`
       }
