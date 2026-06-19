@@ -178,7 +178,7 @@ export default function SearchPage() {
                 w-full pl-11 pr-11 py-3.5 rounded-xl
                 bg-white/[0.05] border border-white/[0.08]
                 text-white placeholder-neutral-600
-                font-broadcast text-sm
+                font-broadcast text-base md:text-sm
                 focus:outline-none focus:border-amber-500/40 focus:bg-white/[0.08]
                 disabled:opacity-40 disabled:cursor-not-allowed
                 transition-all duration-200
