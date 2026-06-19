@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { backendHttpClient, BackendError } from '@/lib/api/backendClient'
 import { rateLimit, RATE_LIMITS } from '@/lib/rateLimit'
+import { assertSameOrigin } from '@/lib/api/assertSameOrigin'
 
 /**
  * GET /api/stations/search
@@ -12,6 +13,10 @@ import { rateLimit, RATE_LIMITS } from '@/lib/rateLimit'
  * ✅ Input validation en parámetros
  */
 export async function GET(request: NextRequest) {
+  // 🔒 Solo peticiones del propio sitio (anti-scraping, defensa en profundidad)
+  const originResult = assertSameOrigin(request)
+  if (originResult) return originResult
+
   // 🔒 Rate limiting
   const rateLimitResult = rateLimit(request, RATE_LIMITS.API)
   if (rateLimitResult) return rateLimitResult

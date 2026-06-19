@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { backendHttpClient, BackendError } from '@/lib/api/backendClient'
 import { rateLimit, RATE_LIMITS } from '@/lib/rateLimit'
+import { assertSameOrigin } from '@/lib/api/assertSameOrigin'
 
 /**
  * GET /api/stations/[id]/now-playing
@@ -12,6 +13,9 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> | { id: string } }
 ) {
+  const originResult = assertSameOrigin(request)
+  if (originResult) return originResult
+
   const rateLimitResult = rateLimit(request, RATE_LIMITS.API)
   if (rateLimitResult) return rateLimitResult
 
