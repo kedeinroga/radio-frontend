@@ -102,7 +102,7 @@ export default function MaintenancePage() {
   }
 
   const handleCleanupPartitions = async () => {
-    const months = window.prompt('Enter retention period in months (e.g., 6):')
+    const months = window.prompt('Enter retention period in months (recommended: 2 to free max space):', '2')
     if (!months) return
 
     const retentionMonths = parseInt(months, 10)

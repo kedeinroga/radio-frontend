@@ -1,7 +1,9 @@
-# Environment variables
+# Environment variables (todas las variantes excepto el ejemplo)
 .env
-.env*.local
-.env.production
+.env.*
+!.env.example
+secrtes.json
+secrets.json
 
 # Dependencies
 node_modules/
