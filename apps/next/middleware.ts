@@ -12,6 +12,15 @@ const DEFAULT_LOCALE = 'es'
 type SupportedLocale = typeof SUPPORTED_LOCALES[number]
 
 /**
+ * Features that need the (currently shut down) backend: accounts, premium/Stripe, ads, admin
+ * and analytics. Disabled unless BACKEND_FEATURES=1, so the app never exposes dead flows
+ * (e.g. a pricing page whose checkout can't activate anything).
+ */
+const BACKEND_FEATURES_ENABLED = process.env.BACKEND_FEATURES === '1'
+const BACKEND_ONLY_PAGE = /^(\/(es|en|fr|de))?\/(pricing|premium|account|admin)(\/|$)/
+const BACKEND_ONLY_API = /^\/api\/(auth|subscription|stripe|ads|admin|analytics)(\/|$)/
+
+/**
  * Extracts the locale from the pathname
  * @param pathname - The URL pathname
  * @returns The locale if found, undefined otherwise
@@ -120,6 +129,16 @@ function shouldExcludePath(pathname: string): boolean {
  */
 export async function middleware(request: NextRequest) {
   const { pathname, search } = request.nextUrl
+
+  // Backend-dependent features are off: answer 404 before any session/backend work
+  if (!BACKEND_FEATURES_ENABLED) {
+    if (BACKEND_ONLY_API.test(pathname)) {
+      return NextResponse.json({ error: 'Not found' }, { status: 404 })
+    }
+    if (BACKEND_ONLY_PAGE.test(pathname)) {
+      return NextResponse.rewrite(new URL('/404', request.url), { status: 404 })
+    }
+  }
 
   // Skip middleware for static assets and API routes
   if (shouldExcludePath(pathname)) {

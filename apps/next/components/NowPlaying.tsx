@@ -30,7 +30,9 @@ export function NowPlaying({ stationId, initialNowPlaying, initialRecent }: NowP
     queryKey: ['now-playing', stationId],
     queryFn: () => stationRepo.getNowPlaying(stationId),
     initialData: initialNowPlaying,
-    refetchInterval: 25_000,
+    // Solo se refresca si ya hay datos: sin metadata ICY (backend apagado) la API siempre
+    // responde vacío y sondear solo gasta invocaciones serverless.
+    refetchInterval: (query) => (query.state.data ? 25_000 : false),
     staleTime: 20_000,
   })
 
@@ -38,7 +40,7 @@ export function NowPlaying({ stationId, initialNowPlaying, initialRecent }: NowP
     queryKey: ['recent-tracks', stationId],
     queryFn: () => stationRepo.getRecentTracks(stationId, 8),
     initialData: initialRecent,
-    refetchInterval: 60_000,
+    refetchInterval: (query) => (query.state.data?.length ? 60_000 : false),
     staleTime: 50_000,
   })
 
