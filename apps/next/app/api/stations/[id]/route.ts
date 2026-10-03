@@ -13,7 +13,7 @@ const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> | { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const originResult = assertSameOrigin(request)
   if (originResult) return originResult
@@ -21,7 +21,7 @@ export async function GET(
   const rateLimitResult = rateLimit(request, RATE_LIMITS.API)
   if (rateLimitResult) return rateLimitResult
 
-  const { id } = await Promise.resolve(params)
+  const { id } = await params
   if (!UUID_REGEX.test(id)) {
     return NextResponse.json({ error: 'Invalid station ID.' }, { status: 400 })
   }
