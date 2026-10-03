@@ -112,7 +112,12 @@ function toDTO(s: RadioBrowserStation): StationDTO | null {
 }
 
 /** GET con fallback entre mirrors. Lanza RadioBrowserError si todos fallan. */
-async function rbFetch<T>(path: string, params: Record<string, string | number | boolean> = {}): Promise<T> {
+async function rbFetch<T>(
+  path: string,
+  params: Record<string, string | number | boolean> = {},
+  /** false para respuestas > 2MB, que el data cache de Next no admite. */
+  useDataCache = true
+): Promise<T> {
   const qs = new URLSearchParams(
     Object.entries(params).map(([k, v]) => [k, String(v)])
   ).toString()
@@ -125,7 +130,7 @@ async function rbFetch<T>(path: string, params: Record<string, string | number |
       const res = await fetch(`${server}${path}${qs ? `?${qs}` : ''}`, {
         headers: { 'User-Agent': USER_AGENT },
         signal: controller.signal,
-        next: { revalidate: REVALIDATE_SECONDS },
+        ...(useDataCache ? { next: { revalidate: REVALIDATE_SECONDS } } : { cache: 'no-store' as const }),
       })
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
       return (await res.json()) as T
@@ -194,4 +199,65 @@ export async function registerStationClick(id: string): Promise<void> {
   } catch {
     // ignorado a propósito
   }
+}
+
+// ─── Sitemaps ────────────────────────────────────────────────────────────────
+
+export interface SitemapStation {
+  id: string
+  votes: number
+}
+
+/**
+ * Una "página" de emisoras para sitemap, ordenadas por votos. La paginación es sobre el
+ * resultado crudo de Radio Browser (offset = page * rawPageSize) y luego se filtra a las
+ * reproducibles, así que cada página devuelve menos de rawPageSize.
+ */
+export async function getStationsForSitemap(page: number, rawPageSize: number): Promise<SitemapStation[]> {
+  const raw = await rbFetch<RadioBrowserStation[]>('/json/stations/search', {
+    limit: rawPageSize,
+    offset: page * rawPageSize,
+    hidebroken: true,
+    order: 'votes',
+    reverse: true,
+  }, false) // ~7MB por página: no cabe en el data cache; el sitemap se cachea por Cache-Control
+  return raw.flatMap((s) => {
+    const dto = toDTO(s)
+    return dto ? [{ id: dto.id, votes: dto.votes }] : []
+  })
+}
+
+export interface CountrySummary {
+  code: string
+  name: string
+  stationCount: number
+}
+
+export async function getTopCountries(limit: number): Promise<CountrySummary[]> {
+  const raw = await rbFetch<{ name: string; iso_3166_1: string; stationcount: number }[]>(
+    '/json/countries',
+    { order: 'stationcount', reverse: true, hidebroken: true }
+  )
+  return raw
+    .filter((c) => /^[A-Z]{2}$/.test(c.iso_3166_1))
+    .slice(0, limit)
+    .map((c) => ({ code: c.iso_3166_1, name: c.name, stationCount: c.stationcount }))
+}
+
+export interface TagSummary {
+  name: string
+  stationCount: number
+}
+
+export async function getTopTags(limit: number): Promise<TagSummary[]> {
+  const raw = await rbFetch<{ name: string; stationcount: number }[]>('/json/tags', {
+    order: 'stationcount',
+    reverse: true,
+    hidebroken: true,
+    limit: limit * 2, // margen para descartar tags vacíos o no-url-safe
+  })
+  return raw
+    .filter((t) => t.name && t.name.trim() && /^[\p{L}\p{N} \-]+$/u.test(t.name.trim()))
+    .slice(0, limit)
+    .map((t) => ({ name: t.name.trim(), stationCount: t.stationcount }))
 }

@@ -110,6 +110,17 @@ const nextConfig = {
     IS_BUILD_TIME: isBuild ? 'true' : 'false',
   },
 
+  // Next no soporta segmentos dinámicos parciales (sitemap-stations-[page].xml), así que la
+  // URL pública sitemap-stations-N.xml se sirve desde app/sitemap-stations/[page].
+  async rewrites() {
+    return [
+      {
+        source: '/sitemap-stations-:page(\\d+).xml',
+        destination: '/sitemap-stations/:page',
+      },
+    ]
+  },
+
   // Permanent redirects
   async redirects() {
     return [

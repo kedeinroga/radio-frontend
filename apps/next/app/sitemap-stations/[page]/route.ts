@@ -3,10 +3,6 @@ import { emptyUrlset, xmlResponse, RAW_STATIONS_PER_PAGE, type UrlEntry } from '
 
 export const dynamic = 'force-dynamic'
 
-interface PageProps {
-  params: Promise<{ page: string }> | { page: string }
-}
-
 /**
  * GET /sitemap-stations-{page}.xml
  *
@@ -14,11 +10,11 @@ interface PageProps {
  * conserva solo las reproducibles. Con 4 locales cada página queda muy por debajo del
  * límite de 50.000 URLs de Google.
  */
-export async function GET(_request: Request, { params }: PageProps): Promise<Response> {
-  // CRITICAL: Skip during build to prevent worker crash
-  if (process.env.SKIP_BUILD_STATIC_GENERATION === '1') return emptyUrlset()
-
-  const { page } = await Promise.resolve(params)
+export async function GET(
+  _request: Request,
+  { params }: { params: Promise<{ page: string }> }
+): Promise<Response> {
+  const { page } = await params
   const pageNum = Math.max(0, parseInt(page, 10) || 0)
 
   try {

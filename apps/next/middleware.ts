@@ -73,7 +73,7 @@ function shouldExcludePath(pathname: string): boolean {
     '/api',
     '/favicon.ico',
     '/robots.txt',
-    '/sitemap.xml',
+    '/sitemap', // sitemap.xml y sitemap-*.xml (índice y sub-sitemaps) se sirven sin prefijo de locale
     '/ads.txt',        // ads.txt must be served from root without locale prefix
     '/manifest.json',
     '/manifest.webmanifest',  // PWA manifest must be served from root
