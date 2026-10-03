@@ -3,11 +3,17 @@
   "globalDependencies": ["**/.env.*local"],
   "globalEnv": [
     "NODE_ENV",
+    "IS_BUILD_TIME",
+    "API_URL",
+    "API_SECRET_KEY",
     "NEXT_PUBLIC_API_URL",
+    "NEXT_PUBLIC_APP_URL",
     "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY",
+    "NEXT_PUBLIC_GOOGLE_ADSENSE_ID",
     "STRIPE_SECRET_KEY",
     "STRIPE_WEBHOOK_SECRET",
-    "STRIPE_PRICE_ID_MONTHLY"
+    "STRIPE_PRICE_ID_MONTHLY",
+    "STRIPE_PRICE_ID_YEARLY"
   ],
   "tasks": {
     "build": {
@@ -15,11 +21,17 @@
       "outputs": [".next/**", "!.next/cache/**", "dist/**"],
       "env": [
         "NODE_ENV",
+        "IS_BUILD_TIME",
+        "API_URL",
+        "API_SECRET_KEY",
         "NEXT_PUBLIC_API_URL",
+        "NEXT_PUBLIC_APP_URL",
         "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY",
+        "NEXT_PUBLIC_GOOGLE_ADSENSE_ID",
         "STRIPE_SECRET_KEY",
         "STRIPE_WEBHOOK_SECRET",
-        "STRIPE_PRICE_ID_MONTHLY"
+        "STRIPE_PRICE_ID_MONTHLY",
+        "STRIPE_PRICE_ID_YEARLY"
       ]
     },
     "dev": {
