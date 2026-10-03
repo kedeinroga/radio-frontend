@@ -1,14 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { backendHttpClient, BackendError } from '@/lib/api/backendClient'
+import { searchStationsByName } from '@/lib/radioBrowser/client'
 import { rateLimit, RATE_LIMITS } from '@/lib/rateLimit'
 import { assertSameOrigin } from '@/lib/api/assertSameOrigin'
 
 /**
  * GET /api/stations/search
  *
- * Proxy para búsqueda de estaciones.
+ * Búsqueda de estaciones por nombre en Radio Browser (server-side, cacheada 1h).
  * ✅ Cliente llama a /api/stations/search?q=...
- * ✅ Proxy al backend (URL oculto)
  * ✅ Rate limiting aplicado
  * ✅ Input validation en parámetros
  */
@@ -44,44 +43,15 @@ export async function GET(request: NextRequest) {
     const rawLimit = parseInt(searchParams.get('limit') ?? '20', 10)
     const limit = isNaN(rawLimit) || rawLimit < 1 || rawLimit > 100 ? 20 : rawLimit
 
-    const lang = searchParams.get('lang') || 'es'
+    const data = await searchStationsByName(query.trim(), limit)
 
-    // Construir query string para backend
-    const backendQuery = `/stations/search?q=${encodeURIComponent(query.trim())}&limit=${limit}&lang=${lang}`
-
-    // ✅ Proxy usando backendHttpClient
-    const data = await backendHttpClient.get(backendQuery, {
-      timeout: 60000, // 60s para búsquedas
-    })
-
-    return NextResponse.json(data, { status: 200 })
+    return NextResponse.json({ data, meta: { total: data.length } }, { status: 200 })
   } catch (error: unknown) {
-    if (error instanceof BackendError) {
-      if (error.isUnauthorized) {
-        console.error('[GET /api/stations/search] Backend rejected X-Rradio-Secret (401).')
-        return NextResponse.json(
-          { error: 'Service temporarily unavailable. Please try again later.' },
-          { status: 503 }
-        )
-      }
-      if (error.isServerError) {
-        console.error(`[GET /api/stations/search] Backend server error (${error.status}).`)
-        return NextResponse.json(
-          { error: 'Search service is experiencing issues. Please try again later.' },
-          { status: 502 }
-        )
-      }
-      return NextResponse.json(
-        { error: 'Failed to search stations.' },
-        { status: error.status }
-      )
-    }
-
     const message = error instanceof Error ? error.message : 'Unknown error'
-    console.error('[GET /api/stations/search] Unexpected error:', message)
+    console.error('[GET /api/stations/search] Radio Browser error:', message)
     return NextResponse.json(
-      { error: 'Failed to search stations.' },
-      { status: 500 }
+      { error: 'Search service is experiencing issues. Please try again later.' },
+      { status: 502 }
     )
   }
 }

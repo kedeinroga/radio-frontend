@@ -1,78 +1,30 @@
-import { MetadataRoute } from 'next'
 import { getAllBlogPosts } from '@/lib/blog-posts'
+import { xmlResponse, type UrlEntry } from '@/lib/sitemap/xml'
 
-// Force dynamic generation
 export const dynamic = 'force-dynamic'
-export const revalidate = 3600 // Revalidate every hour
-
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://rradio.online'
-const SUPPORTED_LOCALES = ['es', 'en', 'fr', 'de'] as const
 
 /**
- * Static Pages Sitemap
- * Includes: home, search, favorites for all locales + blog (es only)
+ * GET /sitemap-static.xml
+ * Páginas estáticas (home, search, favorites…) para todos los locales + blog (solo es).
  */
-export default async function sitemapStatic(): Promise<MetadataRoute.Sitemap> {
-  // CRITICAL: Skip during build to prevent worker crash
-  if (process.env.SKIP_BUILD_STATIC_GENERATION === '1') {
-    return []
-  }
-
-  const sitemapEntries: MetadataRoute.Sitemap = []
-
-  // Helper function to generate alternates for a given path
-  const generateAlternates = (path: string) => {
-    const alternates: { languages: Record<string, string> } = {
-      languages: {}
-    }
-
-    SUPPORTED_LOCALES.forEach(locale => {
-      alternates.languages[locale] = `${BASE_URL}/${locale}${path}`
-    })
-
-    return alternates
-  }
-
-  // Static pages - generate for each locale
-  const staticPaths = [
-    { path: '', priority: 1.0, changeFrequency: 'daily' as const },
-    { path: '/radio-online', priority: 0.9, changeFrequency: 'weekly' as const },
-    { path: '/search', priority: 0.8, changeFrequency: 'daily' as const },
-    { path: '/favorites', priority: 0.7, changeFrequency: 'weekly' as const }
+export async function GET(): Promise<Response> {
+  const entries: UrlEntry[] = [
+    { path: '', priority: 1.0, changeFrequency: 'daily' },
+    { path: '/radio-online', priority: 0.9, changeFrequency: 'weekly' },
+    { path: '/search', priority: 0.8, changeFrequency: 'daily' },
+    { path: '/favorites', priority: 0.7, changeFrequency: 'weekly' },
+    // Blog: solo español
+    { path: '/blog', priority: 0.8, changeFrequency: 'weekly', locales: ['es'] },
+    ...getAllBlogPosts().map(
+      (post): UrlEntry => ({
+        path: `/blog/${post.slug}`,
+        priority: 0.7,
+        changeFrequency: 'monthly',
+        lastModified: new Date(post.updatedAt),
+        locales: ['es'],
+      })
+    ),
   ]
 
-  staticPaths.forEach(({ path, priority, changeFrequency }) => {
-    SUPPORTED_LOCALES.forEach(locale => {
-      sitemapEntries.push({
-        url: `${BASE_URL}/${locale}${path}`,
-        lastModified: new Date(),
-        changeFrequency,
-        priority,
-        alternates: generateAlternates(path)
-      })
-    })
-  })
-
-  // Blog pages - Spanish only
-  const blogPosts = getAllBlogPosts()
-
-  // Blog index page
-  sitemapEntries.push({
-    url: `${BASE_URL}/es/blog`,
-    lastModified: new Date(),
-    changeFrequency: 'weekly',
-    priority: 0.8,
-  })
-
-  // Individual blog articles
-  blogPosts.forEach(post => {
-    sitemapEntries.push({
-      url: `${BASE_URL}/es/blog/${post.slug}`,
-      lastModified: new Date(post.updatedAt),
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    })
-  })
-
-  return sitemapEntries
+  return xmlResponse(entries)
 }

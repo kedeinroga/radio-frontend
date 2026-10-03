@@ -10,9 +10,13 @@ const envSchema = z.object({
   // ==========================================
   // Backend API (SERVER-SIDE ONLY)
   // ==========================================
+  // Opcional: el catálogo y la reproducción ya no dependen del backend (se consume Radio Browser
+  // directo). Solo lo usan las rutas heredadas de auth/admin/suscripción.
   API_URL: z
-    .string()
-    .url('API_URL debe ser una URL válida')
+    .preprocess(
+      (v) => (v === '' ? undefined : v), // un valor vacío equivale a "no configurado"
+      z.string().url('API_URL debe ser una URL válida').optional()
+    )
     .describe('URL del backend API (server-side only, ej: http://localhost:8080/api/v1)'),
 
   // ==========================================
