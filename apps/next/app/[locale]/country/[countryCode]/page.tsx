@@ -110,18 +110,6 @@ export default async function CountryPage({ params }: PageProps) {
     )
   }
   
-  // Don't try to render if API is not available
-  if (!process.env.NEXT_PUBLIC_API_URL) {
-    return (
-      <main className="min-h-screen bg-gray-50 dark:bg-gray-950 p-8">
-        <div className="container mx-auto max-w-6xl">
-          <h1 className="text-2xl font-bold mb-4">API Not Configured</h1>
-          <p>Please configure NEXT_PUBLIC_API_URL environment variable.</p>
-        </div>
-      </main>
-    )
-  }
-  
   const repository = new StationServerRepository()
   const countryName = decodeURIComponent(countryCode).toUpperCase()
   

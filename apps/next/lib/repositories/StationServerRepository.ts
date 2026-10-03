@@ -1,8 +1,11 @@
 import type { IStationRepository } from '@radio-app/app'
 import { Station } from '@radio-app/app'
 import type { SEOMetadata, StationTrack } from '@radio-app/app'
-import { mapToStationTrack } from '@radio-app/app'
-import { backendHttpClient, BackendError } from '@/lib/api/backendClient'
+import {
+  getPopularStations,
+  searchStationsByName,
+  getStationById,
+} from '@/lib/radioBrowser/client'
 
 const PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://rradio.online'
 
@@ -12,8 +15,7 @@ const PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://rradio.onli
  *
  * Implementación de IStationRepository para uso EXCLUSIVO en SSR (apps/next).
  *
- * ✅ Usa backendHttpClient → envía X-Rradio-Secret automáticamente
- * ✅ La clave secreta nunca sale del servidor
+ * ✅ Consume Radio Browser directamente (lib/radioBrowser/client) — ya no depende del backend
  * ✅ Implementa la misma interfaz que StationApiRepository (intercambiable)
  * ❌ NUNCA importar en componentes del cliente
  */
@@ -23,58 +25,28 @@ export class StationServerRepository implements IStationRepository {
 
   async findById(id: string): Promise<Station | null> {
     try {
-      const data = await backendHttpClient.get<{ data: any; seo_metadata?: any }>(
-        `/stations/${id}`
-      )
-      if (data.data) {
-        return this.mapToStation({ ...data.data, seo_metadata: data.seo_metadata })
-      }
-      return null
-    } catch (error) {
-      if (error instanceof BackendError) {
-        if (error.status === 404) return null
-        if (error.status === 403) throw new Error('This station is only available for Premium users.')
-        if (error.isUnauthorized) throw new Error('Service temporarily unavailable. Please try again later.')
-        if (error.isServerError) throw new Error('The stations service is experiencing issues. Please try again later.')
-      }
+      const data = await getStationById(id)
+      return data ? this.mapToStation(data) : null
+    } catch {
       throw new Error('Failed to fetch station. Please try again.')
     }
   }
 
   async search(query: string, limit: number = 20): Promise<Station[]> {
     try {
-      const data = await backendHttpClient.get<{ data: any[] }>(
-        `/stations/search?q=${encodeURIComponent(query)}&limit=${limit}`
-      )
-      return (data.data || []).map((item) => this.mapToStation(item))
-    } catch (error) {
-      if (error instanceof BackendError) {
-        if (error.status === 400) throw new Error('Please provide a valid search term.')
-        if (error.isUnauthorized) throw new Error('Service temporarily unavailable. Please try again later.')
-        if (error.isServerError) throw new Error('The search service is temporarily unavailable. Please try again later.')
-      }
-      throw new Error('Failed to search stations. Please try again.')
+      const data = await searchStationsByName(query, limit)
+      return data.map((item) => this.mapToStation(item))
+    } catch {
+      throw new Error('The search service is temporarily unavailable. Please try again later.')
     }
   }
 
   async getPopular(limit: number = 20, country?: string): Promise<Station[]> {
     try {
-      let endpoint = `/stations/popular?limit=${limit}`
-      if (country) endpoint += `&country=${encodeURIComponent(country)}`
-
-      const data = await backendHttpClient.get<{ data: any[] }>(endpoint)
-      return (data.data || []).map((item) => this.mapToStation(item))
-    } catch (error) {
-      if (error instanceof BackendError) {
-        if (error.isUnauthorized) {
-          console.error('[StationServerRepository] ❌ 401 — verifica API_SECRET_KEY en el entorno.')
-          throw new Error('Service temporarily unavailable. Please try again later.')
-        }
-        if (error.isServerError) {
-          throw new Error('The stations service is temporarily unavailable. Please try again later.')
-        }
-      }
-      throw new Error('Failed to fetch popular stations. Please try again.')
+      const data = await getPopularStations(limit, country)
+      return data.map((item) => this.mapToStation(item))
+    } catch {
+      throw new Error('The stations service is temporarily unavailable. Please try again later.')
     }
   }
 
@@ -83,7 +55,8 @@ export class StationServerRepository implements IStationRepository {
   }
 
   async getByCountry(country: string, limit: number = 20): Promise<Station[]> {
-    return this.search(country, limit)
+    // Los códigos ISO de 2 letras se filtran por countrycode; el resto cae a nombre de país.
+    return this.getPopular(limit, country)
   }
 
   async findBySlug(slug: string): Promise<Station | null> {
@@ -118,34 +91,13 @@ export class StationServerRepository implements IStationRepository {
     return this.findBySlug(slugOrId)
   }
 
-  async getNowPlaying(stationId: string): Promise<StationTrack | null> {
-    try {
-      // Backend returns 204 (-> undefined) when there is no data.
-      const data = await backendHttpClient.get<{
-        station_id: string
-        raw_title: string
-        artist?: string
-        title: string
-        played_at: string
-      } | undefined>(`/stations/${stationId}/now-playing`)
-
-      if (!data || !data.station_id) return null
-      return mapToStationTrack(data)
-    } catch {
-      // Best-effort: never break SSR on now-playing failure
-      return null
-    }
+  // Sin backend no hay metadata ICY: "sonando ahora" y su historial quedan vacíos.
+  async getNowPlaying(_stationId: string): Promise<StationTrack | null> {
+    return null
   }
 
-  async getRecentTracks(stationId: string, limit: number = 10): Promise<StationTrack[]> {
-    try {
-      const data = await backendHttpClient.get<{ data: any[] }>(
-        `/stations/${stationId}/recent-tracks?limit=${limit}`
-      )
-      return (data?.data || []).map(mapToStationTrack)
-    } catch {
-      return []
-    }
+  async getRecentTracks(_stationId: string, _limit: number = 10): Promise<StationTrack[]> {
+    return []
   }
 
   private isUUID(str: string): boolean {
