@@ -590,27 +590,27 @@
     "sections": {
       "collection": {
         "title": "1. Información que Recopilamos",
-        "content": "Recopilamos la siguiente información cuando utilizas nuestro servicio:\n\n**Información de uso automática:**\n- Dirección IP y ubicación geográfica aproximada\n- Tipo de navegador y dispositivo\n- Páginas visitadas y estaciones reproducidas\n- Tiempo de uso y patrones de escucha\n\n**Cookies y tecnologías similares:**\nUtilizamos cookies para mejorar tu experiencia. Consulta nuestra sección de cookies para más detalles.\n\n**Información que nos proporcionas voluntariamente:**\n- Correo electrónico (si te registras)\n- Preferencias de estaciones favoritas\n- Configuraciones de usuario"
+        "content": "Rradio no tiene cuentas de usuario ni formularios de registro, así que no te pedimos nombre, correo ni contraseña.\n\n**Datos técnicos automáticos:** como cualquier sitio web, nuestro proveedor de alojamiento (Vercel) recibe tu dirección IP, el tipo de navegador y las páginas que visitas para servir el sitio y protegerlo frente a abusos. También medimos el rendimiento de las páginas con Vercel Speed Insights, que registra métricas de velocidad de forma agregada y sin cookies.\n\n**Datos guardados en tu dispositivo:** tus emisoras favoritas y tu idioma se guardan en tu propio navegador (almacenamiento local y una cookie de idioma). No se envían a nuestros servidores.\n\n**Si nos escribes:** si nos contactas por correo, usamos tu dirección y tu mensaje solo para responderte."
       },
       "usage": {
         "title": "2. Cómo Usamos tu Información",
-        "content": "Utilizamos la información recopilada para:\n\n- Proporcionar y mejorar nuestro servicio de radio online\n- Personalizar tu experiencia de usuario\n- Mostrar publicidad relevante (Google AdSense)\n- Analizar el uso del servicio y generar estadísticas\n- Cumplir con obligaciones legales\n- Comunicarnos contigo sobre cambios en el servicio"
+        "content": "Usamos la información anterior para:\n\n- Servir el sitio y reproducir las emisoras que eliges\n- Recordar tu idioma y tus favoritas en tu dispositivo\n- Detectar y bloquear usos abusivos del servicio\n- Medir y mejorar la velocidad del sitio\n- Mostrar publicidad mediante Google AdSense (ver sección 3)\n- Responder a tus consultas y cumplir obligaciones legales"
       },
       "advertising": {
         "title": "3. Publicidad y Google AdSense",
-        "content": "Utilizamos **Google AdSense** para mostrar anuncios en nuestro sitio. Google puede usar cookies y balizas web para:\n\n- Mostrar anuncios personalizados basados en tus intereses\n- Medir la efectividad de las campañas publicitarias\n- Recopilar información sobre tu navegación\n\nGoogle es un tercero independiente y tiene su propia política de privacidad. Para más información sobre cómo Google usa tus datos, visita:\n[Cómo usa Google los datos cuando utilizas sitios de sus partners](https://policies.google.com/technologies/partner-sites)\n\n**Control de publicidad personalizada:**\nPuedes desactivar los anuncios personalizados visitando [Configuración de anuncios de Google](https://adssettings.google.com/)."
+        "content": "Rradio se financia con publicidad de **Google AdSense**. Google y sus socios pueden usar cookies e identificadores para mostrar anuncios, limitar cuántas veces ves el mismo anuncio y medir su rendimiento. Los anuncios pueden ser personalizados según tus intereses o no personalizados, según tu elección.\n\n**Consentimiento:** si visitas Rradio desde el Espacio Económico Europeo, el Reino Unido o Suiza, verás un mensaje de consentimiento de Google en el que puedes aceptar o rechazar el uso de tus datos para publicidad, y cambiar tu elección más tarde. Sin tu consentimiento solo se muestran anuncios no personalizados o limitados.\n\nPara saber más: [Cómo usa Google los datos cuando utilizas sitios de sus partners](https://policies.google.com/technologies/partner-sites). Puedes desactivar los anuncios personalizados en [Configuración de anuncios de Google](https://adssettings.google.com/)."
       },
       "cookies": {
-        "title": "4. Cookies y Tecnologías de Seguimiento",
-        "content": "Utilizamos las siguientes cookies:\n\n**Cookies esenciales:** Necesarias para el funcionamiento básico del sitio (recuerdo de preferencias, autenticación).\n\n**Cookies de análisis:** Google Analytics para entender cómo usas el servicio.\n\n**Cookies de publicidad:** Google AdSense para mostrar anuncios relevantes.\n\nPuedes controlar las cookies desde la configuración de tu navegador. Ten en cuenta que deshabilitar cookies puede afectar la funcionalidad del sitio."
+        "title": "4. Cookies y Almacenamiento Local",
+        "content": "**Necesarios (propios):** una cookie que recuerda tu idioma y el almacenamiento local de tu navegador, donde se guardan tus favoritas y tus preferencias. No se usan para seguimiento.\n\n**Publicidad (de Google):** cookies de Google AdSense para mostrar y medir anuncios, sujetas a tu consentimiento donde la ley lo exige.\n\nNo usamos Google Analytics ni otras herramientas de analítica con cookies. Puedes borrar las cookies y el almacenamiento local desde la configuración de tu navegador; si lo haces, se perderán tus favoritas."
       },
       "sharing": {
-        "title": "5. Compartir Información con Terceros",
-        "content": "No vendemos tu información personal. Compartimos datos únicamente con:\n\n- **Google AdSense:** Para publicidad personalizada\n- **Google Analytics:** Para análisis de uso\n\nTodos estos servicios están obligados a proteger tu información y usarla solo para los fines autorizados."
+        "title": "5. Servicios de Terceros",
+        "content": "No vendemos tu información personal. Para funcionar, Rradio depende de estos terceros:\n\n- **Emisoras de radio:** el audio se reproduce directamente desde el servidor de cada emisora, que recibe tu dirección IP como en cualquier transmisión por internet. Cada emisora tiene su propia política de privacidad.\n- **Radio Browser:** el directorio público de emisoras del que obtenemos el catálogo. Cuando reproduces una emisora, le comunicamos de forma anónima que se escuchó, para su ranking de popularidad.\n- **Vercel:** alojamiento del sitio y métricas de rendimiento.\n- **Google AdSense:** publicidad (ver sección 3)."
       },
       "rights": {
         "title": "6. Tus Derechos (GDPR/CCPA)",
-        "content": "Tienes derecho a:\n\n- **Acceder** a tus datos personales\n- **Rectificar** información incorrecta\n- **Eliminar** tu cuenta y datos asociados\n- **Oponerte** al procesamiento de tus datos\n- **Portabilidad** de datos\n- **Retirar consentimiento** de cookies en cualquier momento\n\nPara ejercer estos derechos, contacta: **privacy@rradio.online**"
+        "content": "Según la ley de tu país, puedes tener derecho a acceder a tus datos, rectificarlos, suprimirlos, oponerte a su tratamiento, solicitar su portabilidad y retirar tu consentimiento en cualquier momento.\n\nComo no tenemos cuentas de usuario, la mayoría de los datos que te conciernen están en tu propio navegador y puedes borrarlos tú mismo. Para la publicidad, puedes cambiar tu elección en el mensaje de consentimiento de Google o en la configuración de anuncios de Google.\n\nPara cualquier otra solicitud, escríbenos a **privacy@rradio.online**."
       },
       "children": {
         "title": "7. Privacidad de Menores (COPPA)",
@@ -618,7 +618,7 @@
       },
       "security": {
         "title": "8. Seguridad de los Datos",
-        "content": "Implementamos medidas de seguridad técnicas y organizativas para proteger tu información:\n\n- Cifrado SSL/TLS en todas las conexiones\n- Acceso restringido a datos personales\n- Monitoreo continuo de seguridad\n- Cumplimiento con estándares de la industria\n\nSin embargo, ningún sistema es 100% seguro. Usa contraseñas fuertes y protege tus credenciales."
+        "content": "Todo el sitio funciona con cifrado HTTPS y solo reproducimos emisoras que transmiten por conexiones seguras. Limitamos las peticiones automatizadas para proteger el servicio y no almacenamos datos personales en bases de datos propias. Aun así, ningún sistema es 100% seguro."
       },
       "international": {
         "title": "9. Transferencias Internacionales",
@@ -626,7 +626,7 @@
       },
       "changes": {
         "title": "10. Cambios a esta Política",
-        "content": "Podemos actualizar esta política ocasionalmente. Te notificaremos de cambios significativos mediante un aviso en el sitio o por correo electrónico. La fecha de 'Última actualización' indica cuándo se modificó la política por última vez."
+        "content": "Podemos actualizar esta política cuando cambie el servicio o la ley. Publicaremos los cambios en esta página y actualizaremos la fecha de «Última actualización»."
       },
       "contact": {
         "title": "11. Contacto",
@@ -698,7 +698,7 @@
     },
     "technology": {
       "title": "Tecnología",
-      "content": "Rradio está construido con tecnología moderna web:\n\n**Frontend:**\n- Next.js 15 con React para una experiencia de usuario rápida\n- Progressive Web App (PWA) para instalación en dispositivos\n- Diseño responsive que funciona en móvil, tablet y desktop\n\n**Backend:**\n- Go (Golang) para un backend de alto rendimiento\n- Google Cloud Run para escalabilidad automática\n- API RESTful para integraciones futuras\n\n**Calidad de Audio:**\n- Soporte para múltiples formatos (MP3, AAC, OGG)\n- Streaming adaptativo según tu conexión\n- Calidad hasta 320kbps"
+      "content": "Rradio es una aplicación web moderna y ligera:\n\n- **Next.js y React** para que el sitio cargue rápido y se pueda instalar como aplicación (PWA) en el móvil o el ordenador\n- **Radio Browser**, el directorio público y comunitario de emisoras, como fuente del catálogo\n- **Reproducción directa** desde el servidor de cada emisora, solo por conexiones seguras (HTTPS)\n- **Diseño adaptable** que funciona en móvil, tablet y escritorio\n\nLa calidad de audio depende de cada emisora: la mayoría transmite entre 64 y 320 kbps en MP3, AAC u Ogg."
     },
     "team": {
       "title": "El Equipo",
@@ -713,7 +713,7 @@
         },
         "privacy": {
           "title": "Privacidad Primero",
-          "description": "No vendemos tus datos. Usamos cookies solo para mejorar tu experiencia y cumplir requisitos legales."
+          "description": "No vendemos tus datos ni tenemos cuentas de usuario. Tus favoritas se guardan en tu propio navegador."
         },
         "global": {
           "title": "Diversidad Global",

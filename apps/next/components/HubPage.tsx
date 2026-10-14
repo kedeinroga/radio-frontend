@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { Breadcrumbs } from '@radio-app/app'
 import type { Station } from '@radio-app/app'
 import { StationGridItem } from '@/components/StationGridItem'
+import { AdSenseScript } from '@/components/AdSenseScript'
 import { EDITORIAL_LOCALE, type EditorialHub } from '@/lib/editorial'
 import type { ListingTexts } from '@/lib/listingTexts'
 
@@ -66,6 +67,9 @@ export function HubPage({ locale, emoji, heading, hub, stations, breadcrumbs, te
             </p>
           )}
         </header>
+
+        {/* Anuncios solo donde hay texto propio (no en los listados en/fr/de) */}
+        {editorial && <AdSenseScript />}
 
         {editorial && (
           <section className="mb-10 space-y-4">

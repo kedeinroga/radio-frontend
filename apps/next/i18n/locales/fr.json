@@ -575,5 +575,193 @@
         "description": "Explorez plus de 30,000 stations de radio du monde entier. Gratuit, sans inscription.",
         "button": "Explorer les Stations Populaires"
       }
+    },
+  "legal": {
+    "privacy": "Confidentialité",
+    "terms": "Conditions",
+    "about": "À propos",
+    "contact": "Contact"
+  },
+  "privacy": {
+    "title": "Politique de Confidentialité",
+    "lastUpdated": "Dernière mise à jour : {{date}}",
+    "intro": "Chez Rradio, nous respectons votre vie privée. Cette politique explique quelles informations sont traitées lorsque vous utilisez notre service de radio en ligne, pourquoi, et quels sont vos choix.",
+    "sections": {
+      "collection": {
+        "title": "1. Informations que Nous Collectons",
+        "content": "Rradio n'a ni comptes utilisateurs ni formulaires d'inscription : nous ne vous demandons jamais votre nom, votre e-mail ou un mot de passe.\n\n**Données techniques automatiques :** comme tout site web, notre hébergeur (Vercel) reçoit votre adresse IP, le type de navigateur et les pages visitées afin de servir le site et de le protéger contre les abus. Nous mesurons aussi les performances avec Vercel Speed Insights, qui enregistre des métriques de vitesse de manière agrégée et sans cookies.\n\n**Données stockées sur votre appareil :** vos stations favorites et votre langue sont enregistrées dans votre propre navigateur (stockage local et un cookie de langue). Elles ne sont pas envoyées à nos serveurs.\n\n**Si vous nous écrivez :** si vous nous contactez par e-mail, nous utilisons votre adresse et votre message uniquement pour vous répondre."
+      },
+      "usage": {
+        "title": "2. Comment Nous Utilisons vos Informations",
+        "content": "Nous utilisons ces informations pour :\n\n- Servir le site et diffuser les stations que vous choisissez\n- Mémoriser votre langue et vos favoris sur votre appareil\n- Détecter et bloquer les usages abusifs du service\n- Mesurer et améliorer la vitesse du site\n- Afficher de la publicité via Google AdSense (voir section 3)\n- Répondre à vos demandes et respecter nos obligations légales"
+      },
+      "advertising": {
+        "title": "3. Publicité et Google AdSense",
+        "content": "Rradio est financé par la publicité **Google AdSense**. Google et ses partenaires peuvent utiliser des cookies et des identifiants pour afficher des annonces, limiter leur répétition et mesurer leurs performances. Les annonces peuvent être personnalisées selon vos centres d'intérêt ou non personnalisées, selon votre choix.\n\n**Consentement :** si vous visitez Rradio depuis l'Espace économique européen, le Royaume-Uni ou la Suisse, vous verrez un message de consentement de Google qui vous permet d'accepter ou de refuser l'utilisation de vos données à des fins publicitaires, et de modifier votre choix plus tard. Sans votre consentement, seules des annonces non personnalisées ou limitées sont affichées.\n\nEn savoir plus : [Comment Google utilise les données des sites partenaires](https://policies.google.com/technologies/partner-sites). Vous pouvez désactiver les annonces personnalisées dans les [Paramètres des annonces Google](https://adssettings.google.com/)."
+      },
+      "cookies": {
+        "title": "4. Cookies et Stockage Local",
+        "content": "**Nécessaires (internes) :** un cookie qui mémorise votre langue et le stockage local de votre navigateur, où sont conservés vos favoris et vos préférences. Ils ne servent pas au suivi.\n\n**Publicité (Google) :** cookies Google AdSense pour afficher et mesurer les annonces, soumis à votre consentement lorsque la loi l'exige.\n\nNous n'utilisons ni Google Analytics ni aucun autre outil d'analyse à base de cookies. Vous pouvez supprimer les cookies et le stockage local dans les réglages de votre navigateur ; vos favoris seront alors perdus."
+      },
+      "sharing": {
+        "title": "5. Services Tiers",
+        "content": "Nous ne vendons pas vos informations personnelles. Pour fonctionner, Rradio s'appuie sur ces tiers :\n\n- **Stations de radio :** l'audio est diffusé directement depuis le serveur de chaque station, qui reçoit votre adresse IP comme pour tout flux internet. Chaque station a sa propre politique de confidentialité.\n- **Radio Browser :** l'annuaire public de stations dont provient notre catalogue. Lorsque vous écoutez une station, nous lui signalons l'écoute de façon anonyme pour son classement de popularité.\n- **Vercel :** hébergement du site et mesures de performance.\n- **Google AdSense :** publicité (voir section 3)."
+      },
+      "rights": {
+        "title": "6. Vos Droits (RGPD/CCPA)",
+        "content": "Selon la loi de votre pays, vous pouvez avoir le droit d'accéder à vos données, de les rectifier ou de les supprimer, de vous opposer à leur traitement, d'en demander la portabilité et de retirer votre consentement à tout moment.\n\nComme nous n'avons pas de comptes utilisateurs, la plupart des données vous concernant se trouvent dans votre propre navigateur et vous pouvez les supprimer vous-même. Pour la publicité, vous pouvez modifier votre choix dans le message de consentement de Google ou dans les paramètres des annonces Google.\n\nPour toute autre demande, écrivez à **privacy@rradio.online**."
+      },
+      "children": {
+        "title": "7. Confidentialité des Mineurs (COPPA)",
+        "content": "Notre service ne s'adresse pas aux enfants de moins de 13 ans et nous ne collectons pas sciemment d'informations les concernant. Si vous pensez qu'un enfant nous a transmis des données personnelles, contactez-nous et nous les supprimerons."
+      },
+      "security": {
+        "title": "8. Sécurité des Données",
+        "content": "Tout le site fonctionne en HTTPS et nous ne diffusons que des stations qui émettent via des connexions sécurisées. Nous limitons les requêtes automatisées pour protéger le service et ne stockons pas de données personnelles dans nos propres bases de données. Aucun système n'est toutefois sûr à 100 %."
+      },
+      "international": {
+        "title": "9. Transferts Internationaux",
+        "content": "Nos prestataires peuvent traiter des données sur des serveurs situés hors de votre pays de résidence, notamment aux États-Unis et dans l'Union européenne. Ils appliquent les garanties exigées par les lois de protection des données applicables."
+      },
+      "changes": {
+        "title": "10. Modifications de cette Politique",
+        "content": "Nous pouvons mettre à jour cette politique lorsque le service ou la loi évolue. Les changements seront publiés sur cette page avec une nouvelle date de « Dernière mise à jour »."
+      },
+      "contact": {
+        "title": "11. Contact",
+        "content": "Pour toute question sur cette politique ou pour exercer vos droits, contactez-nous :\n\n**E-mail :** privacy@rradio.online\n**E-mail général :** support@rradio.online\n\nNous répondrons à votre demande sous 30 jours."
+      }
     }
+  },
+  "terms": {
+    "title": "Conditions d'Utilisation",
+    "lastUpdated": "Dernière mise à jour : {{date}}",
+    "intro": "Bienvenue sur Rradio. En utilisant notre service, vous acceptez ces conditions. Merci de les lire attentivement.",
+    "sections": {
+      "acceptance": {
+        "title": "1. Acceptation des Conditions",
+        "content": "En accédant à Rradio et en l'utilisant, vous acceptez d'être lié par ces Conditions d'utilisation et par notre Politique de confidentialité. Si vous n'êtes pas d'accord, n'utilisez pas le service."
+      },
+      "service": {
+        "title": "2. Description du Service",
+        "content": "Rradio est un annuaire de radio en ligne qui donne accès à des stations du monde entier via internet. Le service est gratuit et financé par la publicité.\n\n**Important :** nous ne sommes pas propriétaires des stations. Nous renvoyons vers des flux publiquement disponibles sur internet."
+      },
+      "license": {
+        "title": "3. Licence d'Utilisation",
+        "content": "Nous vous accordons une licence limitée, non exclusive, non transférable et révocable pour utiliser Rradio à des fins personnelles et non commerciales.\n\n**Vous ne pouvez pas :**\n- Copier, modifier ou distribuer le contenu du site\n- Utiliser le service à des fins commerciales sans autorisation\n- Faire de l'ingénierie inverse de la plateforme\n- Utiliser des robots ou des scripts automatisés\n- Porter atteinte à la sécurité du service"
+      },
+      "content": {
+        "title": "4. Contenu de Tiers",
+        "content": "Les flux radio sont fournis par des stations tierces. Nous ne contrôlons pas et ne sommes pas responsables du contenu qu'elles diffusent.\n\n**Droits d'auteur :** les stations sont responsables de disposer des licences nécessaires à la diffusion de leur contenu. Si vous pensez que vos droits d'auteur sont enfreints, écrivez à dmca@rradio.online"
+      },
+      "userConduct": {
+        "title": "5. Conduite de l'Utilisateur",
+        "content": "En utilisant Rradio, vous vous engagez à :\n\n- Respecter toutes les lois applicables\n- Ne pas gêner les autres utilisateurs\n- Ne pas tenter d'accéder à des zones restreintes\n- Ne pas utiliser le service à des fins illégales\n- Respecter les droits de propriété intellectuelle"
+      },
+      "advertising": {
+        "title": "6. Publicité",
+        "content": "Notre service gratuit est financé par la publicité (Google AdSense). En utilisant Rradio, vous acceptez l'affichage d'annonces.\n\nNous ne sommes pas responsables du contenu des annonces diffusées par des tiers."
+      },
+      "disclaimers": {
+        "title": "7. Exclusion de Garantie",
+        "content": "**LE SERVICE EST FOURNI « EN L'ÉTAT » ET « SELON DISPONIBILITÉ ».**\n\nNous ne garantissons pas que :\n- Le service soit exempt d'erreurs\n- Les flux soient toujours disponibles\n- Le service soit ininterrompu\n- Les erreurs soient corrigées\n\nVous utilisez le service à vos propres risques."
+      },
+      "limitation": {
+        "title": "8. Limitation de Responsabilité",
+        "content": "Dans toute la mesure permise par la loi, Rradio ne sera pas responsable :\n\n- Des dommages indirects, accessoires ou consécutifs\n- De la perte de données, de revenus ou de bénéfices\n- Des interruptions du service\n- Du contenu de tiers\n\nNotre responsabilité maximale est limitée à 100 USD ou au montant que vous avez payé pour le service (le cas échéant)."
+      },
+      "termination": {
+        "title": "9. Résiliation",
+        "content": "Nous pouvons suspendre ou résilier votre accès au service à tout moment, sans préavis, en cas de :\n\n- Violation de ces conditions\n- Comportement frauduleux ou illégal\n- Demande des autorités\n- Arrêt du service\n\nVous pouvez cesser d'utiliser le service à tout moment."
+      },
+      "changes": {
+        "title": "10. Modifications des Conditions",
+        "content": "Nous pouvons modifier ces conditions à tout moment. Les changements importants seront signalés par un avis sur le site.\n\nL'utilisation continue du service après une modification vaut acceptation des nouvelles conditions."
+      },
+      "contact": {
+        "title": "11. Contact",
+        "content": "Pour toute question sur ces conditions, contactez-nous :\n\n**E-mail :** legal@rradio.online\n**E-mail général :** support@rradio.online"
+      }
+    }
+  },
+  "about": {
+    "title": "À propos de Rradio",
+    "subtitle": "Votre fenêtre sur le monde grâce à la radio en ligne",
+    "mission": {
+      "title": "Notre Mission",
+      "content": "Nous pensons que la radio en ligne est la façon la plus authentique de se connecter aux cultures du monde entier. Contrairement aux playlists générées par des algorithmes, la radio offre un contenu humain : des animateurs passionnés, l'actualité en direct et l'ambiance réelle de chaque lieu.\n\nNotre mission est de rendre plus de 30 000 stations de radio du monde entier accessibles gratuitement, sans barrières ni téléchargements inutiles."
+    },
+    "story": {
+      "title": "Notre Histoire",
+      "content": "Rradio est né de la nostalgie. Expatriés, nous voulions garder le lien avec nos racines en écoutant les mêmes stations que nos amis et notre famille.\n\nNous avons constaté qu'il existait des milliers de stations formidables sur internet, mais dispersées et difficiles à trouver. Ainsi est né Rradio : une plateforme qui rassemble et organise les stations de radio du monde entier en un seul endroit."
+    },
+    "technology": {
+      "title": "Technologie",
+      "content": "Rradio est une application web moderne et légère :\n\n- **Next.js et React** pour un site rapide, installable comme application (PWA) sur mobile ou ordinateur\n- **Radio Browser**, l'annuaire public et communautaire de stations, comme source du catalogue\n- **Lecture directe** depuis le serveur de chaque station, uniquement via des connexions sécurisées (HTTPS)\n- **Design adaptatif** pour mobile, tablette et ordinateur\n\nLa qualité audio dépend de chaque station : la plupart diffusent entre 64 et 320 kbps en MP3, AAC ou Ogg."
+    },
+    "team": {
+      "title": "L'Équipe",
+      "content": "Nous sommes une petite équipe passionnée de développeurs et d'amoureux de la radio. Nous croyons à l'open source, au respect de la vie privée et aux produits qui apportent une vraie valeur.\n\nPour nous rejoindre ou collaborer : team@rradio.online"
+    },
+    "values": {
+      "title": "Nos Valeurs",
+      "items": {
+        "free": {
+          "title": "100 % Gratuit",
+          "description": "Nous pensons que la radio doit être gratuite pour tous. L'accès aux stations ne sera jamais payant."
+        },
+        "privacy": {
+          "title": "La Vie Privée d'Abord",
+          "description": "Nous ne vendons pas vos données et il n'y a pas de comptes utilisateurs. Vos favoris restent dans votre navigateur."
+        },
+        "global": {
+          "title": "Diversité Mondiale",
+          "description": "Nous célébrons la diversité culturelle, avec des stations de plus de 200 pays dans de nombreuses langues."
+        },
+        "open": {
+          "title": "Transparence",
+          "description": "Nous expliquons clairement comment fonctionne notre service, comment il est financé et comment nous protégeons votre vie privée."
+        }
+      }
+    },
+    "contact_cta": {
+      "title": "Des Questions ?",
+      "description": "Nous sommes là pour vous aider. Contactez-nous à tout moment.",
+      "button": "Aller à Contact"
+    }
+  },
+  "contact": {
+    "title": "Contact",
+    "subtitle": "Nous sommes là pour vous aider",
+    "sections": {
+      "general": {
+        "title": "Support Général",
+        "email": "support@rradio.online",
+        "description": "Pour les questions générales, problèmes techniques ou suggestions."
+      },
+      "privacy": {
+        "title": "Confidentialité et Données",
+        "email": "privacy@rradio.online",
+        "description": "Pour les demandes concernant vos données personnelles (RGPD/CCPA)."
+      },
+      "legal": {
+        "title": "Juridique et Droits d'Auteur",
+        "email": "legal@rradio.online",
+        "description": "Pour les questions juridiques, les avis DMCA ou les réclamations de droits d'auteur."
+      },
+      "business": {
+        "title": "Partenariats",
+        "email": "team@rradio.online",
+        "description": "Pour les propositions de collaboration ou de partenariat commercial."
+      }
+    },
+    "response": {
+      "title": "Délai de Réponse",
+      "content": "Nous nous efforçons de répondre à toutes les demandes sous 24 à 48 heures ouvrées. Les demandes relatives à la vie privée (RGPD/CCPA) sont traitées sous 30 jours maximum."
+    },
+    "social": {
+      "title": "Suivez-nous",
+      "description": "Restez informé de nos dernières nouvelles."
+    }
+  }
 }

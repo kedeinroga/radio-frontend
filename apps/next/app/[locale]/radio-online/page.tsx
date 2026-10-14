@@ -1,4 +1,5 @@
 import { Metadata } from 'next'
+import { AdSenseScript } from '@/components/AdSenseScript'
 import Link from 'next/link'
 import fs from 'fs'
 import path from 'path'
@@ -109,6 +110,7 @@ export default async function RadioOnlinePage({ params }: PageProps) {
 
   return (
     <main className="min-h-screen">
+      <AdSenseScript />
       {/* Hero Section */}
       <section className="bg-gradient-to-b from-purple-50 to-white dark:from-gray-900 dark:to-gray-800 py-16 px-8">
         <div className="max-w-4xl mx-auto text-center">

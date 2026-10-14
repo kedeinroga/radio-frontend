@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { AdSenseScript } from '@/components/AdSenseScript'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getBlogPostBySlug, getRelatedPosts, getAllBlogPosts } from '@/lib/blog-posts'
@@ -67,6 +68,7 @@ export default async function BlogPostPage({ params }: PageProps) {
 
   return (
     <main className="min-h-screen bg-white dark:bg-gray-950">
+      <AdSenseScript />
       {/* Article hero */}
       <div className="bg-gradient-to-b from-purple-50 to-white dark:from-gray-900 dark:to-gray-950 pt-12 pb-6 px-6">
         <div className="max-w-3xl mx-auto">

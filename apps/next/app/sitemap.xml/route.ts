@@ -30,7 +30,7 @@ export async function GET(): Promise<Response> {
     { path: '/contact', priority: 0.5, changeFrequency: 'yearly' },
     { path: '/privacy', priority: 0.3, changeFrequency: 'yearly' },
     { path: '/terms', priority: 0.3, changeFrequency: 'yearly' },
-    { path: '/dmca', priority: 0.3, changeFrequency: 'yearly' },
+    { path: '/dmca', priority: 0.3, changeFrequency: 'yearly', locales: ['es', 'en'] },
     // Blog: solo español
     { path: '/blog', priority: 0.8, changeFrequency: 'weekly', locales: ['es'] },
     ...getAllBlogPosts().map(

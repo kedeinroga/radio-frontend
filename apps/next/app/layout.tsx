@@ -39,24 +39,16 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  // Get nonce from middleware for CSP compatibility
-  const headersList = await headers()
-  const nonce = headersList.get('x-nonce') || undefined
+  // Leer headers() mantiene el render dinámico, necesario para que Next aplique el nonce de
+  // la CSP ('strict-dynamic') a sus propios scripts. No quitar aunque no se use el valor.
+  await headers()
 
   return (
     <html lang="es" className="dark" suppressHydrationWarning data-scroll-behavior="smooth">
       <head>
-        {/* Google AdSense — must be present unconditionally for site verification & ad serving.
-            Nonce is required because CSP uses 'strict-dynamic'. Consent for personalized ads
-            is handled by Google Consent Mode / the CMP, not by withholding the script. */}
-        {ADSENSE_ID && (
-          <script
-            async
-            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_ID}`}
-            crossOrigin="anonymous"
-            nonce={nonce}
-          />
-        )}
+        {/* Verificación de AdSense en todo el sitio. El script de anuncios solo lo cargan las
+            páginas con contenido propio (components/AdSenseScript). */}
+        {ADSENSE_ID && <meta name="google-adsense-account" content={ADSENSE_ID} />}
 
         {/* Schema.org Organization & WebSite Global */}
         <script

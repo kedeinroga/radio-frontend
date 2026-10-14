@@ -8,6 +8,18 @@ interface PageProps {
 // ISR: Revalidate daily
 export const revalidate = 86400
 
+const PRIVACY_LAST_UPDATED = '2026-10-14'
+
+/** **negrita** y [texto](https://…) del contenido de i18n (texto propio, no de usuarios). */
+function renderInline(text: string): string {
+  return text
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(
+      /\[([^\]]+)\]\((https:\/\/[^)\s]+)\)/g,
+      '<a href="$2" target="_blank" rel="noopener noreferrer" class="text-purple-600 dark:text-purple-400 underline">$1</a>'
+    )
+}
+
 /**
  * Generate metadata for Privacy Policy page
  */
@@ -38,10 +50,12 @@ export default async function PrivacyPage({ params }: PageProps) {
   // Import translations dynamically
   const t = await import(`@/i18n/locales/${locale}.json`).then(m => m.default)
   
-  const currentDate = new Date().toLocaleDateString(locale, {
+  // Fecha real del último cambio de contenido (actualizar al modificar la política)
+  const lastUpdated = new Date(PRIVACY_LAST_UPDATED).toLocaleDateString(locale, {
     year: 'numeric',
     month: 'long',
-    day: 'numeric'
+    day: 'numeric',
+    timeZone: 'UTC',
   })
 
   return (
@@ -53,7 +67,7 @@ export default async function PrivacyPage({ params }: PageProps) {
             {t.privacy?.title || 'Política de Privacidad'}
           </h1>
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            {(t.privacy?.lastUpdated || 'Última actualización: {{date}}').replace('{{date}}', currentDate)}
+            {(t.privacy?.lastUpdated || 'Última actualización: {{date}}').replace('{{date}}', lastUpdated)}
           </p>
         </header>
 
@@ -73,7 +87,7 @@ export default async function PrivacyPage({ params }: PageProps) {
               </h2>
               <div 
                 className="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line"
-                dangerouslySetInnerHTML={{ __html: section.content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }}
+                dangerouslySetInnerHTML={{ __html: renderInline(section.content) }}
               />
             </section>
           ))}

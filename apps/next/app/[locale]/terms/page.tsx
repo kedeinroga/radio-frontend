@@ -8,6 +8,8 @@ interface PageProps {
 // ISR: Revalidate daily
 export const revalidate = 86400
 
+const TERMS_LAST_UPDATED = '2026-10-14'
+
 /**
  * Generate metadata for Terms of Service page
  */
@@ -38,10 +40,12 @@ export default async function TermsPage({ params }: PageProps) {
   // Import translations dynamically
   const t = await import(`@/i18n/locales/${locale}.json`).then(m => m.default)
   
-  const currentDate = new Date().toLocaleDateString(locale, {
+  // Fecha real del último cambio de contenido (actualizar al modificar los términos)
+  const lastUpdated = new Date(TERMS_LAST_UPDATED).toLocaleDateString(locale, {
     year: 'numeric',
     month: 'long',
-    day: 'numeric'
+    day: 'numeric',
+    timeZone: 'UTC',
   })
 
   return (
@@ -53,7 +57,7 @@ export default async function TermsPage({ params }: PageProps) {
             {t.terms?.title || 'Términos de Servicio'}
           </h1>
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            {(t.terms?.lastUpdated || 'Última actualización: {{date}}').replace('{{date}}', currentDate)}
+            {(t.terms?.lastUpdated || 'Última actualización: {{date}}').replace('{{date}}', lastUpdated)}
           </p>
         </header>
 

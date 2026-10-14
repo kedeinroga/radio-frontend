@@ -3,7 +3,6 @@ import { notFound } from 'next/navigation'
 import { PlayerBar } from '@/components/PlayerBar'
 import BottomNav from '@/components/BottomNav'
 import { I18nProvider } from '@/components/I18nProvider'
-import { CookieConsent } from '@/components/CookieConsent'
 
 // Import translations statically to avoid dynamic imports during build
 import esTranslations from '@/i18n/locales/es.json'
@@ -243,7 +242,6 @@ export default async function LocaleLayout({
       <div className="pb-36">{children}</div>
       <PlayerBar />
       <BottomNav />
-      <CookieConsent />
     </I18nProvider>
   )
 }

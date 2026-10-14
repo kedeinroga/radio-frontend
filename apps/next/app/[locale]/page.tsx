@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { AdSenseScript } from '@/components/AdSenseScript'
 import { headers } from 'next/headers'
 import { Station } from '@radio-app/app'
 import { FAQSection } from '@/components/FAQSection'
@@ -113,6 +114,7 @@ export default async function HomePage({ params }: PageProps) {
 
   return (
     <main id="main-content" className="min-h-screen p-6 md:p-8">
+      <AdSenseScript />
       <div className="max-w-2xl mx-auto">
 
         {/* ── Page header ──────────────────────────────── */}

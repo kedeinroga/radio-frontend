@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { AdSenseScript } from '@/components/AdSenseScript'
 import { Metadata } from 'next'
 import { getAllBlogPosts } from '@/lib/blog-posts'
 
@@ -44,6 +45,7 @@ export default async function BlogListPage({ params, searchParams }: PageProps) 
 
   return (
     <main className="min-h-screen bg-gray-50 dark:bg-gray-950">
+      <AdSenseScript />
       {/* Hero */}
       <section className="bg-gradient-to-b from-purple-50 to-white dark:from-gray-900 dark:to-gray-950 py-16 px-6">
         <div className="max-w-4xl mx-auto text-center">

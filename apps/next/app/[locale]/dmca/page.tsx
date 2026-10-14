@@ -18,7 +18,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     description: locale === 'es'
       ? 'Rradio no aloja contenido de audio. Solo enlazamos a transmisiones públicas de radio en internet. Información sobre derechos de autor y DMCA.'
       : 'Rradio does not host any audio content. We only link to publicly available radio streams on the internet. Copyright and DMCA information.',
-    robots: { index: true, follow: true },
+    // fr/de muestran la versión inglesa: solo se indexan es y en
+    robots: { index: locale === 'es' || locale === 'en', follow: true },
   }
 }
 
@@ -122,7 +123,8 @@ We will process your request and remove the link to the station within **5 busin
 export default async function DmcaPage({ params }: PageProps) {
   const resolvedParams = await Promise.resolve(params)
   const locale = resolvedParams.locale || 'es'
-  const t = (content as any)[locale] || content.es
+  // Solo hay versión es y en: los demás idiomas ven la inglesa
+  const t = (content as any)[locale] || content.en
 
   return (
     <main className="min-h-screen p-8 bg-gray-50 dark:bg-gray-900">
