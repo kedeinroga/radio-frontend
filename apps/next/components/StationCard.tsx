@@ -4,6 +4,7 @@ import React from 'react'
 import { useRouter } from 'next/navigation'
 import { Station } from '@radio-app/app'
 import { useAppTranslation } from '@/hooks/useAppTranslation'
+import { formatCountry } from '@/lib/country'
 import { Heart, Play, Pause, Radio } from 'lucide-react'
 
 /** Animated waveform for playing state */
@@ -37,14 +38,15 @@ export const StationCard: React.FC<StationCardProps> = ({
   onFavorite,
 }) => {
   const router = useRouter()
-  const { t } = useAppTranslation()
+  const { t, locale } = useAppTranslation()
   const [imgError, setImgError] = React.useState(false)
+  const country = formatCountry(station.country, locale)
 
   const handleCardClick = () => {
     if (window.innerWidth < 640) {
       onPlay()
     } else {
-      router.push(`/radio/${station.id}`)
+      router.push(`/${locale}/radio/${station.id}`)
     }
   }
 
@@ -122,12 +124,12 @@ export const StationCard: React.FC<StationCardProps> = ({
               <>
                 <WaveformBars />
                 <span className="font-broadcast text-[11px] text-neutral-500 truncate">
-                  {station.country || 'Live'}
+                  {country || 'Live'}
                 </span>
               </>
             ) : (
               <p className="font-broadcast text-[11px] text-neutral-500 truncate">
-                {station.country || t('stations.unknownCountry')}
+                {country || t('stations.unknownCountry')}
               </p>
             )}
           </div>

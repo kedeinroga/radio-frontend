@@ -23,8 +23,8 @@ export class GetRelatedStations {
     }
 
     // Search for stations with similar tags
-    const searchPromises = relatedTags.map(tag => 
-      this.stationRepository.search(tag, 10)
+    const searchPromises = relatedTags.map(tag =>
+      this.stationRepository.getByGenre(tag, 10)
     )
 
     try {

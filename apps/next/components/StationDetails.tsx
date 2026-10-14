@@ -7,6 +7,7 @@ import { Station } from '@radio-app/app'
 import { StationImage } from './StationImage'
 import { PlayStationButton } from './PlayStationButton'
 import { useAppTranslation } from '@/hooks/useAppTranslation'
+import { formatCountry } from '@/lib/country'
 import { useFavorites } from '@/hooks/useFavorites'
 import { ArrowLeft, Heart, MapPin, Wifi, Star, Radio } from 'lucide-react'
 
@@ -15,7 +16,8 @@ interface StationDetailsProps {
 }
 
 export function StationDetails({ station }: StationDetailsProps) {
-  const { t } = useAppTranslation()
+  const { t, locale } = useAppTranslation()
+  const country = formatCountry(station.country, locale)
   const router = useRouter()
   const { isFavorite, toggleFavorite } = useFavorites()
   const [isFav, setIsFav] = useState(false)
@@ -160,10 +162,10 @@ export function StationDetails({ station }: StationDetailsProps) {
             className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 mb-4 animate-fade-up"
             style={{ animationDelay: '210ms' }}
           >
-            {station.country && (
+            {country && (
               <span className="flex items-center gap-1.5 font-broadcast text-[11px] text-neutral-400">
                 <MapPin className="w-3 h-3 text-amber-500 flex-shrink-0" aria-hidden="true" />
-                {station.country}
+                {country}
               </span>
             )}
             {station.bitrate && (
@@ -253,8 +255,8 @@ export function StationDetails({ station }: StationDetailsProps) {
           <p>
             {station.name}{' '}
             {t('stations.isA')}{' '}
-            {station.country
-              ? `${t('stations.from')} ${station.country}`
+            {country
+              ? `${t('stations.from')} ${country}`
               : t('stations.international')}
             {station.primaryGenre && ` ${t('stations.specializedIn')} ${station.primaryGenre}`}.{' '}
             {t('stations.listen24h')}{' '}

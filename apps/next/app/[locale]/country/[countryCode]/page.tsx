@@ -8,6 +8,8 @@ import {
 } from '@radio-app/app'
 import { StationServerRepository } from '@/lib/repositories/StationServerRepository'
 import { StationGridItem } from '@/components/StationGridItem'
+import { getListingTexts } from '@/lib/listingTexts'
+import { formatCountry } from '@/lib/country'
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://rradio.online'
 
@@ -65,7 +67,7 @@ function getLocalizedCountryText(locale: string, countryName: string) {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const resolvedParams = await Promise.resolve(params)
   const { countryCode, locale } = resolvedParams
-  const countryName = decodeURIComponent(countryCode).toUpperCase()
+  const countryName = formatCountry(decodeURIComponent(countryCode), locale) ?? countryCode
   const localizedText = getLocalizedCountryText(locale, countryName)
   
   return {
@@ -111,7 +113,8 @@ export default async function CountryPage({ params }: PageProps) {
   }
   
   const repository = new StationServerRepository()
-  const countryName = decodeURIComponent(countryCode).toUpperCase()
+  const countryName = formatCountry(decodeURIComponent(countryCode), locale) ?? countryCode
+  const texts = getListingTexts(locale)
   
   let stations: Station[] = []
   try {
@@ -121,18 +124,18 @@ export default async function CountryPage({ params }: PageProps) {
   }
 
   const breadcrumbs = [
-    { name: 'Inicio', url: `${BASE_URL}/${locale}` },
-    { name: 'Países', url: `${BASE_URL}/${locale}/radio-online` },
+    { name: texts.home, url: `${BASE_URL}/${locale}` },
+    { name: texts.countries, url: `${BASE_URL}/${locale}/radio-online` },
     { name: countryName, url: `${BASE_URL}/${locale}/country/${countryCode}` }
   ]
 
   return (
     <>
       <WebSiteSchema
-        name="RadioApp"
+        name="Rradio"
         url={BASE_URL}
-        description="Escucha radio online gratis"
-        searchActionTarget={`${BASE_URL}/search?q={search_term_string}`}
+        description={texts.countryHeading(countryName)}
+        searchActionTarget={`${BASE_URL}/${locale}/search?q={search_term_string}`}
       />
 
       <main className="min-h-screen bg-gray-50 dark:bg-gray-950">
@@ -142,12 +145,10 @@ export default async function CountryPage({ params }: PageProps) {
           {/* Header */}
           <div className="mb-8">
             <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
-              🌍 Radios de {countryName}
+              🌍 {texts.countryHeading(countryName)}
             </h1>
             <p className="text-lg text-gray-600 dark:text-gray-400">
-              {stations.length > 0 
-                ? `Descubre ${stations.length} estaciones de radio de ${countryName}` 
-                : `Cargando estaciones de ${countryName}...`}
+              {stations.length > 0 && texts.stationCount(stations.length)}
             </p>
           </div>
 
@@ -171,20 +172,11 @@ export default async function CountryPage({ params }: PageProps) {
           ) : (
             <div className="text-center py-16">
               <p className="text-gray-500 dark:text-gray-400 text-lg">
-                No se encontraron estaciones para {countryName}
+                {texts.noStations}
               </p>
             </div>
           )}
 
-          {/* SEO Content */}
-          <div className="mt-12 prose dark:prose-invert max-w-none">
-            <h2>Sobre las radios de {countryName}</h2>
-            <p>
-              En RadioApp encontrarás las mejores estaciones de radio de {countryName}. 
-              Escucha en vivo música, noticias, deportes y entretenimiento las 24 horas del día. 
-              Todas las estaciones son gratuitas y no requieren descargas.
-            </p>
-          </div>
         </div>
       </main>
     </>

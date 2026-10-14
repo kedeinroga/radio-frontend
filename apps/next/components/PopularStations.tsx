@@ -9,9 +9,15 @@ import { EmptyState } from '@/components/EmptyState'
 import { usePlayer } from '@/hooks/usePlayer'
 import { useFavorites } from '@/hooks/useFavorites'
 import { useAppTranslation } from '@/hooks/useAppTranslation'
+import { formatCountry } from '@/lib/country'
 
 interface PopularStationsProps {
   initialStations: any[]
+  /** Código ISO del país: lista "Populares en {país}" en lugar del ranking global. */
+  country?: string
+  limit?: number
+  /** Emisoras ya mostradas en otra lista de la página. */
+  excludeIds?: string[]
 }
 
 const stationRepo = new StationApiRepository()
@@ -22,17 +28,28 @@ const stationRepo = new StationApiRepository()
  * Handles interactive features (play, favorite) while using SSR data
  * for initial render and SEO optimization.
  */
-export function PopularStations({ initialStations }: PopularStationsProps) {
+export function PopularStations({
+  initialStations,
+  country,
+  limit = 20,
+  excludeIds = [],
+}: PopularStationsProps) {
   const [, setFavoritesState] = useState(0) // Force re-render on favorite changes
-  const { t } = useAppTranslation()
-  
+  const { t, locale } = useAppTranslation()
+  const title = country
+    ? t('stations.popularIn', { country: formatCountry(country, locale) ?? country })
+    : t('stations.popular')
+
   // Use initialStations from SSR as default data
-  const { data: stations, isLoading, error } = useQuery({
-    queryKey: ['popular-stations'],
-    queryFn: () => stationRepo.getPopular(20),
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['popular-stations', country ?? 'global', limit],
+    queryFn: () => stationRepo.getPopular(limit, country),
     initialData: initialStations,
     staleTime: 5 * 60 * 1000, // 5 minutes - reduces unnecessary refetches
   })
+  const stations = excludeIds.length
+    ? data?.filter((station: any) => !excludeIds.includes(station.id))
+    : data
 
   const { play, togglePlayPause, currentStation, playerState } = usePlayer()
   const { isFavorite, toggleFavorite } = useFavorites()
@@ -56,7 +73,7 @@ export function PopularStations({ initialStations }: PopularStationsProps) {
     <section>
       <div className="flex items-center gap-4 mb-5">
         <h2 className="font-broadcast text-[11px] tracking-[0.2em] uppercase text-neutral-500 whitespace-nowrap">
-          {t('stations.popular')}
+          {title}
         </h2>
         <div className="flex-1 h-px bg-white/[0.06]" aria-hidden="true" />
       </div>

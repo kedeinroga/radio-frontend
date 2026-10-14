@@ -10,6 +10,7 @@ import { StationServerRepository } from '@/lib/repositories/StationServerReposit
 import { StationDetails } from '@/components/StationDetails'
 import { NowPlaying } from '@/components/NowPlaying'
 import { RelatedStations } from '@/components/RelatedStations'
+import { formatCountry } from '@/lib/country'
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://rradio.online'
 
@@ -82,7 +83,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     }
 
     const tags = station.tags.join(', ')
-    const country = station.country || 'Online'
+    const country = formatCountry(station.country, locale) || 'Online'
     const genre = station.tags[0] || 'Radio'
 
     return {
@@ -131,7 +132,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 // 🔥 SERVER COMPONENT - SSR RENDERING
 export default async function RadioStationPage({ params }: PageProps) {
-  const { id } = await params
+  const { id, locale } = await params
   
   const repository = new StationServerRepository()
   let station
@@ -188,7 +189,7 @@ export default async function RadioStationPage({ params }: PageProps) {
               isPartOf: {
                 '@type': 'RadioStation',
                 name: station.name,
-                url: `${BASE_URL}/radio/${id}`,
+                url: `${BASE_URL}/${locale}/radio/${id}`,
               },
             }),
           }}

@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { headers } from 'next/headers'
 import { Station } from '@radio-app/app'
 import { FAQSection } from '@/components/FAQSection'
 import { PopularStations } from '@/components/PopularStations'
@@ -13,8 +14,10 @@ import { StationServerRepository } from '@/lib/repositories/StationServerReposit
 
 const stationRepo = new StationServerRepository()
 
-// ISR: Revalidate every hour for fresh content
-export const revalidate = 3600
+// Dinámica: lee el país del visitante (x-vercel-ip-country). Las consultas a Radio Browser
+// siguen cacheadas 1h en el data cache (lib/radioBrowser/client).
+
+const LOCAL_STATIONS_LIMIT = 10
 
 interface PageProps {
   params: Promise<{ locale: string }> | { locale: string }
@@ -67,18 +70,29 @@ export default async function HomePage({ params }: PageProps) {
   // Only H1 title is enhanced for SEO keywords
   const seoTitle = getSEOTitle(locale)
   
+  // País del visitante según Vercel; en local o sin header no hay fila local.
+  const headersList = await headers()
+  const ipCountry = headersList.get('x-vercel-ip-country')?.toUpperCase()
+  const visitorCountry = ipCountry && /^[A-Z]{2}$/.test(ipCountry) ? ipCountry : undefined
+
   // SSR: Fetch stations on the server for SEO
-  let stations: Station[] = []
-  try {
-    stations = await stationRepo.getPopular(20)
-  } catch (error) {
-    console.error('[HomePage SSR] Error fetching stations:', error)
-    // Fallback to empty array - component will handle error state
-    stations = []
-  }
+  const [stations, localStations] = await Promise.all([
+    stationRepo.getPopular(20).catch((error) => {
+      console.error('[HomePage SSR] Error fetching stations:', error)
+      // Fallback to empty array - component will handle error state
+      return [] as Station[]
+    }),
+    visitorCountry
+      ? stationRepo.getPopular(LOCAL_STATIONS_LIMIT, visitorCountry).catch((error) => {
+          console.error('[HomePage SSR] Error fetching local stations:', error)
+          return [] as Station[]
+        })
+      : Promise.resolve([] as Station[]),
+  ])
+  const localIds = localStations.map((station) => station.id)
 
   // Serialize Station objects to plain objects for Next.js (can't pass class instances to Client Components)
-  const plainStations = stations.map(station => ({
+  const toPlain = (station: Station) => ({
     id: station.id,
     name: station.name,
     streamUrl: station.streamUrl,
@@ -92,7 +106,9 @@ export default async function HomePage({ params }: PageProps) {
     description: station.description,
     bitrate: station.bitrate,
     votes: station.votes,
-  }))
+  })
+  const plainStations = stations.map(toPlain)
+  const plainLocalStations = localStations.map(toPlain)
 
   return (
     <main id="main-content" className="min-h-screen p-6 md:p-8">
@@ -108,8 +124,17 @@ export default async function HomePage({ params }: PageProps) {
           </p>
         </header>
 
-        {/* Popular Stations */}
-        <PopularStations initialStations={plainStations} />
+        {/* Populares en el país del visitante, luego el ranking global sin repetirlas */}
+        {plainLocalStations.length > 0 && (
+          <div className="mb-12">
+            <PopularStations
+              initialStations={plainLocalStations}
+              country={visitorCountry}
+              limit={LOCAL_STATIONS_LIMIT}
+            />
+          </div>
+        )}
+        <PopularStations initialStations={plainStations} excludeIds={localIds} />
 
         {/* SEO features section */}
         <section className="mt-16">

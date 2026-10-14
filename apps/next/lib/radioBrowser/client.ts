@@ -54,6 +54,10 @@ export interface StationDTO {
   stream_url: string
   image_url?: string
   tags: string[]
+  /**
+   * Código ISO 3166-1 alpha-2 cuando Radio Browser lo trae (la UI lo traduce con
+   * formatCountry); si no, el nombre crudo del país.
+   */
   country: string
   votes: number
   bitrate?: number
@@ -103,7 +107,7 @@ function toDTO(s: RadioBrowserStation): StationDTO | null {
     stream_url: streamUrl,
     image_url: s.favicon && isHttps(s.favicon) ? s.favicon : undefined,
     tags: s.tags ? s.tags.split(',').map((t) => t.trim()).filter(Boolean) : [],
-    country: s.country,
+    country: /^[A-Z]{2}$/i.test(s.countrycode) ? s.countrycode.toUpperCase() : s.country,
     votes: s.votes,
     bitrate: s.bitrate > 0 ? s.bitrate : undefined,
     slug: slugify(s.name),
@@ -145,6 +149,25 @@ async function rbFetch<T>(
   throw new RadioBrowserError(`Radio Browser unavailable: ${reason}`)
 }
 
+/** Sufijos técnicos al final del nombre: "WALM 2 HD Opus", "SomaFM Lush (128k AAC)", "SWR3 | 48k aac". */
+const TECH_SUFFIX = /[\s\-_|/([]+(hd|opus|mp3|aac\+?|he-?aac|ogg|flac|hq|lq|hi-?fi|\d{2,3}\s?k(bps)?|low|high|mobile|stream)[)\]]?$/i
+
+/**
+ * Clave para detectar la misma emisora publicada varias veces (por códec/bitrate o entradas
+ * repetidas): nombre sin sufijos técnicos ni puntuación + país. Con el país en la clave no se
+ * fusionan emisoras homónimas de países distintos.
+ */
+function dedupeKey(s: RadioBrowserStation): string {
+  let name = s.name.trim().toLowerCase()
+  let previous
+  do {
+    previous = name
+    name = name.replace(TECH_SUFFIX, '').trim()
+  } while (name !== previous)
+  name = name.replace(/[^\p{L}\p{N}]+/gu, ' ').trim()
+  return `${name || s.name.trim().toLowerCase()}|${s.countrycode}`
+}
+
 async function searchStations(query: StationQuery): Promise<StationDTO[]> {
   const { limit, ...filters } = query
   const raw = await rbFetch<RadioBrowserStation[]>('/json/stations/search', {
@@ -155,29 +178,54 @@ async function searchStations(query: StationQuery): Promise<StationDTO[]> {
     reverse: true,
   })
 
+  // raw viene ordenado por votos: de cada grupo de duplicados queda la variante más votada.
   const stations: StationDTO[] = []
   const seen = new Set<string>()
   for (const s of raw) {
     if (stations.length >= limit) break
     const dto = toDTO(s)
-    if (!dto || seen.has(dto.id)) continue
-    seen.add(dto.id)
+    if (!dto) continue
+    const key = dedupeKey(s)
+    if (seen.has(key)) continue
+    seen.add(key)
     stations.push(dto)
   }
   return stations
 }
 
-export function getPopularStations(limit: number, country?: string): Promise<StationDTO[]> {
+const SEASONAL_CHRISTMAS = /christmas|xmas|navidad|navide|weihnacht|no[eë]l/i
+
+/** Del 15 de noviembre al 6 de enero. */
+function isChristmasSeason(date = new Date()): boolean {
+  const month = date.getUTCMonth()
+  const day = date.getUTCDate()
+  return (month === 10 && day >= 15) || month === 11 || (month === 0 && day <= 6)
+}
+
+/** En los rankings no tiene sentido mostrar emisoras navideñas en octubre. */
+function isOutOfSeason(station: StationDTO): boolean {
+  if (isChristmasSeason()) return false
+  return SEASONAL_CHRISTMAS.test(station.name) || station.tags.some((t) => SEASONAL_CHRISTMAS.test(t))
+}
+
+export async function getPopularStations(limit: number, country?: string): Promise<StationDTO[]> {
   // 2 letras => código ISO (filtro exacto); si no, nombre de país.
   const isCode = !!country && /^[a-z]{2}$/i.test(country)
-  return searchStations({
-    limit,
+  // Margen para lo que descarta el filtro de temporada.
+  const stations = await searchStations({
+    limit: limit + 10,
     ...(country ? (isCode ? { countrycode: country.toUpperCase() } : { country }) : {}),
   })
+  return stations.filter((s) => !isOutOfSeason(s)).slice(0, limit)
 }
 
 export function searchStationsByName(name: string, limit: number): Promise<StationDTO[]> {
   return searchStations({ name, limit })
+}
+
+/** Emisoras cuyo tag contiene `tag` (p.ej. "rock" incluye "classic rock"). */
+export function searchStationsByTag(tag: string, limit: number): Promise<StationDTO[]> {
+  return searchStations({ tag, limit })
 }
 
 export async function getStationById(id: string): Promise<StationDTO | null> {

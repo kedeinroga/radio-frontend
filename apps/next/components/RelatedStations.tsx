@@ -4,6 +4,8 @@ import React, { useState } from 'react'
 import Link from 'next/link'
 import { StationDTO } from '@radio-app/app'
 import { Radio } from 'lucide-react'
+import { useAppTranslation } from '@/hooks/useAppTranslation'
+import { formatCountry } from '@/lib/country'
 
 interface RelatedStationsProps {
   stations: StationDTO[]
@@ -42,12 +44,14 @@ function RelatedCard({
   station: StationDTO
   index: number
 }) {
+  const { locale } = useAppTranslation()
   const primaryTag = station.tags[0]
   const secondaryTag = station.tags[1]
+  const country = formatCountry(station.country, locale)
 
   return (
     <Link
-      href={`/radio/${station.id}`}
+      href={`/${locale}/radio/${station.id}`}
       className="
         group relative flex items-center gap-3.5 p-3 rounded-xl
         bg-white/[0.04] hover:bg-white/[0.08]
@@ -90,9 +94,9 @@ function RelatedCard({
         </p>
 
         <div className="flex items-center gap-2 mt-1">
-          {station.country && (
+          {country && (
             <span className="font-broadcast text-[10px] text-neutral-600 truncate">
-              {station.country}
+              {country}
             </span>
           )}
         </div>
@@ -127,10 +131,12 @@ function RelatedCard({
 
 export function RelatedStations({
   stations,
-  title = 'Radios Similares',
+  title: titleProp,
   className = '',
 }: RelatedStationsProps) {
+  const { t } = useAppTranslation()
   if (stations.length === 0) return null
+  const title = titleProp ?? t('stations.similar')
 
   return (
     <section className={`mt-10 ${className}`} aria-label={title}>

@@ -74,6 +74,8 @@
   },
   "stations": {
     "popular": "Popular Stations",
+    "similar": "Similar stations",
+    "popularIn": "Popular in {{country}}",
     "recent": "Recent",
     "recommended": "Recommended",
     "trending": "Trending",
@@ -86,7 +88,7 @@
     "noStationsDescription": "We couldn't find any stations at the moment.",
     "stationInfo": "Station Information",
     "country": "Country",
-    "unknownCountry": "Unknown",
+    "unknownCountry": "International",
     "language": "Language",
     "tags": "Tags",
     "codec": "Codec",

@@ -2,6 +2,8 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { useAppTranslation } from '@/hooks/useAppTranslation'
+import { formatCountry } from '@/lib/country'
 
 interface StationGridItemProps {
   station: {
@@ -16,10 +18,12 @@ interface StationGridItemProps {
 
 export function StationGridItem({ station }: StationGridItemProps) {
   const [imgError, setImgError] = useState(false)
+  const { locale } = useAppTranslation()
+  const country = formatCountry(station.country, locale)
 
   return (
     <Link
-      href={`/radio/${station.id}`}
+      href={`/${locale}/radio/${station.id}`}
       className="bg-white dark:bg-gray-900 rounded-lg p-4 shadow hover:shadow-xl transition-shadow border border-gray-200 dark:border-gray-800 group"
     >
       <div className="flex flex-col items-center text-center">
@@ -33,9 +37,9 @@ export function StationGridItem({ station }: StationGridItemProps) {
         <h3 className="font-semibold text-gray-900 dark:text-white line-clamp-2 mb-2">
           {station.name}
         </h3>
-        {station.country && (
+        {country && (
           <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-            📍 {station.country}
+            📍 {country}
           </p>
         )}
         {station.tags.length > 0 && (

@@ -4,6 +4,7 @@ import type { SEOMetadata, StationTrack } from '@radio-app/app'
 import {
   getPopularStations,
   searchStationsByName,
+  searchStationsByTag,
   getStationById,
 } from '@/lib/radioBrowser/client'
 
@@ -51,7 +52,13 @@ export class StationServerRepository implements IStationRepository {
   }
 
   async getByGenre(genre: string, limit: number = 20): Promise<Station[]> {
-    return this.search(genre, limit)
+    // Por tag, no por nombre: "rock" debe traer emisoras de rock, no las que se llaman "Rock…".
+    try {
+      const data = await searchStationsByTag(genre, limit)
+      return data.map((item) => this.mapToStation(item))
+    } catch {
+      throw new Error('The stations service is temporarily unavailable. Please try again later.')
+    }
   }
 
   async getByCountry(country: string, limit: number = 20): Promise<Station[]> {

@@ -4,6 +4,7 @@ import { usePlayer } from '@/hooks/usePlayer'
 import { useRouter, usePathname } from 'next/navigation'
 import { useState } from 'react'
 import { useAppTranslation } from '@/hooks/useAppTranslation'
+import { formatCountry } from '@/lib/country'
 import { Play, Pause, Square, Volume2, VolumeX } from 'lucide-react'
 import Image from 'next/image'
 
@@ -28,7 +29,7 @@ const MiniWaveform = ({ isPlaying }: { isPlaying: boolean }) => (
 )
 
 export function PlayerBar() {
-  const { t } = useAppTranslation()
+  const { t, locale } = useAppTranslation()
   const { currentStation, playerState, togglePlayPause, stop, setVolume } = usePlayer()
   const router = useRouter()
   const pathname = usePathname()
@@ -42,7 +43,7 @@ export function PlayerBar() {
 
   const handleStationClick = () => {
     if (currentStation?.id) {
-      router.push(`/radio/${currentStation.id}`)
+      router.push(`/${locale}/radio/${currentStation.id}`)
     }
   }
 
@@ -120,7 +121,7 @@ export function PlayerBar() {
                 <div className="flex items-center gap-1.5 mt-0.5">
                   <MiniWaveform isPlaying={playerState.isPlaying} />
                   <p className="font-broadcast text-[10px] text-neutral-500 truncate">
-                    {currentStation.country || 'Live Radio'}
+                    {formatCountry(currentStation.country, locale) || 'Live Radio'}
                   </p>
                 </div>
               </div>

@@ -75,6 +75,8 @@
   },
   "stations": {
     "popular": "Estaciones Populares",
+    "similar": "Radios similares",
+    "popularIn": "Populares en {{country}}",
     "recent": "Recientes",
     "recommended": "Recomendadas",
     "trending": "En Tendencia",
@@ -87,7 +89,7 @@
     "noStationsDescription": "No pudimos encontrar ninguna estación en este momento.",
     "stationInfo": "Información de la Estación",
     "country": "País",
-    "unknownCountry": "Desconocido",
+    "unknownCountry": "Internacional",
     "language": "Idioma",
     "tags": "Etiquetas",
     "codec": "Códec",

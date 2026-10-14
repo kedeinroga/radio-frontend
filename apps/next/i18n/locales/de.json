@@ -74,6 +74,8 @@
   },
   "stations": {
     "popular": "Beliebte Sender",
+    "similar": "Ähnliche Sender",
+    "popularIn": "Beliebt in {{country}}",
     "recent": "Kürzlich",
     "recommended": "Empfohlen",
     "trending": "Im Trend",
@@ -86,7 +88,7 @@
     "noStationsDescription": "Wir konnten momentan keine Sender finden.",
     "stationInfo": "Senderinformationen",
     "country": "Land",
-    "unknownCountry": "Unbekannt",
+    "unknownCountry": "International",
     "language": "Sprache",
     "tags": "Tags",
     "codec": "Codec",

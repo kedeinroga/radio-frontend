@@ -9,6 +9,7 @@ import {
 } from '@radio-app/app'
 import { StationServerRepository } from '@/lib/repositories/StationServerRepository'
 import { StationGridItem } from '@/components/StationGridItem'
+import { getListingTexts } from '@/lib/listingTexts'
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://rradio.online'
 
@@ -118,24 +119,25 @@ export default async function GenrePage({ params }: PageProps) {
   
   let stations: Station[] = []
   try {
-    stations = await repository.search(genreName, 50)
+    stations = await repository.getByGenre(genreName, 50)
   } catch (error) {
 
   }
 
+  const texts = getListingTexts(locale)
   const breadcrumbs = [
-    { name: 'Inicio', url: `${BASE_URL}/${locale}` },
-    { name: 'Géneros', url: `${BASE_URL}/${locale}/radio-online` },
+    { name: texts.home, url: `${BASE_URL}/${locale}` },
+    { name: texts.genres, url: `${BASE_URL}/${locale}/radio-online` },
     { name: displayName, url: `${BASE_URL}/${locale}/genre/${tag}` }
   ]
 
   return (
     <>
       <WebSiteSchema
-        name="RadioApp"
+        name="Rradio"
         url={BASE_URL}
-        description="Escucha radio online gratis"
-        searchActionTarget={`${BASE_URL}/search?q={search_term_string}`}
+        description={texts.genreHeading(displayName)}
+        searchActionTarget={`${BASE_URL}/${locale}/search?q={search_term_string}`}
       />
 
       <main className="min-h-screen bg-gray-50 dark:bg-gray-950">
@@ -147,13 +149,11 @@ export default async function GenrePage({ params }: PageProps) {
             <div className="flex items-center gap-3 mb-4">
               <span className="text-5xl">🎵</span>
               <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
-                Radios de {displayName}
+                {texts.genreHeading(displayName)}
               </h1>
             </div>
             <p className="text-lg text-gray-600 dark:text-gray-400">
-              {stations.length > 0 
-                ? `${stations.length} estaciones de ${displayName} disponibles` 
-                : `Buscando estaciones de ${displayName}...`}
+              {stations.length > 0 && texts.stationCount(stations.length)}
             </p>
           </div>
 
@@ -177,35 +177,17 @@ export default async function GenrePage({ params }: PageProps) {
           ) : (
             <div className="text-center py-16">
               <p className="text-gray-500 dark:text-gray-400 text-lg">
-                No se encontraron estaciones de {displayName}
+                {texts.noStations}
               </p>
-              <Link 
-                href="/search"
+              <Link
+                href={`/${locale}/search`}
                 className="mt-4 inline-block text-blue-600 dark:text-blue-400 hover:underline"
               >
-                Buscar otras estaciones →
+                {texts.searchOther}
               </Link>
             </div>
           )}
 
-          {/* SEO Content */}
-          <div className="mt-12 prose dark:prose-invert max-w-none">
-            <h2>Radio {displayName} Online Gratis</h2>
-            <p>
-              Descubre las mejores estaciones de radio de {displayName} en RadioApp. 
-              Escucha tu música favorita de {displayName} en vivo, sin interrupciones 
-              y completamente gratis. No necesitas descargar nada, solo dale play y 
-              disfruta de la mejor programación de {displayName}.
-            </p>
-            
-            <h3>¿Por qué escuchar radio de {displayName}?</h3>
-            <ul>
-              <li>Transmisión en vivo las 24 horas del día</li>
-              <li>Sin publicidad intrusiva ni interrupciones molestas</li>
-              <li>Calidad de audio optimizada para streaming</li>
-              <li>Acceso desde cualquier dispositivo: móvil, tablet o computadora</li>
-            </ul>
-          </div>
         </div>
       </main>
     </>
