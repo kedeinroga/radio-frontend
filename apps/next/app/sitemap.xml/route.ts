@@ -4,8 +4,9 @@ import { xmlResponse, type UrlEntry } from '@/lib/sitemap/xml'
 export const dynamic = 'force-dynamic'
 
 /**
- * GET /sitemap-static.xml
+ * GET /sitemap.xml
  * Páginas indexables: home, hub, legales/institucionales para todos los locales + blog (solo es).
+ * Es un <urlset> directo: con un solo grupo de URLs no hace falta un <sitemapindex>.
  */
 export async function GET(): Promise<Response> {
   const entries: UrlEntry[] = [

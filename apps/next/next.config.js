@@ -121,14 +121,16 @@ const nextConfig = {
         permanent: true,
       },
       // El blog solo existe en español: en/fr/de servían el mismo texto como duplicado.
-      {
-        source: '/:locale(en|fr|de)/blog/:path*',
-        destination: '/es/blog/:path*',
-        permanent: true,
-      },
+      // La regla exacta va primero: con :path* vacío el destino quedaba "/es/blog/" y
+      // generaba un segundo salto por la barra final.
       {
         source: '/:locale(en|fr|de)/blog',
         destination: '/es/blog',
+        permanent: true,
+      },
+      {
+        source: '/:locale(en|fr|de)/blog/:path+',
+        destination: '/es/blog/:path+',
         permanent: true,
       },
       // /genres nunca existió; el índice de géneros y países vive en /radio-online.
