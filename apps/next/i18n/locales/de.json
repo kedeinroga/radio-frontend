@@ -72,6 +72,10 @@
     "live": "Live",
     "recentlyPlayed": "Zuletzt gespielt"
   },
+  "explore": {
+    "genres": "Nach Genre entdecken",
+    "countries": "Nach Land entdecken"
+  },
   "stations": {
     "popular": "Beliebte Sender",
     "similar": "Ähnliche Sender",

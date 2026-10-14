@@ -72,6 +72,10 @@
     "live": "Live",
     "recentlyPlayed": "Recently played"
   },
+  "explore": {
+    "genres": "Browse by genre",
+    "countries": "Browse by country"
+  },
   "stations": {
     "popular": "Popular Stations",
     "similar": "Similar stations",

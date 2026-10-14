@@ -5,6 +5,7 @@ import {
   getPopularStations,
   searchStationsByName,
   searchStationsByTag,
+  searchStationsByTags,
   getStationById,
 } from '@/lib/radioBrowser/client'
 
@@ -51,10 +52,13 @@ export class StationServerRepository implements IStationRepository {
     }
   }
 
-  async getByGenre(genre: string, limit: number = 20): Promise<Station[]> {
+  /** `genre` puede ser una lista de tags (ver GenreHub.tags). */
+  async getByGenre(genre: string | string[], limit: number = 20): Promise<Station[]> {
     // Por tag, no por nombre: "rock" debe traer emisoras de rock, no las que se llaman "Rock…".
     try {
-      const data = await searchStationsByTag(genre, limit)
+      const data = Array.isArray(genre)
+        ? await searchStationsByTags(genre, limit)
+        : await searchStationsByTag(genre, limit)
       return data.map((item) => this.mapToStation(item))
     } catch {
       throw new Error('The stations service is temporarily unavailable. Please try again later.')

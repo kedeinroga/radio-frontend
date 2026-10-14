@@ -3,6 +3,7 @@ import { headers } from 'next/headers'
 import { Station } from '@radio-app/app'
 import { FAQSection } from '@/components/FAQSection'
 import { PopularStations } from '@/components/PopularStations'
+import { GENRE_HUBS, COUNTRY_HUBS } from '@/lib/editorial'
 
 // Import translations statically for SSR
 import esTranslations from '@/i18n/locales/es.json'
@@ -135,6 +136,34 @@ export default async function HomePage({ params }: PageProps) {
           </div>
         )}
         <PopularStations initialStations={plainStations} excludeIds={localIds} />
+
+        {/* Explorar: enlaces a las páginas hub de género y país */}
+        {[
+          { title: t.explore.genres, items: GENRE_HUBS, base: 'genre' },
+          { title: t.explore.countries, items: COUNTRY_HUBS, base: 'country' },
+        ].map(({ title, items, base }) => (
+          <nav key={base} className="mt-12" aria-label={title}>
+            <div className="flex items-center gap-4 mb-5">
+              <h2 className="font-broadcast text-[11px] tracking-[0.2em] uppercase text-neutral-500 whitespace-nowrap">
+                {title}
+              </h2>
+              <div className="flex-1 h-px bg-white/[0.06]" aria-hidden="true" />
+            </div>
+            <ul className="flex flex-wrap gap-2">
+              {items.map((hub) => (
+                <li key={hub.slug}>
+                  <Link
+                    href={`/${locale}/${base}/${hub.slug}`}
+                    className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/[0.04] border border-white/[0.06] font-broadcast text-xs text-neutral-300 hover:text-amber-400 hover:border-amber-500/20 transition-colors"
+                  >
+                    <span aria-hidden="true">{hub.emoji}</span>
+                    {hub.names[locale as keyof typeof hub.names] ?? hub.names.es}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        ))}
 
         {/* SEO features section */}
         <section className="mt-16">

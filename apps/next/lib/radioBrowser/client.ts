@@ -157,14 +157,15 @@ const TECH_SUFFIX = /[\s\-_|/([]+(hd|opus|mp3|aac\+?|he-?aac|ogg|flac|hq|lq|hi-?
  * repetidas): nombre sin sufijos técnicos ni puntuación + país. Con el país en la clave no se
  * fusionan emisoras homónimas de países distintos.
  */
-function dedupeKey(s: RadioBrowserStation): string {
+function dedupeKey(s: { name: string; countrycode: string }): string {
   let name = s.name.trim().toLowerCase()
   let previous
   do {
     previous = name
     name = name.replace(TECH_SUFFIX, '').trim()
   } while (name !== previous)
-  name = name.replace(/[^\p{L}\p{N}]+/gu, ' ').trim()
+  // Sin tildes ("Opéra" = "Opera") ni puntuación
+  name = name.normalize('NFD').replace(/\p{M}/gu, '').replace(/[^\p{L}\p{N}]+/gu, ' ').trim()
   return `${name || s.name.trim().toLowerCase()}|${s.countrycode}`
 }
 
@@ -226,6 +227,25 @@ export function searchStationsByName(name: string, limit: number): Promise<Stati
 /** Emisoras cuyo tag contiene `tag` (p.ej. "rock" incluye "classic rock"). */
 export function searchStationsByTag(tag: string, limit: number): Promise<StationDTO[]> {
   return searchStations({ tag, limit })
+}
+
+/**
+ * Unión de varias búsquedas por tag, ordenada por votos y sin duplicados. Para géneros cuyo
+ * tag genérico está mal usado en Radio Browser (p.ej. "classical" en emisoras que no lo son).
+ */
+export async function searchStationsByTags(tags: string[], limit: number): Promise<StationDTO[]> {
+  const results = await Promise.all(tags.map((tag) => searchStationsByTag(tag, limit)))
+  const stations: StationDTO[] = []
+  const seen = new Set<string>()
+  for (const dto of results.flat().sort((a, b) => b.votes - a.votes)) {
+    const key = dedupeKey({ name: dto.name, countrycode: dto.country })
+    if (seen.has(dto.id) || seen.has(key)) continue
+    seen.add(dto.id)
+    seen.add(key)
+    stations.push(dto)
+    if (stations.length >= limit) break
+  }
+  return stations
 }
 
 export async function getStationById(id: string): Promise<StationDTO | null> {

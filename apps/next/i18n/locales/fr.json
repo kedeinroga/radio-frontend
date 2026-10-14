@@ -72,6 +72,10 @@
     "live": "En direct",
     "recentlyPlayed": "Joué récemment"
   },
+  "explore": {
+    "genres": "Explorer par genre",
+    "countries": "Explorer par pays"
+  },
   "stations": {
     "popular": "Stations Populaires",
     "similar": "Stations similaires",

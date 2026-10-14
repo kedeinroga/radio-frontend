@@ -1,15 +1,10 @@
 import { Metadata } from 'next'
-import {
-  SEOApiRepository,
-  GetPopularCountries,
-  Breadcrumbs,
-  WebSiteSchema,
-  Station
-} from '@radio-app/app'
+import type { Station } from '@radio-app/app'
 import { StationServerRepository } from '@/lib/repositories/StationServerRepository'
-import { StationGridItem } from '@/components/StationGridItem'
+import { HubPage } from '@/components/HubPage'
 import { getListingTexts } from '@/lib/listingTexts'
 import { formatCountry } from '@/lib/country'
+import { getCountryHub, isHubIndexable } from '@/lib/editorial'
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://rradio.online'
 
@@ -35,28 +30,28 @@ function getLocalizedCountryText(locale: string, countryName: string) {
       title: `Radios de ${countryName} en vivo | Escuchar online gratis`,
       description: `Descubre las mejores estaciones de radio de ${countryName}. Escucha música, noticias y entretenimiento en vivo. Gratis y sin descargas.`,
       keywords: [`radio ${countryName}`, `estaciones ${countryName}`, `radio online ${countryName}`, `música ${countryName}`],
-      ogTitle: `Radios de ${countryName} | RadioApp`,
+      ogTitle: `Radios de ${countryName} | Rradio`,
       ogDescription: `Las mejores estaciones de radio de ${countryName}`,
     },
     en: {
       title: `${countryName} Radio Stations live | Listen online free`,
       description: `Discover the best radio stations from ${countryName}. Listen to music, news and entertainment live. Free and no downloads.`,
       keywords: [`${countryName} radio`, `${countryName} stations`, `${countryName} online radio`, `${countryName} music`],
-      ogTitle: `${countryName} Radio Stations | RadioApp`,
+      ogTitle: `${countryName} Radio Stations | Rradio`,
       ogDescription: `The best radio stations from ${countryName}`,
     },
     fr: {
       title: `Stations de radio ${countryName} en direct | Écouter en ligne gratuitement`,
       description: `Découvrez les meilleures stations de radio de ${countryName}. Écoutez de la musique, des actualités et du divertissement en direct. Gratuit et sans téléchargement.`,
       keywords: [`radio ${countryName}`, `stations ${countryName}`, `radio en ligne ${countryName}`, `musique ${countryName}`],
-      ogTitle: `Stations de radio ${countryName} | RadioApp`,
+      ogTitle: `Stations de radio ${countryName} | Rradio`,
       ogDescription: `Les meilleures stations de radio de ${countryName}`,
     },
     de: {
       title: `${countryName} Radiosender live | Kostenlos online hören`,
       description: `Entdecken Sie die besten Radiosender aus ${countryName}. Hören Sie Musik, Nachrichten und Unterhaltung live. Kostenlos und ohne Downloads.`,
       keywords: [`${countryName} Radio`, `${countryName} Sender`, `${countryName} Online-Radio`, `${countryName} Musik`],
-      ogTitle: `${countryName} Radiosender | RadioApp`,
+      ogTitle: `${countryName} Radiosender | Rradio`,
       ogDescription: `Die besten Radiosender aus ${countryName}`,
     },
   }
@@ -65,120 +60,77 @@ function getLocalizedCountryText(locale: string, countryName: string) {
 
 // 🔥 DYNAMIC METADATA
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const resolvedParams = await Promise.resolve(params)
-  const { countryCode, locale } = resolvedParams
-  const countryName = formatCountry(decodeURIComponent(countryCode), locale) ?? countryCode
+  const { countryCode, locale } = await Promise.resolve(params)
+  const hub = getCountryHub(countryCode)
+  const code = hub?.slug ?? decodeURIComponent(countryCode).toUpperCase()
+  const countryName = formatCountry(code, locale) ?? countryCode
   const localizedText = getLocalizedCountryText(locale, countryName)
-  
+  const url = `${BASE_URL}/${locale}/country/${code}`
+
+  // Indexable solo con contenido editorial revisado y en su idioma (es); el resto es una
+  // página de navegación con datos de terceros: noindex.
+  if (isHubIndexable(hub, locale)) {
+    return {
+      // absolute: la plantilla del layout alargaría el título a ~90 caracteres
+      title: { absolute: `${hub.metaTitle} | Rradio` },
+      description: hub.metaDescription,
+      robots: { index: true, follow: true },
+      openGraph: { title: hub.metaTitle, description: hub.metaDescription, url, locale: 'es_ES' },
+      alternates: { canonical: url },
+    }
+  }
+
   return {
     title: localizedText.title,
     description: localizedText.description,
-    keywords: localizedText.keywords,
-    // noindex temporal: estas páginas agregan datos de terceros con texto plantilla.
-    // Se reactivará el indexado cuando muestren datos únicos.
     robots: { index: false, follow: true },
     openGraph: {
       title: localizedText.ogTitle,
       description: localizedText.ogDescription,
-      url: `${BASE_URL}/${locale}/country/${countryCode}`,
-      locale: locale === 'es' ? 'es_ES' : locale === 'en' ? 'en_US' : locale === 'fr' ? 'fr_FR' : 'de_DE',
+      url,
     },
-    alternates: {
-      canonical: `${BASE_URL}/${locale}/country/${countryCode}`,
-      languages: {
-        'es': `${BASE_URL}/es/country/${countryCode}`,
-        'en': `${BASE_URL}/en/country/${countryCode}`,
-        'fr': `${BASE_URL}/fr/country/${countryCode}`,
-        'de': `${BASE_URL}/de/country/${countryCode}`,
-        'x-default': `${BASE_URL}/es/country/${countryCode}`,
-      },
-    }
+    alternates: { canonical: url },
   }
 }
 
-// 🔥 SERVER COMPONENT WITH ISR
 export default async function CountryPage({ params }: PageProps) {
   const { countryCode, locale } = await Promise.resolve(params)
-  
+
   // CRITICAL: Skip rendering during build phase to prevent crashes
   // This prevents API calls during "Collecting page data" in Vercel builds
   if (process.env.NODE_ENV === 'production' && !process.env.VERCEL_ENV) {
     return (
-      <main className="min-h-screen bg-gray-50 dark:bg-gray-950 p-8">
-        <div className="container mx-auto">
-          <p>Loading country...</p>
-        </div>
+      <main className="min-h-screen p-8">
+        <p>Loading country...</p>
       </main>
     )
   }
-  
-  const repository = new StationServerRepository()
-  const countryName = formatCountry(decodeURIComponent(countryCode), locale) ?? countryCode
+
+  const hub = getCountryHub(countryCode)
+  const code = hub?.slug ?? decodeURIComponent(countryCode).toUpperCase()
+  const countryName = formatCountry(code, locale) ?? countryCode
   const texts = getListingTexts(locale)
-  
+
   let stations: Station[] = []
   try {
-    stations = await repository.getByCountry(countryCode, 50)
+    stations = await new StationServerRepository().getByCountry(code, 50)
   } catch (error) {
-
+    console.error('[CountryPage] Error fetching stations:', error)
   }
 
-  const breadcrumbs = [
-    { name: texts.home, url: `${BASE_URL}/${locale}` },
-    { name: texts.countries, url: `${BASE_URL}/${locale}/radio-online` },
-    { name: countryName, url: `${BASE_URL}/${locale}/country/${countryCode}` }
-  ]
-
   return (
-    <>
-      <WebSiteSchema
-        name="Rradio"
-        url={BASE_URL}
-        description={texts.countryHeading(countryName)}
-        searchActionTarget={`${BASE_URL}/${locale}/search?q={search_term_string}`}
-      />
-
-      <main className="min-h-screen bg-gray-50 dark:bg-gray-950">
-        <div className="container mx-auto px-4 py-8 max-w-7xl">
-          <Breadcrumbs items={breadcrumbs} />
-
-          {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
-              🌍 {texts.countryHeading(countryName)}
-            </h1>
-            <p className="text-lg text-gray-600 dark:text-gray-400">
-              {stations.length > 0 && texts.stationCount(stations.length)}
-            </p>
-          </div>
-
-          {/* Stations Grid */}
-          {stations.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {stations.map(station => (
-                <StationGridItem
-                  key={station.id}
-                  station={{
-                    id: station.id,
-                    name: station.name,
-                    slug: station.slug,
-                    imageUrl: station.imageUrl,
-                    country: station.country,
-                    tags: station.tags
-                  }}
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-16">
-              <p className="text-gray-500 dark:text-gray-400 text-lg">
-                {texts.noStations}
-              </p>
-            </div>
-          )}
-
-        </div>
-      </main>
-    </>
+    <HubPage
+      locale={locale}
+      emoji={hub?.emoji ?? '🌍'}
+      heading={texts.countryHeading(countryName)}
+      hub={hub}
+      stations={stations}
+      texts={texts}
+      breadcrumbs={[
+        { name: texts.home, url: `${BASE_URL}/${locale}` },
+        { name: texts.countries, url: `${BASE_URL}/${locale}/radio-online` },
+        { name: countryName, url: `${BASE_URL}/${locale}/country/${code}` },
+      ]}
+    />
   )
 }

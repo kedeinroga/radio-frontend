@@ -73,6 +73,10 @@
     "live": "En directo",
     "recentlyPlayed": "Sonó antes"
   },
+  "explore": {
+    "genres": "Explora por género",
+    "countries": "Explora por país"
+  },
   "stations": {
     "popular": "Estaciones Populares",
     "similar": "Radios similares",
