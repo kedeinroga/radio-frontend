@@ -36,9 +36,7 @@ export function PlayerBar() {
 
   if (!currentStation) return null
 
-  const isOnStationDetailPage =
-    pathname?.includes(`/radio/${currentStation.id}`) ||
-    pathname?.includes(`/stations/${currentStation.id}`)
+  const isOnStationDetailPage = pathname?.includes(`/radio/${currentStation.id}`)
 
   if (isOnStationDetailPage) return null
 

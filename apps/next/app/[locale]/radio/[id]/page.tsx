@@ -59,6 +59,11 @@ function getLocalizedText(locale: string) {
   return texts[locale] || texts['es']
 }
 
+// Las fichas son datos de Radio Browser con texto plantilla: no se indexan para no
+// diluir la calidad del dominio (AdSense / thin content). `follow` mantiene el enlazado
+// interno. Las emisoras con contenido editorial propio se indexarán vía allowlist.
+const STATION_ROBOTS: Metadata['robots'] = { index: false, follow: true }
+
 // 🔥 DYNAMIC METADATA FOR SEO
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id, locale } = await params
@@ -72,6 +77,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       return {
         title: texts.notFoundTitle,
         description: texts.notFoundDescription,
+        robots: STATION_ROBOTS,
       }
     }
 
@@ -81,6 +87,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
     return {
       title: texts.titleTemplate(station.name, genre),
+      robots: STATION_ROBOTS,
       description: texts.descriptionTemplate(station.name, country, tags),
       openGraph: {
         title: station.name,
@@ -117,6 +124,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return {
       title: 'Radio Station | Listen Online',
       description: 'Listen to your favorite radio station online with high quality streaming',
+      robots: STATION_ROBOTS,
     }
   }
 }

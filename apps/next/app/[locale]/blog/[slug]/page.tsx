@@ -11,11 +11,8 @@ interface PageProps {
 
 // Pre-generate all known blog slugs at build time for static rendering
 export async function generateStaticParams() {
-  const posts = getAllBlogPosts()
-  const locales = ['es', 'en', 'fr', 'de']
-  return locales.flatMap((locale) =>
-    posts.map((post) => ({ locale, slug: post.slug }))
-  )
+  // Solo español: next.config.js redirige /en|fr|de/blog/* a /es/blog/*
+  return getAllBlogPosts().map((post) => ({ locale: 'es', slug: post.slug }))
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {

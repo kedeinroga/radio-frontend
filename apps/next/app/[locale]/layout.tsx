@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { notFound } from 'next/navigation'
 import { PlayerBar } from '@/components/PlayerBar'
 import BottomNav from '@/components/BottomNav'
 import { I18nProvider } from '@/components/I18nProvider'
@@ -226,7 +227,12 @@ export default async function LocaleLayout({
   const supportedLocales = ['es', 'en', 'fr', 'de']
   // Await params to comply with Next.js 15 requirements
   const resolvedParams = await Promise.resolve(params)
-  const validLocaleCode = supportedLocales.includes(resolvedParams.locale) ? resolvedParams.locale : 'es'
+  // Un primer segmento que no es locale (p.ej. /sitemap-viejo.xml, que el middleware no
+  // redirige) renderizaba la home con 200: soft-404 / home duplicada.
+  if (!supportedLocales.includes(resolvedParams.locale)) {
+    notFound()
+  }
+  const validLocaleCode = resolvedParams.locale
 
   // Get translations for the current locale
   const translations = getTranslations(validLocaleCode)

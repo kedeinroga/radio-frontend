@@ -110,17 +110,6 @@ const nextConfig = {
     IS_BUILD_TIME: isBuild ? 'true' : 'false',
   },
 
-  // Next no soporta segmentos dinámicos parciales (sitemap-stations-[page].xml), así que la
-  // URL pública sitemap-stations-N.xml se sirve desde app/sitemap-stations/[page].
-  async rewrites() {
-    return [
-      {
-        source: '/sitemap-stations-:page(\\d+).xml',
-        destination: '/sitemap-stations/:page',
-      },
-    ]
-  },
-
   // Permanent redirects
   async redirects() {
     return [
@@ -129,6 +118,23 @@ const nextConfig = {
       {
         source: '/:locale(es|en|fr|de)/stations/:id',
         destination: '/:locale/radio/:id',
+        permanent: true,
+      },
+      // El blog solo existe en español: en/fr/de servían el mismo texto como duplicado.
+      {
+        source: '/:locale(en|fr|de)/blog/:path*',
+        destination: '/es/blog/:path*',
+        permanent: true,
+      },
+      {
+        source: '/:locale(en|fr|de)/blog',
+        destination: '/es/blog',
+        permanent: true,
+      },
+      // /genres nunca existió; el índice de géneros y países vive en /radio-online.
+      {
+        source: '/:locale(es|en|fr|de)/genres',
+        destination: '/:locale/radio-online',
         permanent: true,
       },
     ]

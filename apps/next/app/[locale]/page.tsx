@@ -212,7 +212,6 @@ export default async function HomePage({ params }: PageProps) {
                 { href: `/${locale}/radio-online`, label: t.radioOnline?.h1 || 'Radio Online' },
                 { href: `/${locale}/blog`,         label: t.navigation?.blog || 'Blog' },
                 { href: `/${locale}/search`,       label: t.navigation?.search || 'Buscar' },
-                { href: `/${locale}/genres`,       label: t.navigation?.genres || 'Géneros' },
               ].map(({ href, label }) => (
                 <li key={href}>
                   <Link href={href} className="font-broadcast text-[11px] text-neutral-500 hover:text-amber-400 transition-colors">
