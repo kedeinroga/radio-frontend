@@ -35,7 +35,7 @@ function getTranslations(locale: string): Record<string, any> {
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ locale: string }> | { locale: string }
+  params: Promise<{ locale: string }>
 }): Promise<Metadata> {
   const supportedLocales = ['es', 'en', 'fr', 'de']
   // Await params to comply with Next.js 15 requirements
@@ -86,8 +86,8 @@ export async function generateMetadata({
     },
     fr: {
       title: {
-        template: '%s | RadioApp - Écoutez la Radio en Ligne',
-        default: 'RadioApp - Radio en Ligne Gratuite - Musique en Direct',
+        template: '%s | Rradio - Écoutez la Radio en Ligne',
+        default: 'Rradio - Radio en Ligne Gratuite - Musique en Direct',
       },
       description: 'Écoutez la radio en ligne gratuitement. Plus de 30 000 stations de radio en direct. Musique, actualités et sports. Gratuit et haute qualité.',
       keywords: [
@@ -101,13 +101,13 @@ export async function generateMetadata({
         'radio mondiale',
         'musique gratuite'
       ],
-      ogTitle: 'RadioApp - Radio en Ligne Gratuite',
+      ogTitle: 'Rradio - Radio en Ligne Gratuite',
       ogDescription: 'La meilleure façon d\'écouter la radio en ligne gratuitement. Plus de 30 000 stations en direct.',
     },
     de: {
       title: {
-        template: '%s | RadioApp - Radio Online Hören',
-        default: 'RadioApp - Kostenloses Online-Radio - Live-Musik',
+        template: '%s | Rradio - Radio Online Hören',
+        default: 'Rradio - Kostenloses Online-Radio - Live-Musik',
       },
       description: 'Hören Sie kostenloses Online-Radio. Über 30.000 Live-Radiosender. Musik, Nachrichten und Sport. Kostenlos und in hoher Qualität.',
       keywords: [
@@ -121,7 +121,7 @@ export async function generateMetadata({
         'weltradio',
         'kostenlose musik'
       ],
-      ogTitle: 'RadioApp - Kostenloses Online-Radio',
+      ogTitle: 'Rradio - Kostenloses Online-Radio',
       ogDescription: 'Der beste Weg, kostenloses Online-Radio zu hören. Über 30.000 Live-Sender.',
     },
   }
@@ -176,8 +176,6 @@ export async function generateMetadata({
     },
     twitter: {
       card: 'summary_large_image',
-      site: '@radioapp',
-      creator: '@radioapp',
       title: localeMetadata.ogTitle,
       description: localeMetadata.ogDescription,
       images: ['/og-image.png'],
@@ -220,7 +218,7 @@ export default async function LocaleLayout({
   params,
 }: {
   children: React.ReactNode
-  params: Promise<{ locale: string }> | { locale: string }
+  params: Promise<{ locale: string }>
 }) {
   // Validate it's a supported locale
   const supportedLocales = ['es', 'en', 'fr', 'de']

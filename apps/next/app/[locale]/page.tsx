@@ -22,7 +22,7 @@ const stationRepo = new StationServerRepository()
 const LOCAL_STATIONS_LIMIT = 10
 
 interface PageProps {
-  params: Promise<{ locale: string }> | { locale: string }
+  params: Promise<{ locale: string }>
 }
 
 /**

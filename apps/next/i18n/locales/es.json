@@ -68,11 +68,6 @@
     "error": "Error al reproducir la estación",
     "errorRetry": "No se pudo reproducir. Reintentar"
   },
-  "nowPlaying": {
-    "title": "Sonando ahora",
-    "live": "En directo",
-    "recentlyPlayed": "Sonó antes"
-  },
   "explore": {
     "genres": "Explora por género",
     "countries": "Explora por país"
@@ -155,61 +150,6 @@
     "resultsCount": "{{count}} resultado encontrado",
     "resultsCount_other": "{{count}} resultados encontrados",
     "ariaLabel": "Campo de búsqueda"
-  },
-  "auth": {
-    "login": "Iniciar Sesión",
-    "logout": "Cerrar Sesión",
-    "loginTitle": "Bienvenido de Vuelta",
-    "loginDescription": "Inicia sesión para acceder al panel de administración",
-    "email": "Correo Electrónico",
-    "password": "Contraseña",
-    "rememberMe": "Recordarme",
-    "forgotPassword": "¿Olvidaste tu contraseña?",
-    "loggingIn": "Iniciando sesión...",
-    "loginError": "Error al Iniciar Sesión",
-    "loginErrorDescription": "Credenciales inválidas. Por favor, verifica tu correo y contraseña.",
-    "loginSuccess": "Sesión iniciada correctamente",
-    "logoutSuccess": "Sesión cerrada correctamente",
-    "unauthorized": "No autorizado",
-    "unauthorizedDescription": "No tienes permisos para acceder a esta página.",
-    "sessionExpired": "Sesión expirada",
-    "sessionExpiredDescription": "Tu sesión ha expirado. Por favor, inicia sesión nuevamente.",
-    "verifyingAccess": "Verificando acceso..."
-  },
-  "admin": {
-    "dashboard": "Panel de Control",
-    "analytics": "Analíticas",
-    "seo": "SEO",
-    "translations": "Traducciones",
-    "users": "Usuarios",
-    "activeUsers": "Usuarios Activos",
-    "guestUsers": "Usuarios Invitados",
-    "popularStations": "Estaciones Populares",
-    "trendingSearches": "Búsquedas en Tendencia",
-    "statistics": "Estadísticas",
-    "timeRange": "Rango de Tiempo",
-    "today": "Hoy",
-    "week": "Semana",
-    "month": "Mes",
-    "year": "Año",
-    "plays": "Reproducciones",
-    "searches": "Búsquedas",
-    "percentage": "Porcentaje",
-    "searchTerm": "Término de Búsqueda",
-    "count": "Cantidad",
-    "loadingDashboard": "Cargando panel...",
-    "errorLoading": "Error al cargar datos",
-    "sitemapGenerator": "Generador de Sitemap",
-    "generateSitemap": "Generar Sitemap",
-    "sitemapGenerated": "Sitemap generado correctamente",
-    "metadataEditor": "Editor de Metadatos",
-    "translationEditor": "Editor de Traducciones",
-    "language": "Idioma",
-    "key": "Clave",
-    "value": "Valor",
-    "addTranslation": "Agregar Traducción",
-    "updateTranslation": "Actualizar Traducción",
-    "deleteTranslation": "Eliminar Traducción"
   },
   "countries": {
     "title": "Estaciones por País",
@@ -346,164 +286,6 @@
     "copyright": "© {{year}} Rradio. Todos los derechos reservados.",
     "poweredBy": "Potenciado por"
   },
-  "premium": {
-    "title": "Premium",
-    "upgradeTitle": "Eliminar anuncios",
-    "upgradeSubtitle": "Disfruta sin interrupciones con Premium",
-    "tryFree": "Probar gratis",
-    "freeTrial": "7 días gratis",
-    "cancelAnytime": "Cancela cuando quieras",
-    "noCommitment": "Sin compromiso",
-    "getStarted": "Comenzar",
-    "learnMore": "Saber más",
-    "features": {
-      "noAds": "Sin anuncios",
-      "superiorQuality": "Calidad superior",
-      "exclusiveStations": "Estaciones exclusivas"
-    },
-    "plans": {
-      "free": "Gratis",
-      "premium": "Premium",
-      "monthly": "Mensual",
-      "yearly": "Anual",
-      "perMonth": "/mes",
-      "perYear": "/año",
-      "billedAnnually": "facturado anualmente",
-      "mostPopular": "Más popular",
-      "save": "Ahorrar",
-      "currentPlan": "Plan actual",
-      "freeDescription": "Perfecto para empezar",
-      "premiumDescription": "La mejor experiencia de radio",
-      "freeFeatures": {
-        "thousands": "Miles de estaciones de radio",
-        "search": "Búsqueda por género y país",
-        "favorites": "Favoritos ilimitados",
-        "withAds": "Con anuncios",
-        "standardQuality": "Calidad de audio estándar",
-        "exclusiveStations": "Estaciones exclusivas"
-      },
-      "premiumFeatures": {
-        "everything": "Todo en Gratis",
-        "noAds": "Sin anuncios",
-        "superiorQuality": "Calidad de audio superior",
-        "exclusiveStations": "Estaciones exclusivas",
-        "backgroundPlay": "Reproducción en segundo plano",
-        "prioritySupport": "Soporte prioritario"
-      },
-      "cta": {
-        "startFree": "Comenzar gratis",
-        "tryFree": "Prueba 7 días gratis",
-        "processing": "Procesando..."
-      }
-    },
-    "benefits": {
-      "title": "Todo incluido con Premium",
-      "noAds": {
-        "title": "Sin anuncios",
-        "description": "Disfruta de tu música favorita sin interrupciones publicitarias. Experiencia 100% libre de anuncios."
-      },
-      "superiorQuality": {
-        "title": "Calidad de audio superior",
-        "description": "Escucha con la mejor calidad de sonido disponible. Transmisión en alta definición para audiófilos."
-      },
-      "exclusiveStations": {
-        "title": "Estaciones exclusivas",
-        "description": "Accede a contenido premium y estaciones exclusivas no disponibles en la versión gratuita."
-      },
-      "backgroundPlay": {
-        "title": "Reproducción en segundo plano",
-        "description": "Escucha mientras usas otras aplicaciones. Perfecto para multitarea ilimitada."
-      },
-      "recording": {
-        "title": "Grabación de contenido",
-        "description": "Graba tus programas favoritos para escucharlos cuando quieras, sin conexión."
-      },
-      "prioritySupport": {
-        "title": "Soporte prioritario",
-        "description": "Obtén ayuda rápida de nuestro equipo. Servicio al cliente Premium 24/7."
-      },
-      "unlimitedListening": {
-        "title": "Escucha ilimitada",
-        "description": "Escucha todo lo que quieras sin restricciones de tiempo o saltos."
-      },
-      "multiDevice": {
-        "title": "Sincronización multi-dispositivo",
-        "description": "Tus favoritos y configuraciones sincronizados en todos tus dispositivos."
-      }
-    },
-    "faq": {
-      "title": "Preguntas frecuentes",
-      "trial": {
-        "question": "¿Cómo funciona la prueba gratuita?",
-        "answer": "Obtienes 7 días de acceso completo a Premium sin cargo. Puedes cancelar en cualquier momento durante el período de prueba y no se te cobrará nada. Si decides continuar, el pago comenzará después de los 7 días."
-      },
-      "cancel": {
-        "question": "¿Puedo cancelar mi suscripción?",
-        "answer": "Sí, puedes cancelar en cualquier momento desde tu cuenta. No hay compromisos a largo plazo. Si cancelas, seguirás teniendo acceso Premium hasta el final del período que ya pagaste."
-      },
-      "payment": {
-        "question": "¿Qué métodos de pago aceptan?",
-        "answer": "Aceptamos todas las principales tarjetas de crédito y débito (Visa, Mastercard, American Express), así como PayPal y otros métodos de pago locales a través de Stripe."
-      },
-      "changePlan": {
-        "question": "¿Puedo cambiar de plan mensual a anual?",
-        "answer": "Sí, puedes cambiar tu plan en cualquier momento desde la configuración de tu cuenta. Si cambias a anual, recibirás un crédito prorrateado de tu plan mensual."
-      },
-      "taxes": {
-        "question": "¿El precio incluye impuestos?",
-        "answer": "Los precios mostrados pueden variar según tu ubicación debido a los impuestos locales. El precio final con impuestos se mostrará antes de confirmar el pago."
-      },
-      "multiDevice": {
-        "question": "¿Puedo usar Premium en varios dispositivos?",
-        "answer": "Sí, puedes usar tu cuenta Premium en todos tus dispositivos (móvil, tableta, computadora). Solo puedes tener una sesión activa reproduciendo contenido a la vez."
-      },
-      "data": {
-        "question": "¿Qué pasa con mis datos si cancelo?",
-        "answer": "Todos tus favoritos, configuraciones y datos de cuenta permanecen guardados. Si te vuelves a suscribir más tarde, todo estará como lo dejaste."
-      },
-      "student": {
-        "question": "¿Ofrecen descuentos para estudiantes?",
-        "answer": "Actualmente estamos trabajando en un plan especial para estudiantes. Suscríbete a nuestro boletín para ser el primero en saber cuándo esté disponible."
-      }
-    },
-    "success": {
-      "title": "¡Bienvenido a Premium!",
-      "subtitle": "Tu suscripción está activa y lista para usar",
-      "nowYouCan": "Ahora puedes disfrutar de:",
-      "startListening": "Comenzar a escuchar",
-      "viewSubscription": "Ver mi suscripción",
-      "confirmationNote": "Recibirás un correo de confirmación con los detalles de tu suscripción. Puedes gestionar tu suscripción desde tu cuenta en cualquier momento."
-    },
-    "subscription": {
-      "title": "Mi suscripción",
-      "status": {
-        "active": "Activa",
-        "trialing": "Período de prueba",
-        "canceled": "Cancelada",
-        "pastDue": "Pago pendiente"
-      },
-      "nextRenewal": "Próxima renovación",
-      "trialEnd": "Fin de prueba",
-      "accessUntil": "Acceso hasta",
-      "canceledWarning": "Tu suscripción ha sido cancelada",
-      "canceledMessage": "Seguirás teniendo acceso Premium hasta {{date}}. Después de eso, tu cuenta volverá al plan gratuito.",
-      "reactivate": "Reactivar suscripción",
-      "paymentMethod": "Método de pago",
-      "updatePaymentMethod": "Actualizar tu tarjeta de crédito o débito",
-      "update": "Actualizar",
-      "cancelSubscription": "Cancelar suscripción",
-      "canceling": "Cancelando...",
-      "cancelConfirm": "¿Estás seguro de que quieres cancelar tu suscripción? Seguirás teniendo acceso Premium hasta el final del período pagado.",
-      "cancelSuccess": "Tu suscripción ha sido cancelada. Seguirás teniendo acceso Premium hasta el final del período.",
-      "reactivateSuccess": "Tu suscripción ha sido reactivada.",
-      "noSubscription": "No tienes una suscripción activa",
-      "noSubscriptionMessage": "Suscríbete a Premium para disfrutar sin anuncios y con características exclusivas.",
-      "viewPlans": "Ver planes"
-    },
-    "banner": {
-      "dismiss": "Cerrar banner"
-    }
-  },
   "radioOnline": {
       "title": "Radio Online Gratis - Escucha 30,000+ Estaciones | Guía Completa 2026",
       "description": "Descubre la mejor plataforma de radio online gratis. Conecta con la cultura local de más de 200 países. Música, noticias, deportes en vivo. Sin descargas.",
@@ -610,7 +392,7 @@
       },
       "rights": {
         "title": "6. Tus Derechos (GDPR/CCPA)",
-        "content": "Según la ley de tu país, puedes tener derecho a acceder a tus datos, rectificarlos, suprimirlos, oponerte a su tratamiento, solicitar su portabilidad y retirar tu consentimiento en cualquier momento.\n\nComo no tenemos cuentas de usuario, la mayoría de los datos que te conciernen están en tu propio navegador y puedes borrarlos tú mismo. Para la publicidad, puedes cambiar tu elección en el mensaje de consentimiento de Google o en la configuración de anuncios de Google.\n\nPara cualquier otra solicitud, escríbenos a **privacy@rradio.online**."
+        "content": "Según la ley de tu país, puedes tener derecho a acceder a tus datos, rectificarlos, suprimirlos, oponerte a su tratamiento, solicitar su portabilidad y retirar tu consentimiento en cualquier momento.\n\nComo no tenemos cuentas de usuario, la mayoría de los datos que te conciernen están en tu propio navegador y puedes borrarlos tú mismo. Para la publicidad, puedes cambiar tu elección en el mensaje de consentimiento de Google o en la configuración de anuncios de Google.\n\nPara cualquier otra solicitud, escríbenos a **contacto@rradio.online**."
       },
       "children": {
         "title": "7. Privacidad de Menores (COPPA)",
@@ -630,7 +412,7 @@
       },
       "contact": {
         "title": "11. Contacto",
-        "content": "Si tienes preguntas sobre esta política de privacidad o quieres ejercer tus derechos, contáctanos:\n\n**Email:** privacy@rradio.online\n**Email general:** support@rradio.online\n\nResponderemos a tu solicitud dentro de 30 días."
+        "content": "Si tienes preguntas sobre esta política de privacidad o quieres ejercer tus derechos, contáctanos:\n\n**Email:** contacto@rradio.online\n\nResponderemos a tu solicitud dentro de 30 días."
       }
     }
   },
@@ -653,7 +435,7 @@
       },
       "content": {
         "title": "4. Contenido de Terceros",
-        "content": "Las transmisiones de radio son proporcionadas por estaciones de terceros. No controlamos ni somos responsables del contenido transmitido por estas estaciones.\n\n**Derechos de autor:** Las estaciones de radio son responsables de tener las licencias necesarias para transmitir su contenido. Si crees que se está infringiendo tu copyright, contacta: dmca@rradio.online"
+        "content": "Las transmisiones de radio son proporcionadas por estaciones de terceros. No controlamos ni somos responsables del contenido transmitido por estas estaciones.\n\n**Derechos de autor:** Las estaciones de radio son responsables de tener las licencias necesarias para transmitir su contenido. Si crees que se está infringiendo tu copyright, contacta: contacto@rradio.online"
       },
       "userConduct": {
         "title": "5. Conducta del Usuario",
@@ -681,7 +463,7 @@
       },
       "contact": {
         "title": "11. Contacto",
-        "content": "Si tienes preguntas sobre estos términos, contáctanos:\n\n**Email:** legal@rradio.online\n**Email general:** support@rradio.online"
+        "content": "Si tienes preguntas sobre estos términos, contáctanos:\n\n**Email:** contacto@rradio.online"
       }
     }
   },
@@ -701,8 +483,8 @@
       "content": "Rradio es una aplicación web moderna y ligera:\n\n- **Next.js y React** para que el sitio cargue rápido y se pueda instalar como aplicación (PWA) en el móvil o el ordenador\n- **Radio Browser**, el directorio público y comunitario de emisoras, como fuente del catálogo\n- **Reproducción directa** desde el servidor de cada emisora, solo por conexiones seguras (HTTPS)\n- **Diseño adaptable** que funciona en móvil, tablet y escritorio\n\nLa calidad de audio depende de cada emisora: la mayoría transmite entre 64 y 320 kbps en MP3, AAC u Ogg."
     },
     "team": {
-      "title": "El Equipo",
-      "content": "Somos un equipo pequeño pero apasionado de desarrolladores y amantes de la radio. Creemos en el código abierto, la privacidad del usuario, y en crear productos que realmente aporten valor.\n\nSi quieres unirte o colaborar, contáctanos: team@rradio.online"
+      "title": "El Proyecto",
+      "content": "Rradio es un proyecto independiente, creado y mantenido por un solo desarrollador apasionado por la radio. No hay una gran empresa detrás: cada función, cada texto y cada corrección los hago yo.\n\nSi encuentras un error, una emisora que no funciona o quieres proponer una mejora, escríbeme a contacto@rradio.online. Leo todos los mensajes."
     },
     "values": {
       "title": "Nuestros Valores",
@@ -737,22 +519,22 @@
     "sections": {
       "general": {
         "title": "Soporte General",
-        "email": "support@rradio.online",
+        "email": "contacto@rradio.online",
         "description": "Para preguntas generales, problemas técnicos o sugerencias."
       },
       "privacy": {
         "title": "Privacidad y Datos",
-        "email": "privacy@rradio.online",
+        "email": "contacto@rradio.online",
         "description": "Para solicitudes relacionadas con tus datos personales (GDPR/CCPA)."
       },
       "legal": {
         "title": "Legal y Copyright",
-        "email": "legal@rradio.online",
+        "email": "contacto@rradio.online",
         "description": "Para asuntos legales, DMCA, o reclamaciones de copyright."
       },
       "business": {
         "title": "Colaboraciones",
-        "email": "team@rradio.online",
+        "email": "contacto@rradio.online",
         "description": "Para propuestas de colaboración o asociaciones comerciales."
       }
     },
@@ -763,36 +545,6 @@
     "social": {
       "title": "Síguenos",
       "description": "Mantente al día con nuestras últimas noticias y actualizaciones."
-    }
-  },
-  "cookies": {
-    "banner": {
-      "title": "🍪 Usamos Cookies",
-      "description": "Usamos cookies esenciales para el funcionamiento del sitio y cookies de terceros (Google AdSense, Google Analytics) para publicidad personalizada y análisis. Al continuar, aceptas nuestro uso de cookies.",
-      "acceptAll": "Aceptar Todo",
-      "rejectAll": "Rechazar No Esenciales",
-      "customize": "Personalizar",
-      "learnMore": "Más Información"
-    },
-    "preferences": {
-      "title": "Preferencias de Cookies",
-      "description": "Controla qué cookies permitir en tu navegador. Las cookies esenciales no se pueden desactivar.",
-      "essential": {
-        "title": "Cookies Esenciales",
-        "description": "Necesarias para el funcionamiento básico del sitio (autenticación, preferencias de idioma).",
-        "required": "Siempre activas"
-      },
-      "analytics": {
-        "title": "Cookies de Análisis",
-        "description": "Google Analytics para entender cómo usas el sitio y mejorar la experiencia del usuario."
-      },
-      "advertising": {
-        "title": "Cookies de Publicidad",
-        "description": "Google AdSense para mostrar anuncios personalizados basados en tus intereses."
-      },
-      "savePreferences": "Guardar Preferencias",
-      "acceptAll": "Aceptar Todo",
-      "rejectAll": "Solo Esenciales"
     }
   }
 } 

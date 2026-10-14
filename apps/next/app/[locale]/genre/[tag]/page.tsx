@@ -8,7 +8,7 @@ import { getGenreHub, isHubIndexable } from '@/lib/editorial'
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://rradio.online'
 
 interface PageProps {
-  params: Promise<{ tag: string; locale: string }> | { tag: string; locale: string }
+  params: Promise<{ tag: string; locale: string }>
 }
 
 // Removed: export const dynamic = 'force-dynamic'

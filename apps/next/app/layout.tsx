@@ -60,22 +60,17 @@ export default async function RootLayout({
                 name: 'Rradio',
                 url: BASE_URL,
                 logo: `${BASE_URL}/icon-512.png`,
-                sameAs: [
-                  'https://twitter.com/radioapp',
-                  'https://facebook.com/radioapp',
-                  'https://instagram.com/radioapp'
-                ],
                 contactPoint: {
                   '@type': 'ContactPoint',
                   contactType: 'customer support',
-                  email: 'support@rradio.online'
+                  email: 'contacto@rradio.online'
                 }
               },
               {
                 '@context': 'https://schema.org',
                 '@type': 'WebSite',
                 name: 'Rradio',
-                alternateName: ['Rradio Online', 'RadioApp'],
+                alternateName: ['Rradio Online'],
                 url: BASE_URL,
                 potentialAction: {
                   '@type': 'SearchAction',

@@ -67,11 +67,6 @@
     "error": "Fehler beim Abspielen des Senders",
     "errorRetry": "Abspielen fehlgeschlagen. Erneut versuchen"
   },
-  "nowPlaying": {
-    "title": "Läuft gerade",
-    "live": "Live",
-    "recentlyPlayed": "Zuletzt gespielt"
-  },
   "explore": {
     "genres": "Nach Genre entdecken",
     "countries": "Nach Land entdecken"
@@ -154,61 +149,6 @@
     "resultsCount": "{{count}} Ergebnis gefunden",
     "resultsCount_other": "{{count}} Ergebnisse gefunden",
     "ariaLabel": "Suchfeld"
-  },
-  "auth": {
-    "login": "Anmelden",
-    "logout": "Abmelden",
-    "loginTitle": "Willkommen Zurück",
-    "loginDescription": "Melden Sie sich an, um auf das Admin-Panel zuzugreifen",
-    "email": "E-Mail",
-    "password": "Passwort",
-    "rememberMe": "Angemeldet bleiben",
-    "forgotPassword": "Passwort vergessen?",
-    "loggingIn": "Anmeldung läuft...",
-    "loginError": "Anmeldefehler",
-    "loginErrorDescription": "Ungültige Anmeldedaten. Bitte überprüfen Sie Ihre E-Mail und Ihr Passwort.",
-    "loginSuccess": "Erfolgreich angemeldet",
-    "logoutSuccess": "Erfolgreich abgemeldet",
-    "unauthorized": "Nicht autorisiert",
-    "unauthorizedDescription": "Sie haben keine Berechtigung, auf diese Seite zuzugreifen.",
-    "sessionExpired": "Sitzung abgelaufen",
-    "sessionExpiredDescription": "Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an.",
-    "verifyingAccess": "Zugriff wird überprüft..."
-  },
-  "admin": {
-    "dashboard": "Dashboard",
-    "analytics": "Analytik",
-    "seo": "SEO",
-    "translations": "Übersetzungen",
-    "users": "Benutzer",
-    "activeUsers": "Aktive Benutzer",
-    "guestUsers": "Gastbenutzer",
-    "popularStations": "Beliebte Sender",
-    "trendingSearches": "Trendsuchen",
-    "statistics": "Statistiken",
-    "timeRange": "Zeitraum",
-    "today": "Heute",
-    "week": "Woche",
-    "month": "Monat",
-    "year": "Jahr",
-    "plays": "Wiedergaben",
-    "searches": "Suchen",
-    "percentage": "Prozentsatz",
-    "searchTerm": "Suchbegriff",
-    "count": "Anzahl",
-    "loadingDashboard": "Dashboard wird geladen...",
-    "errorLoading": "Fehler beim Laden der Daten",
-    "sitemapGenerator": "Sitemap-Generator",
-    "generateSitemap": "Sitemap Generieren",
-    "sitemapGenerated": "Sitemap erfolgreich generiert",
-    "metadataEditor": "Metadaten-Editor",
-    "translationEditor": "Übersetzungs-Editor",
-    "language": "Sprache",
-    "key": "Schlüssel",
-    "value": "Wert",
-    "addTranslation": "Übersetzung Hinzufügen",
-    "updateTranslation": "Übersetzung Aktualisieren",
-    "deleteTranslation": "Übersetzung Löschen"
   },
   "countries": {
     "title": "Sender nach Land",
@@ -345,164 +285,6 @@
     "copyright": "© {{year}} Rradio. Alle Rechte vorbehalten.",
     "poweredBy": "Angetrieben von"
   },
-  "premium": {
-    "title": "Premium",
-    "upgradeTitle": "Werbung entfernen",
-    "upgradeSubtitle": "Genießen Sie ohne Unterbrechungen mit Premium",
-    "tryFree": "Kostenlos testen",
-    "freeTrial": "7 Tage kostenlos",
-    "cancelAnytime": "Jederzeit kündbar",
-    "noCommitment": "Keine Verpflichtung",
-    "getStarted": "Loslegen",
-    "learnMore": "Mehr erfahren",
-    "features": {
-      "noAds": "Keine Werbung",
-      "superiorQuality": "Überlegene Qualität",
-      "exclusiveStations": "Exklusive Sender"
-    },
-    "plans": {
-      "free": "Kostenlos",
-      "premium": "Premium",
-      "monthly": "Monatlich",
-      "yearly": "Jährlich",
-      "perMonth": "/Monat",
-      "perYear": "/Jahr",
-      "billedAnnually": "jährlich abgerechnet",
-      "mostPopular": "Am beliebtesten",
-      "save": "Sparen",
-      "currentPlan": "Aktueller Plan",
-      "freeDescription": "Perfekt zum Starten",
-      "premiumDescription": "Das beste Radioerlebnis",
-      "freeFeatures": {
-        "thousands": "Tausende von Radiosendern",
-        "search": "Suche nach Genre und Land",
-        "favorites": "Unbegrenzte Favoriten",
-        "withAds": "Mit Werbung",
-        "standardQuality": "Standard Audioqualität",
-        "exclusiveStations": "Exklusive Sender"
-      },
-      "premiumFeatures": {
-        "everything": "Alles in Kostenlos",
-        "noAds": "Keine Werbung",
-        "superiorQuality": "Überlegene Audioqualität",
-        "exclusiveStations": "Exklusive Sender",
-        "backgroundPlay": "Hintergrundwiedergabe",
-        "prioritySupport": "Prioritäts-Support"
-      },
-      "cta": {
-        "startFree": "Kostenlos starten",
-        "tryFree": "7 Tage kostenlos testen",
-        "processing": "Verarbeitung..."
-      }
-    },
-    "benefits": {
-      "title": "Alles inklusive mit Premium",
-      "noAds": {
-        "title": "Keine Werbung",
-        "description": "Genießen Sie Ihre Lieblingsmusik ohne Werbeunterbrechungen. 100% werbefreies Erlebnis."
-      },
-      "superiorQuality": {
-        "title": "Überlegene Audioqualität",
-        "description": "Hören Sie mit der besten verfügbaren Klangqualität. High-Definition-Streaming für Audiophile."
-      },
-      "exclusiveStations": {
-        "title": "Exklusive Sender",
-        "description": "Zugang zu Premium-Inhalten und exklusiven Sendern, die in der kostenlosen Version nicht verfügbar sind."
-      },
-      "backgroundPlay": {
-        "title": "Hintergrundwiedergabe",
-        "description": "Hören Sie, während Sie andere Apps verwenden. Perfekt für unbegrenztes Multitasking."
-      },
-      "recording": {
-        "title": "Inhaltsaufzeichnung",
-        "description": "Nehmen Sie Ihre Lieblingssendungen auf, um sie jederzeit offline anzuhören."
-      },
-      "prioritySupport": {
-        "title": "Prioritäts-Support",
-        "description": "Erhalten Sie schnelle Hilfe von unserem Team. Premium-Kundenservice rund um die Uhr."
-      },
-      "unlimitedListening": {
-        "title": "Unbegrenztes Hören",
-        "description": "Hören Sie so viel Sie möchten ohne Zeit- oder Skip-Beschränkungen."
-      },
-      "multiDevice": {
-        "title": "Multi-Geräte-Synchronisation",
-        "description": "Ihre Favoriten und Einstellungen synchronisiert auf allen Ihren Geräten."
-      }
-    },
-    "faq": {
-      "title": "Häufig gestellte Fragen",
-      "trial": {
-        "question": "Wie funktioniert die kostenlose Testversion?",
-        "answer": "Sie erhalten 7 Tage vollen Premium-Zugang ohne Kosten. Sie können jederzeit während des Testzeitraums kündigen und Ihnen wird nichts berechnet. Wenn Sie fortfahren möchten, beginnt die Zahlung nach den 7 Tagen."
-      },
-      "cancel": {
-        "question": "Kann ich mein Abonnement kündigen?",
-        "answer": "Ja, Sie können jederzeit über Ihr Konto kündigen. Es gibt keine langfristigen Verpflichtungen. Wenn Sie kündigen, haben Sie weiterhin Premium-Zugang bis zum Ende des bereits bezahlten Zeitraums."
-      },
-      "payment": {
-        "question": "Welche Zahlungsmethoden akzeptieren Sie?",
-        "answer": "Wir akzeptieren alle gängigen Kredit- und Debitkarten (Visa, Mastercard, American Express) sowie PayPal und andere lokale Zahlungsmethoden über Stripe."
-      },
-      "changePlan": {
-        "question": "Kann ich vom monatlichen zum jährlichen Plan wechseln?",
-        "answer": "Ja, Sie können Ihren Plan jederzeit in den Kontoeinstellungen ändern. Wenn Sie zu jährlich wechseln, erhalten Sie eine anteilige Gutschrift von Ihrem monatlichen Plan."
-      },
-      "taxes": {
-        "question": "Enthält der Preis Steuern?",
-        "answer": "Die angezeigten Preise können je nach Standort aufgrund lokaler Steuern variieren. Der endgültige Preis mit Steuern wird vor der Zahlungsbestätigung angezeigt."
-      },
-      "multiDevice": {
-        "question": "Kann ich Premium auf mehreren Geräten verwenden?",
-        "answer": "Ja, Sie können Ihr Premium-Konto auf allen Ihren Geräten (Handy, Tablet, Desktop) verwenden. Sie können nur eine aktive Sitzung gleichzeitig haben."
-      },
-      "data": {
-        "question": "Was passiert mit meinen Daten, wenn ich kündige?",
-        "answer": "Alle Ihre Favoriten, Einstellungen und Kontodaten bleiben gespeichert. Wenn Sie sich später erneut anmelden, ist alles so, wie Sie es hinterlassen haben."
-      },
-      "student": {
-        "question": "Bieten Sie Studentenrabatte an?",
-        "answer": "Wir arbeiten derzeit an einem Sonderplan für Studenten. Abonnieren Sie unseren Newsletter, um als Erster zu erfahren, wenn er verfügbar ist."
-      }
-    },
-    "success": {
-      "title": "Willkommen bei Premium!",
-      "subtitle": "Ihr Abonnement ist aktiv und einsatzbereit",
-      "nowYouCan": "Jetzt können Sie genießen:",
-      "startListening": "Zu hören beginnen",
-      "viewSubscription": "Mein Abonnement anzeigen",
-      "confirmationNote": "Sie erhalten eine Bestätigungs-E-Mail mit Ihren Abonnementdetails. Sie können Ihr Abonnement jederzeit über Ihr Konto verwalten."
-    },
-    "subscription": {
-      "title": "Mein Abonnement",
-      "status": {
-        "active": "Aktiv",
-        "trialing": "Testzeitraum",
-        "canceled": "Gekündigt",
-        "pastDue": "Zahlung ausstehend"
-      },
-      "nextRenewal": "Nächste Verlängerung",
-      "trialEnd": "Testende",
-      "accessUntil": "Zugang bis",
-      "canceledWarning": "Ihr Abonnement wurde gekündigt",
-      "canceledMessage": "Sie haben weiterhin Premium-Zugang bis {{date}}. Danach wird Ihr Konto zum kostenlosen Plan zurückkehren.",
-      "reactivate": "Abonnement reaktivieren",
-      "paymentMethod": "Zahlungsmethode",
-      "updatePaymentMethod": "Ihre Kredit- oder Debitkarte aktualisieren",
-      "update": "Aktualisieren",
-      "cancelSubscription": "Abonnement kündigen",
-      "canceling": "Kündigung läuft...",
-      "cancelConfirm": "Sind Sie sicher, dass Sie Ihr Abonnement kündigen möchten? Sie haben weiterhin Premium-Zugang bis zum Ende des bezahlten Zeitraums.",
-      "cancelSuccess": "Ihr Abonnement wurde gekündigt. Sie haben weiterhin Premium-Zugang bis zum Ende des Zeitraums.",
-      "reactivateSuccess": "Ihr Abonnement wurde reaktiviert.",
-      "noSubscription": "Sie haben kein aktives Abonnement",
-      "noSubscriptionMessage": "Abonnieren Sie Premium, um ohne Werbung und mit exklusiven Funktionen zu genießen.",
-      "viewPlans": "Pläne anzeigen"
-    },
-    "banner": {
-      "dismiss": "Banner schließen"
-    }
-  },
   "radioOnline": {
       "title": "Kostenloses Online-Radio - Hören Sie 30,000+ Sender | Vollständiger Leitfaden 2026",
       "description": "Entdecken Sie die beste kostenlose Online-Radio-Plattform. Verbinden Sie sich mit lokaler Kultur aus über 200 Ländern. Musik, Nachrichten, Live-Sport.",
@@ -609,7 +391,7 @@
       },
       "rights": {
         "title": "6. Ihre Rechte (DSGVO/CCPA)",
-        "content": "Je nach Recht Ihres Landes haben Sie das Recht auf Auskunft, Berichtigung und Löschung Ihrer Daten, auf Widerspruch gegen die Verarbeitung, auf Datenübertragbarkeit und darauf, Ihre Einwilligung jederzeit zu widerrufen.\n\nDa wir keine Benutzerkonten haben, liegen die meisten Sie betreffenden Daten in Ihrem eigenen Browser und Sie können sie selbst löschen. Für Werbung können Sie Ihre Wahl in der Einwilligungsmeldung von Google oder in den Google-Anzeigeneinstellungen ändern.\n\nFür alle anderen Anfragen schreiben Sie an **privacy@rradio.online**."
+        "content": "Je nach Recht Ihres Landes haben Sie das Recht auf Auskunft, Berichtigung und Löschung Ihrer Daten, auf Widerspruch gegen die Verarbeitung, auf Datenübertragbarkeit und darauf, Ihre Einwilligung jederzeit zu widerrufen.\n\nDa wir keine Benutzerkonten haben, liegen die meisten Sie betreffenden Daten in Ihrem eigenen Browser und Sie können sie selbst löschen. Für Werbung können Sie Ihre Wahl in der Einwilligungsmeldung von Google oder in den Google-Anzeigeneinstellungen ändern.\n\nFür alle anderen Anfragen schreiben Sie an **contacto@rradio.online**."
       },
       "children": {
         "title": "7. Datenschutz von Kindern (COPPA)",
@@ -629,7 +411,7 @@
       },
       "contact": {
         "title": "11. Kontakt",
-        "content": "Bei Fragen zu dieser Datenschutzerklärung oder zur Ausübung Ihrer Rechte kontaktieren Sie uns:\n\n**E-Mail:** privacy@rradio.online\n**Allgemeine E-Mail:** support@rradio.online\n\nWir beantworten Ihre Anfrage innerhalb von 30 Tagen."
+        "content": "Bei Fragen zu dieser Datenschutzerklärung oder zur Ausübung Ihrer Rechte kontaktieren Sie uns:\n\n**E-Mail:** contacto@rradio.online\n\nWir beantworten Ihre Anfrage innerhalb von 30 Tagen."
       }
     }
   },
@@ -652,7 +434,7 @@
       },
       "content": {
         "title": "4. Inhalte Dritter",
-        "content": "Die Radiostreams werden von Drittsendern bereitgestellt. Wir kontrollieren deren Inhalte nicht und sind dafür nicht verantwortlich.\n\n**Urheberrecht:** Die Sender sind dafür verantwortlich, die für ihre Ausstrahlung nötigen Lizenzen zu besitzen. Wenn Sie glauben, dass Ihr Urheberrecht verletzt wird, schreiben Sie an dmca@rradio.online"
+        "content": "Die Radiostreams werden von Drittsendern bereitgestellt. Wir kontrollieren deren Inhalte nicht und sind dafür nicht verantwortlich.\n\n**Urheberrecht:** Die Sender sind dafür verantwortlich, die für ihre Ausstrahlung nötigen Lizenzen zu besitzen. Wenn Sie glauben, dass Ihr Urheberrecht verletzt wird, schreiben Sie an contacto@rradio.online"
       },
       "userConduct": {
         "title": "5. Verhalten der Nutzer",
@@ -680,7 +462,7 @@
       },
       "contact": {
         "title": "11. Kontakt",
-        "content": "Bei Fragen zu diesen Bedingungen kontaktieren Sie uns:\n\n**E-Mail:** legal@rradio.online\n**Allgemeine E-Mail:** support@rradio.online"
+        "content": "Bei Fragen zu diesen Bedingungen kontaktieren Sie uns:\n\n**E-Mail:** contacto@rradio.online"
       }
     }
   },
@@ -700,8 +482,8 @@
       "content": "Rradio ist eine moderne, schlanke Web-App:\n\n- **Next.js und React**, damit die Website schnell lädt und sich als App (PWA) auf Smartphone oder Computer installieren lässt\n- **Radio Browser**, das öffentliche, von der Community gepflegte Senderverzeichnis, als Quelle unseres Katalogs\n- **Direkte Wiedergabe** vom Server des jeweiligen Senders, ausschließlich über sichere Verbindungen (HTTPS)\n- **Responsives Design** für Smartphone, Tablet und Desktop\n\nDie Audioqualität hängt vom Sender ab: Die meisten streamen mit 64 bis 320 kbit/s in MP3, AAC oder Ogg."
     },
     "team": {
-      "title": "Das Team",
-      "content": "Wir sind ein kleines, leidenschaftliches Team aus Entwicklern und Radiofans. Wir glauben an Open Source, an den Schutz der Privatsphäre und an Produkte mit echtem Mehrwert.\n\nWenn Sie mitmachen oder zusammenarbeiten möchten: team@rradio.online"
+      "title": "Das Projekt",
+      "content": "Rradio ist ein unabhängiges Projekt, entwickelt und betreut von einem einzelnen Entwickler mit einer Leidenschaft für Radio. Dahinter steht kein großes Unternehmen: Jede Funktion, jeden Text und jede Korrektur übernehme ich selbst.\n\nWenn Sie einen Fehler finden, ein Sender nicht funktioniert oder Sie eine Verbesserung vorschlagen möchten, schreiben Sie an contacto@rradio.online. Ich lese jede Nachricht."
     },
     "values": {
       "title": "Unsere Werte",
@@ -736,22 +518,22 @@
     "sections": {
       "general": {
         "title": "Allgemeiner Support",
-        "email": "support@rradio.online",
+        "email": "contacto@rradio.online",
         "description": "Für allgemeine Fragen, technische Probleme oder Vorschläge."
       },
       "privacy": {
         "title": "Datenschutz",
-        "email": "privacy@rradio.online",
+        "email": "contacto@rradio.online",
         "description": "Für Anfragen zu Ihren personenbezogenen Daten (DSGVO/CCPA)."
       },
       "legal": {
         "title": "Recht und Urheberrecht",
-        "email": "legal@rradio.online",
+        "email": "contacto@rradio.online",
         "description": "Für rechtliche Anliegen, DMCA-Meldungen oder Urheberrechtsansprüche."
       },
       "business": {
         "title": "Kooperationen",
-        "email": "team@rradio.online",
+        "email": "contacto@rradio.online",
         "description": "Für Kooperationsvorschläge oder geschäftliche Partnerschaften."
       }
     },

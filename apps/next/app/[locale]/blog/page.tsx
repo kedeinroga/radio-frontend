@@ -6,8 +6,8 @@ import { getAllBlogPosts } from '@/lib/blog-posts'
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://rradio.online'
 
 interface PageProps {
-  params: Promise<{ locale: string }> | { locale: string }
-  searchParams?: Promise<{ category?: string }> | { category?: string }
+  params: Promise<{ locale: string }>
+  searchParams?: Promise<{ category?: string }>
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {

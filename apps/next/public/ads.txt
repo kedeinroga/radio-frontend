@@ -5,7 +5,7 @@
 # ==============================================
 
 # Contact information (required by IAB standards)
-contact=contact@rradio.online
+contact=contacto@rradio.online
 
 # Variables (optional)
 # subdomain=ads

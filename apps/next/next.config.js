@@ -12,11 +12,11 @@ const nextConfig = {
   ],
   reactStrictMode: true,
 
-  // Skip type checking and linting during build in Vercel
-  // This helps avoid issues with monorepo workspace dependencies
+  // El build falla ante errores de tipos (apps/next y packages/app están en 0)
   typescript: {
-    ignoreBuildErrors: true, // Skip TypeScript errors during build
+    ignoreBuildErrors: false,
   },
+  // Skip linting during builds
   eslint: {
     ignoreDuringBuilds: true, // Skip ESLint during builds
   },

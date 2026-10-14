@@ -7,7 +7,7 @@ import { getBlogPostBySlug, getRelatedPosts, getAllBlogPosts } from '@/lib/blog-
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://rradio.online'
 
 interface PageProps {
-  params: Promise<{ locale: string; slug: string }> | { locale: string; slug: string }
+  params: Promise<{ locale: string; slug: string }>
 }
 
 // Pre-generate all known blog slugs at build time for static rendering

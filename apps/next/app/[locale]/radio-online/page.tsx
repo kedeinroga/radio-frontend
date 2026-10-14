@@ -28,7 +28,7 @@ function getTranslations(locale: string): Record<string, any> {
 
 
 interface PageProps {
-  params: Promise<{ locale: string }> | { locale: string }
+  params: Promise<{ locale: string }>
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {

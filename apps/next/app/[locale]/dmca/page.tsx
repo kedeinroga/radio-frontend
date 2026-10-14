@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 
 interface PageProps {
-  params: Promise<{ locale: string }> | { locale: string }
+  params: Promise<{ locale: string }>
 }
 
 export const revalidate = 86400
@@ -66,7 +66,7 @@ Procesaremos su solicitud y eliminaremos el enlace a la estación dentro de los 
       {
         id: 'contact',
         heading: '5. Contacto',
-        body: `Para notificaciones DMCA, solicitudes de eliminación o cualquier consulta relacionada con derechos de autor, contacta con nosotros en:\n\n**dmca@rradio.online**`,
+        body: `Para notificaciones DMCA, solicitudes de eliminación o cualquier consulta relacionada con derechos de autor, contacta con nosotros en:\n\n**contacto@rradio.online**`,
       },
     ],
     back: 'Volver al inicio',
@@ -113,7 +113,7 @@ We will process your request and remove the link to the station within **5 busin
       {
         id: 'contact',
         heading: '5. Contact',
-        body: `For DMCA notices, removal requests, or any copyright-related inquiry, contact us at:\n\n**dmca@rradio.online**`,
+        body: `For DMCA notices, removal requests, or any copyright-related inquiry, contact us at:\n\n**contacto@rradio.online**`,
       },
     ],
     back: 'Back to home',

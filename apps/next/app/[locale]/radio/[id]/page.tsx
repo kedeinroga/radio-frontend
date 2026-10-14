@@ -13,7 +13,7 @@ import { formatCountry } from '@/lib/country'
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://rradio.online'
 
 interface PageProps {
-  params: Promise<{ id: string; locale: string }> | { id: string; locale: string }
+  params: Promise<{ id: string; locale: string }>
 }
 
 // Force dynamic rendering - don't try to generate this page at build time
