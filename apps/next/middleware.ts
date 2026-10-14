@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { validateSession } from './middleware/sessionValidator'
 import { generateNonce, getSecurityHeaders } from './lib/csp'
 
 /**
@@ -10,15 +9,6 @@ const SUPPORTED_LOCALES = ['es', 'en', 'fr', 'de'] as const
 const DEFAULT_LOCALE = 'es'
 
 type SupportedLocale = typeof SUPPORTED_LOCALES[number]
-
-/**
- * Features that need the (currently shut down) backend: accounts, premium/Stripe, ads, admin
- * and analytics. Disabled unless BACKEND_FEATURES=1, so the app never exposes dead flows
- * (e.g. a pricing page whose checkout can't activate anything).
- */
-const BACKEND_FEATURES_ENABLED = process.env.BACKEND_FEATURES === '1'
-const BACKEND_ONLY_PAGE = /^(\/(es|en|fr|de))?\/(pricing|premium|account|admin)(\/|$)/
-const BACKEND_ONLY_API = /^\/api\/(auth|subscription|stripe|ads|admin|analytics)(\/|$)/
 
 /**
  * Extracts the locale from the pathname
@@ -117,28 +107,16 @@ function shouldExcludePath(pathname: string): boolean {
 }
 
 /**
- * Next.js Middleware for i18n routing and session validation
+ * Next.js Middleware for i18n routing
  * 
  * Responsibilities:
- * 1. Validate authenticated sessions for protected routes
- * 2. Detect locale from URL pathname
- * 3. If no locale found, detect from Accept-Language header or localStorage
- * 4. Redirect to URL with locale prefix: / -> /es/ or /en/
- * 5. Validate that locale in URL is supported
- * 6. Pass locale and user info to components via headers
+ * 1. Detect locale from URL pathname
+ * 2. If no locale found, detect from the app-locale cookie or Accept-Language header
+ * 3. Redirect to URL with locale prefix: / -> /es/ or /en/
+ * 4. Pass locale and CSP nonce to components via headers
  */
 export async function middleware(request: NextRequest) {
   const { pathname, search } = request.nextUrl
-
-  // Backend-dependent features are off: answer 404 before any session/backend work
-  if (!BACKEND_FEATURES_ENABLED) {
-    if (BACKEND_ONLY_API.test(pathname)) {
-      return NextResponse.json({ error: 'Not found' }, { status: 404 })
-    }
-    if (BACKEND_ONLY_PAGE.test(pathname)) {
-      return NextResponse.rewrite(new URL('/404', request.url), { status: 404 })
-    }
-  }
 
   // Skip middleware for static assets and API routes
   if (shouldExcludePath(pathname)) {
@@ -151,14 +129,7 @@ export async function middleware(request: NextRequest) {
   // Get security headers including CSP
   const securityHeaders = getSecurityHeaders(nonce)
 
-  // 1. FIRST: Validate session for protected routes
-  const sessionValidationResult = await validateSession(request)
-  if (sessionValidationResult) {
-    // Session validation failed - redirect was returned
-    return sessionValidationResult
-  }
-
-  // 2. SECOND: Handle i18n routing
+  // i18n routing
   // Get locale from pathname
   const localeInPath = getLocaleFromPathname(pathname)
 

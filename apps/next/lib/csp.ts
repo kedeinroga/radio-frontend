@@ -50,14 +50,6 @@ export const TRUSTED_DOMAINS = {
   // Self
   self: "'self'",
 
-  // Stripe (payments)
-  stripe: [
-    'https://js.stripe.com',
-    'https://checkout.stripe.com',
-    'https://m.stripe.com',
-    'https://q.stripe.com', // Analytics
-  ],
-
   // Analytics & Monitoring
   analytics: [
     'https://www.google-analytics.com',
@@ -127,7 +119,6 @@ export function buildCSPDirectives(nonce: string): Record<string, string[]> {
     'script-src': [
       TRUSTED_DOMAINS.self,
       `'nonce-${nonce}'`,
-      ...TRUSTED_DOMAINS.stripe,
       ...TRUSTED_DOMAINS.analytics,
       ...TRUSTED_DOMAINS.adSense,
       // Allow 'unsafe-eval' only in development for HMR
@@ -145,7 +136,6 @@ export function buildCSPDirectives(nonce: string): Record<string, string[]> {
     'style-src': [
       TRUSTED_DOMAINS.self,
       "'unsafe-inline'", // Required for Next.js, Tailwind, CSS-in-JS libraries, and AdSense
-      ...TRUSTED_DOMAINS.stripe,
       ...TRUSTED_DOMAINS.cdn,
     ],
 
@@ -157,7 +147,6 @@ export function buildCSPDirectives(nonce: string): Record<string, string[]> {
       'blob:', // Blob URIs for generated images
       'https:', // Allow all HTTPS images (radio station logos, etc.)
       'http:', // Allow HTTP images (legacy radio station favicons, etc.)
-      ...TRUSTED_DOMAINS.stripe,
       ...TRUSTED_DOMAINS.imageHosts,
     ],
 
@@ -171,7 +160,6 @@ export function buildCSPDirectives(nonce: string): Record<string, string[]> {
     // AJAX/Fetch requests
     'connect-src': [
       TRUSTED_DOMAINS.self,
-      ...TRUSTED_DOMAINS.stripe,
       ...TRUSTED_DOMAINS.analytics,
       ...TRUSTED_DOMAINS.adSense,
       ...TRUSTED_DOMAINS.adServers,
@@ -197,17 +185,15 @@ export function buildCSPDirectives(nonce: string): Record<string, string[]> {
       'blob:',
     ],
 
-    // Child frames: iframes (Stripe Checkout, AdSense, etc.)
+    // Child frames: iframes (AdSense)
     'frame-src': [
       TRUSTED_DOMAINS.self,
-      ...TRUSTED_DOMAINS.stripe,
       ...TRUSTED_DOMAINS.adSense,
     ],
 
     // Form actions: Where forms can submit to
     'form-action': [
       TRUSTED_DOMAINS.self,
-      ...TRUSTED_DOMAINS.stripe,
     ],
 
     // Frame ancestors: Who can embed this site
@@ -271,7 +257,7 @@ export function getSecurityHeaders(nonce: string): Record<string, string> {
       'camera=()',
       'microphone=()',
       'geolocation=(self)',
-      'payment=(self "https://js.stripe.com" "https://checkout.stripe.com")',
+      'payment=()',
       'usb=()',
       'interest-cohort=()', // Disable FLoC
     ].join(', '),
@@ -283,7 +269,7 @@ export function getSecurityHeaders(nonce: string): Record<string, string> {
 
     // Cross-Origin policies
     'Cross-Origin-Embedder-Policy': 'credentialless',
-    'Cross-Origin-Opener-Policy': 'same-origin-allow-popups', // Allow Stripe popups
+    'Cross-Origin-Opener-Policy': 'same-origin-allow-popups', // Los clics en anuncios abren ventanas nuevas
     'Cross-Origin-Resource-Policy': 'same-origin',
   }
 }
@@ -330,11 +316,6 @@ export function validateCSPConfig(): {
         errors.push(`Missing required directive: ${directive}`)
       }
     }
-  }
-
-  // Check for missing Stripe domains
-  if (!TRUSTED_DOMAINS.stripe.length) {
-    warnings.push('No Stripe domains configured. Stripe Checkout may not work.')
   }
 
   return {

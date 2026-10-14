@@ -179,7 +179,7 @@ function guessDomainCategory(directive: string): string {
     'img-src': 'imageHosts',
     'connect-src': 'analytics or adServers',
     'media-src': 'audioStreaming',
-    'frame-src': 'stripe',
+    'frame-src': 'adServers',
   }
   
   return mapping[directive] || 'appropriate category'

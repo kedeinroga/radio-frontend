@@ -104,8 +104,6 @@ const nextConfig = {
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
   env: {
-    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api/v1',
-    // Production: https://api.rradio.online/api/v1
     // Tell the app we're in build mode to skip data fetching
     IS_BUILD_TIME: isBuild ? 'true' : 'false',
   },

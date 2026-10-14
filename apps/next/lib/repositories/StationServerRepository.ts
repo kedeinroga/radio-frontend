@@ -1,6 +1,6 @@
 import type { IStationRepository } from '@radio-app/app'
 import { Station } from '@radio-app/app'
-import type { SEOMetadata, StationTrack } from '@radio-app/app'
+import type { SEOMetadata } from '@radio-app/app'
 import {
   getPopularStations,
   searchStationsByName,
@@ -100,15 +100,6 @@ export class StationServerRepository implements IStationRepository {
   async findBySlugOrId(slugOrId: string): Promise<Station | null> {
     if (this.isUUID(slugOrId)) return this.findById(slugOrId)
     return this.findBySlug(slugOrId)
-  }
-
-  // Sin backend no hay metadata ICY: "sonando ahora" y su historial quedan vacíos.
-  async getNowPlaying(_stationId: string): Promise<StationTrack | null> {
-    return null
-  }
-
-  async getRecentTracks(_stationId: string, _limit: number = 10): Promise<StationTrack[]> {
-    return []
   }
 
   private isUUID(str: string): boolean {
