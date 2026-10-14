@@ -41,7 +41,7 @@ export const COUNTRY_HUBS: CountryHub[] = [
       { label: 'Radios de cumbia', href: '/genre/cumbia' },
     ],
     updatedAt: UPDATED,
-    reviewed: false,
+    reviewed: true,
   },
   {
     slug: 'MX',
@@ -81,7 +81,7 @@ export const COUNTRY_HUBS: CountryHub[] = [
       { label: 'Radios de rock', href: '/genre/rock' },
     ],
     updatedAt: UPDATED,
-    reviewed: false,
+    reviewed: true,
   },
   {
     slug: 'AR',
@@ -121,7 +121,7 @@ export const COUNTRY_HUBS: CountryHub[] = [
       { label: 'Radios de deportes', href: '/genre/deportes' },
     ],
     updatedAt: UPDATED,
-    reviewed: false,
+    reviewed: true,
   },
   {
     slug: 'ES',
@@ -161,7 +161,7 @@ export const COUNTRY_HUBS: CountryHub[] = [
       { label: 'Radios de deportes', href: '/genre/deportes' },
     ],
     updatedAt: UPDATED,
-    reviewed: false,
+    reviewed: true,
   },
   {
     slug: 'CO',
@@ -201,7 +201,7 @@ export const COUNTRY_HUBS: CountryHub[] = [
       { label: 'Radios de reguetón', href: '/genre/reggaeton' },
     ],
     updatedAt: UPDATED,
-    reviewed: false,
+    reviewed: true,
   },
   {
     slug: 'CL',
@@ -241,7 +241,7 @@ export const COUNTRY_HUBS: CountryHub[] = [
       { label: 'Radio online en español', href: '/blog/radio-online-en-espanol-espana-america-latina' },
     ],
     updatedAt: UPDATED,
-    reviewed: false,
+    reviewed: true,
   },
   {
     slug: 'VE',
@@ -281,7 +281,7 @@ export const COUNTRY_HUBS: CountryHub[] = [
       { label: 'Radios de baladas', href: '/genre/baladas' },
     ],
     updatedAt: UPDATED,
-    reviewed: false,
+    reviewed: true,
   },
   {
     slug: 'EC',
@@ -321,7 +321,7 @@ export const COUNTRY_HUBS: CountryHub[] = [
       { label: 'Radio latina: música y cultura', href: '/blog/radio-latina-musica-y-cultura' },
     ],
     updatedAt: UPDATED,
-    reviewed: false,
+    reviewed: true,
   },
   {
     slug: 'UY',
@@ -361,7 +361,7 @@ export const COUNTRY_HUBS: CountryHub[] = [
       { label: 'Radio online en español', href: '/blog/radio-online-en-espanol-espana-america-latina' },
     ],
     updatedAt: UPDATED,
-    reviewed: false,
+    reviewed: true,
   },
   {
     slug: 'US',
@@ -401,6 +401,6 @@ export const COUNTRY_HUBS: CountryHub[] = [
       { label: 'Las mejores radios de jazz online', href: '/blog/mejores-radios-de-jazz-online' },
     ],
     updatedAt: UPDATED,
-    reviewed: false,
+    reviewed: true,
   },
 ]

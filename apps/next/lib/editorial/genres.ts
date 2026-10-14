@@ -42,7 +42,7 @@ export const GENRE_HUBS: GenreHub[] = [
       { label: 'Radios de Colombia', href: '/country/CO' },
     ],
     updatedAt: UPDATED,
-    reviewed: false,
+    reviewed: true,
   },
   {
     slug: 'cumbia',
@@ -83,7 +83,7 @@ export const GENRE_HUBS: GenreHub[] = [
       { label: 'Radio latina: música y cultura', href: '/blog/radio-latina-musica-y-cultura' },
     ],
     updatedAt: UPDATED,
-    reviewed: false,
+    reviewed: true,
   },
   {
     slug: 'reggaeton',
@@ -124,7 +124,7 @@ export const GENRE_HUBS: GenreHub[] = [
       { label: 'Radio latina: música y cultura', href: '/blog/radio-latina-musica-y-cultura' },
     ],
     updatedAt: UPDATED,
-    reviewed: false,
+    reviewed: true,
   },
   {
     slug: 'baladas',
@@ -165,7 +165,7 @@ export const GENRE_HUBS: GenreHub[] = [
       { label: 'Radio online en español', href: '/blog/radio-online-en-espanol-espana-america-latina' },
     ],
     updatedAt: UPDATED,
-    reviewed: false,
+    reviewed: true,
   },
   {
     slug: 'regional-mexicana',
@@ -206,7 +206,7 @@ export const GENRE_HUBS: GenreHub[] = [
       { label: 'Radios de Estados Unidos', href: '/country/US' },
     ],
     updatedAt: UPDATED,
-    reviewed: false,
+    reviewed: true,
   },
   {
     slug: 'rock',
@@ -247,7 +247,7 @@ export const GENRE_HUBS: GenreHub[] = [
       { label: 'Radios de Estados Unidos', href: '/country/US' },
     ],
     updatedAt: UPDATED,
-    reviewed: false,
+    reviewed: true,
   },
   {
     slug: 'pop',
@@ -288,7 +288,7 @@ export const GENRE_HUBS: GenreHub[] = [
       { label: 'Radio online, Spotify y podcasts: diferencias', href: '/blog/diferencias-radio-online-spotify-podcasts' },
     ],
     updatedAt: UPDATED,
-    reviewed: false,
+    reviewed: true,
   },
   {
     slug: 'jazz',
@@ -329,7 +329,7 @@ export const GENRE_HUBS: GenreHub[] = [
       { label: 'Radios de Estados Unidos', href: '/country/US' },
     ],
     updatedAt: UPDATED,
-    reviewed: false,
+    reviewed: true,
   },
   {
     slug: 'clasica',
@@ -370,7 +370,7 @@ export const GENRE_HUBS: GenreHub[] = [
       { label: 'Radios de jazz', href: '/genre/jazz' },
     ],
     updatedAt: UPDATED,
-    reviewed: false,
+    reviewed: true,
   },
   {
     slug: 'electronica',
@@ -411,7 +411,7 @@ export const GENRE_HUBS: GenreHub[] = [
       { label: 'Radios de pop', href: '/genre/pop' },
     ],
     updatedAt: UPDATED,
-    reviewed: false,
+    reviewed: true,
   },
   {
     slug: 'noticias',
@@ -452,7 +452,7 @@ export const GENRE_HUBS: GenreHub[] = [
       { label: 'Radios de Perú', href: '/country/PE' },
     ],
     updatedAt: UPDATED,
-    reviewed: false,
+    reviewed: true,
   },
   {
     slug: 'deportes',
@@ -493,6 +493,6 @@ export const GENRE_HUBS: GenreHub[] = [
       { label: 'Radios de noticias', href: '/genre/noticias' },
     ],
     updatedAt: UPDATED,
-    reviewed: false,
+    reviewed: true,
   },
 ]
