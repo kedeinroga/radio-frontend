@@ -6,11 +6,6 @@
 export const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://rradio.online'
 export const SUPPORTED_LOCALES = ['es', 'en', 'fr', 'de'] as const
 
-/** Emisoras crudas por página de sitemap (antes de filtrar a https/no-HLS, ~1/3 sobrevive). */
-export const RAW_STATIONS_PER_PAGE = 5000
-/** Cuántas páginas de sitemap-stations-N.xml se anuncian en el índice (top ~20.000 por votos). */
-export const STATION_SITEMAP_PAGES = 4
-
 export type ChangeFreq = 'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never'
 
 export interface UrlEntry {
@@ -65,5 +60,3 @@ ${entries.map(renderEntry).join('\n')}
     },
   })
 }
-
-export const emptyUrlset = (): Response => xmlResponse([])

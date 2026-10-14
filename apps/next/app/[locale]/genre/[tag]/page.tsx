@@ -98,7 +98,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 // 🔥 SERVER COMPONENT WITH ISR
 export default async function GenrePage({ params }: PageProps) {
-  const { tag } = await Promise.resolve(params)
+  const { tag, locale } = await Promise.resolve(params)
   
   // CRITICAL: Skip rendering during build phase to prevent crashes
   // This prevents API calls during "Collecting page data" in Vercel builds
@@ -124,9 +124,9 @@ export default async function GenrePage({ params }: PageProps) {
   }
 
   const breadcrumbs = [
-    { name: 'Inicio', url: BASE_URL },
-    { name: 'Géneros', url: `${BASE_URL}/genres` },
-    { name: displayName, url: `${BASE_URL}/genre/${tag}` }
+    { name: 'Inicio', url: `${BASE_URL}/${locale}` },
+    { name: 'Géneros', url: `${BASE_URL}/${locale}/radio-online` },
+    { name: displayName, url: `${BASE_URL}/${locale}/genre/${tag}` }
   ]
 
   return (

@@ -5,14 +5,17 @@ export const dynamic = 'force-dynamic'
 
 /**
  * GET /sitemap-static.xml
- * Páginas estáticas (home, search, favorites…) para todos los locales + blog (solo es).
+ * Páginas indexables: home, hub, legales/institucionales para todos los locales + blog (solo es).
  */
 export async function GET(): Promise<Response> {
   const entries: UrlEntry[] = [
     { path: '', priority: 1.0, changeFrequency: 'daily' },
     { path: '/radio-online', priority: 0.9, changeFrequency: 'weekly' },
-    { path: '/search', priority: 0.8, changeFrequency: 'daily' },
-    { path: '/favorites', priority: 0.7, changeFrequency: 'weekly' },
+    { path: '/about', priority: 0.5, changeFrequency: 'yearly' },
+    { path: '/contact', priority: 0.5, changeFrequency: 'yearly' },
+    { path: '/privacy', priority: 0.3, changeFrequency: 'yearly' },
+    { path: '/terms', priority: 0.3, changeFrequency: 'yearly' },
+    { path: '/dmca', priority: 0.3, changeFrequency: 'yearly' },
     // Blog: solo español
     { path: '/blog', priority: 0.8, changeFrequency: 'weekly', locales: ['es'] },
     ...getAllBlogPosts().map(

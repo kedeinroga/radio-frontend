@@ -96,7 +96,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 // 🔥 SERVER COMPONENT WITH ISR
 export default async function CountryPage({ params }: PageProps) {
-  const { countryCode } = await Promise.resolve(params)
+  const { countryCode, locale } = await Promise.resolve(params)
   
   // CRITICAL: Skip rendering during build phase to prevent crashes
   // This prevents API calls during "Collecting page data" in Vercel builds
@@ -121,9 +121,9 @@ export default async function CountryPage({ params }: PageProps) {
   }
 
   const breadcrumbs = [
-    { name: 'Inicio', url: BASE_URL },
-    { name: 'Países', url: `${BASE_URL}/countries` },
-    { name: countryName, url: `${BASE_URL}/country/${countryCode}` }
+    { name: 'Inicio', url: `${BASE_URL}/${locale}` },
+    { name: 'Países', url: `${BASE_URL}/${locale}/radio-online` },
+    { name: countryName, url: `${BASE_URL}/${locale}/country/${countryCode}` }
   ]
 
   return (
