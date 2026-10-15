@@ -16,7 +16,7 @@ import { StationServerRepository } from '@/lib/repositories/StationServerReposit
 
 const stationRepo = new StationServerRepository()
 
-// Dinámica: lee el país del visitante (x-vercel-ip-country). Las consultas a Radio Browser
+// Dinámica: lee el país del visitante (cf-ipcountry). Las consultas a Radio Browser
 // siguen cacheadas 1h en el data cache (lib/radioBrowser/client).
 
 const LOCAL_STATIONS_LIMIT = 10
@@ -72,10 +72,16 @@ export default async function HomePage({ params }: PageProps) {
   // Only H1 title is enhanced for SEO keywords
   const seoTitle = getSEOTitle(locale)
   
-  // País del visitante según Vercel; en local o sin header no hay fila local.
+  // País del visitante. El dominio pasa por el proxy de Cloudflare, así que Vercel ve la IP de
+  // Cloudflare y su x-vercel-ip-country es el del centro de datos, no el del visitante: manda
+  // cf-ipcountry. x-vercel-ip-country solo vale en accesos directos (*.vercel.app). En local o
+  // sin header no hay fila local. XX = desconocido, T1 = Tor.
   const headersList = await headers()
-  const ipCountry = headersList.get('x-vercel-ip-country')?.toUpperCase()
-  const visitorCountry = ipCountry && /^[A-Z]{2}$/.test(ipCountry) ? ipCountry : undefined
+  const ipCountry = (
+    headersList.get('cf-ipcountry') ?? headersList.get('x-vercel-ip-country')
+  )?.toUpperCase()
+  const visitorCountry =
+    ipCountry && /^[A-Z]{2}$/.test(ipCountry) && ipCountry !== 'XX' ? ipCountry : undefined
 
   // SSR: Fetch stations on the server for SEO
   const [stations, localStations] = await Promise.all([
