@@ -392,7 +392,7 @@
       },
       "rights": {
         "title": "6. Your Rights (GDPR/CCPA)",
-        "content": "Depending on the law in your country, you may have the right to access, correct or delete your data, object to its processing, request portability and withdraw your consent at any time.\n\nSince we have no user accounts, most data about you lives in your own browser and you can delete it yourself. For advertising, you can change your choice in Google's consent message or in Google Ads Settings.\n\nFor any other request, write to **contacto@rradio.online**."
+        "content": "Depending on the law in your country, you may have the right to access, correct or delete your data, object to its processing, request portability and withdraw your consent at any time.\n\nSince we have no user accounts, most data about you lives in your own browser and you can delete it yourself. For advertising, you can change your choice in Google's consent message or in Google Ads Settings.\n\nFor any other request, write to **contact@rradio.online**."
       },
       "children": {
         "title": "7. Children's Privacy (COPPA)",
@@ -412,7 +412,7 @@
       },
       "contact": {
         "title": "11. Contact",
-        "content": "If you have questions about this privacy policy or want to exercise your rights, contact us:\n\n**Email:** contacto@rradio.online\n\nWe will answer your request within 30 days."
+        "content": "If you have questions about this privacy policy or want to exercise your rights, contact us:\n\n**Email:** contact@rradio.online\n\nWe will answer your request within 30 days."
       }
     }
   },
@@ -435,7 +435,7 @@
       },
       "content": {
         "title": "4. Third-Party Content",
-        "content": "Radio streams are provided by third-party stations. We do not control and are not responsible for the content they broadcast.\n\n**Copyright:** radio stations are responsible for holding the licenses needed to broadcast their content. If you believe your copyright is being infringed, contact contacto@rradio.online"
+        "content": "Radio streams are provided by third-party stations. We do not control and are not responsible for the content they broadcast.\n\n**Copyright:** radio stations are responsible for holding the licenses needed to broadcast their content. If you believe your copyright is being infringed, contact contact@rradio.online"
       },
       "userConduct": {
         "title": "5. User Conduct",
@@ -463,7 +463,7 @@
       },
       "contact": {
         "title": "11. Contact",
-        "content": "If you have questions about these terms, contact us:\n\n**Email:** contacto@rradio.online"
+        "content": "If you have questions about these terms, contact us:\n\n**Email:** contact@rradio.online"
       }
     }
   },
@@ -484,7 +484,7 @@
     },
     "team": {
       "title": "The Project",
-      "content": "Rradio is an independent project, built and maintained by a single developer who loves radio. There is no big company behind it: every feature, text and fix is done by me.\n\nIf you find a bug, a station that does not work or want to suggest an improvement, write to contacto@rradio.online. I read every message."
+      "content": "Rradio is an independent project, built and maintained by a single developer who loves radio. There is no big company behind it: every feature, text and fix is done by me.\n\nIf you find a bug, a station that does not work or want to suggest an improvement, write to contact@rradio.online. I read every message."
     },
     "values": {
       "title": "Our Values",
@@ -519,22 +519,22 @@
     "sections": {
       "general": {
         "title": "General Support",
-        "email": "contacto@rradio.online",
+        "email": "contact@rradio.online",
         "description": "For general questions, technical issues or suggestions."
       },
       "privacy": {
         "title": "Privacy and Data",
-        "email": "contacto@rradio.online",
+        "email": "contact@rradio.online",
         "description": "For requests about your personal data (GDPR/CCPA)."
       },
       "legal": {
         "title": "Legal and Copyright",
-        "email": "contacto@rradio.online",
+        "email": "contact@rradio.online",
         "description": "For legal matters, copyright or requests to remove a station."
       },
       "business": {
         "title": "Partnerships",
-        "email": "contacto@rradio.online",
+        "email": "contact@rradio.online",
         "description": "For collaboration proposals or business partnerships."
       }
     },

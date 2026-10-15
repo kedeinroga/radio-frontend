@@ -38,7 +38,7 @@ const content: Record<'es' | 'en' | 'fr' | 'de', CopyrightContent> = {
       {
         id: 'removal',
         heading: '3. Cómo pedir que retiremos una emisora',
-        body: 'Si eres titular de derechos, representas a una emisora o crees por otro motivo que una emisora no debería aparecer en Rradio, escríbenos a **contacto@rradio.online** indicando:\n\n- El nombre de la emisora y el enlace a su página en Rradio\n- El motivo de la solicitud\n- Cómo podemos contactarte\n\nRevisamos cada solicitud y, si procede, retiramos la emisora del directorio y te lo confirmamos por correo.',
+        body: 'Si eres titular de derechos, representas a una emisora o crees por otro motivo que una emisora no debería aparecer en Rradio, escríbenos a **contact@rradio.online** indicando:\n\n- El nombre de la emisora y el enlace a su página en Rradio\n- El motivo de la solicitud\n- Cómo podemos contactarte\n\nRevisamos cada solicitud y, si procede, retiramos la emisora del directorio y te lo confirmamos por correo.',
       },
     ],
     back: 'Volver al inicio',
@@ -63,7 +63,7 @@ const content: Record<'es' | 'en' | 'fr' | 'de', CopyrightContent> = {
       {
         id: 'removal',
         heading: '3. How to ask us to remove a station',
-        body: 'If you are a rights holder, represent a station or believe for any other reason that a station should not be listed on Rradio, write to **contacto@rradio.online** with:\n\n- The station name and the link to its page on Rradio\n- The reason for your request\n- How we can reach you\n\nWe review every request and, where appropriate, remove the station from the directory and confirm it by email.',
+        body: 'If you are a rights holder, represent a station or believe for any other reason that a station should not be listed on Rradio, write to **contact@rradio.online** with:\n\n- The station name and the link to its page on Rradio\n- The reason for your request\n- How we can reach you\n\nWe review every request and, where appropriate, remove the station from the directory and confirm it by email.',
       },
     ],
     back: 'Back to home',
@@ -88,7 +88,7 @@ const content: Record<'es' | 'en' | 'fr' | 'de', CopyrightContent> = {
       {
         id: 'removal',
         heading: '3. Comment demander le retrait d\'une station',
-        body: 'Si vous êtes titulaire de droits, représentez une station ou estimez pour une autre raison qu\'une station ne devrait pas figurer sur Rradio, écrivez à **contacto@rradio.online** en indiquant :\n\n- Le nom de la station et le lien vers sa page sur Rradio\n- Le motif de votre demande\n- Comment vous joindre\n\nNous examinons chaque demande et, le cas échéant, retirons la station de l\'annuaire et vous le confirmons par e-mail.',
+        body: 'Si vous êtes titulaire de droits, représentez une station ou estimez pour une autre raison qu\'une station ne devrait pas figurer sur Rradio, écrivez à **contact@rradio.online** en indiquant :\n\n- Le nom de la station et le lien vers sa page sur Rradio\n- Le motif de votre demande\n- Comment vous joindre\n\nNous examinons chaque demande et, le cas échéant, retirons la station de l\'annuaire et vous le confirmons par e-mail.',
       },
     ],
     back: 'Retour à l\'accueil',
@@ -113,7 +113,7 @@ const content: Record<'es' | 'en' | 'fr' | 'de', CopyrightContent> = {
       {
         id: 'removal',
         heading: '3. So beantragen Sie die Entfernung eines Senders',
-        body: 'Wenn Sie Rechteinhaber sind, einen Sender vertreten oder aus einem anderen Grund der Meinung sind, dass ein Sender nicht auf Rradio erscheinen sollte, schreiben Sie an **contacto@rradio.online** mit:\n\n- Name des Senders und Link zu seiner Seite auf Rradio\n- Grund Ihrer Anfrage\n- Wie wir Sie erreichen können\n\nWir prüfen jede Anfrage, entfernen den Sender gegebenenfalls aus dem Verzeichnis und bestätigen es Ihnen per E-Mail.',
+        body: 'Wenn Sie Rechteinhaber sind, einen Sender vertreten oder aus einem anderen Grund der Meinung sind, dass ein Sender nicht auf Rradio erscheinen sollte, schreiben Sie an **contact@rradio.online** mit:\n\n- Name des Senders und Link zu seiner Seite auf Rradio\n- Grund Ihrer Anfrage\n- Wie wir Sie erreichen können\n\nWir prüfen jede Anfrage, entfernen den Sender gegebenenfalls aus dem Verzeichnis und bestätigen es Ihnen per E-Mail.',
       },
     ],
     back: 'Zurück zur Startseite',

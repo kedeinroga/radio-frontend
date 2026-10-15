@@ -392,7 +392,7 @@
       },
       "rights": {
         "title": "6. Ihre Rechte (DSGVO/CCPA)",
-        "content": "Je nach Recht Ihres Landes haben Sie das Recht auf Auskunft, Berichtigung und Löschung Ihrer Daten, auf Widerspruch gegen die Verarbeitung, auf Datenübertragbarkeit und darauf, Ihre Einwilligung jederzeit zu widerrufen.\n\nDa wir keine Benutzerkonten haben, liegen die meisten Sie betreffenden Daten in Ihrem eigenen Browser und Sie können sie selbst löschen. Für Werbung können Sie Ihre Wahl in der Einwilligungsmeldung von Google oder in den Google-Anzeigeneinstellungen ändern.\n\nFür alle anderen Anfragen schreiben Sie an **contacto@rradio.online**."
+        "content": "Je nach Recht Ihres Landes haben Sie das Recht auf Auskunft, Berichtigung und Löschung Ihrer Daten, auf Widerspruch gegen die Verarbeitung, auf Datenübertragbarkeit und darauf, Ihre Einwilligung jederzeit zu widerrufen.\n\nDa wir keine Benutzerkonten haben, liegen die meisten Sie betreffenden Daten in Ihrem eigenen Browser und Sie können sie selbst löschen. Für Werbung können Sie Ihre Wahl in der Einwilligungsmeldung von Google oder in den Google-Anzeigeneinstellungen ändern.\n\nFür alle anderen Anfragen schreiben Sie an **contact@rradio.online**."
       },
       "children": {
         "title": "7. Datenschutz von Kindern (COPPA)",
@@ -412,7 +412,7 @@
       },
       "contact": {
         "title": "11. Kontakt",
-        "content": "Bei Fragen zu dieser Datenschutzerklärung oder zur Ausübung Ihrer Rechte kontaktieren Sie uns:\n\n**E-Mail:** contacto@rradio.online\n\nWir beantworten Ihre Anfrage innerhalb von 30 Tagen."
+        "content": "Bei Fragen zu dieser Datenschutzerklärung oder zur Ausübung Ihrer Rechte kontaktieren Sie uns:\n\n**E-Mail:** contact@rradio.online\n\nWir beantworten Ihre Anfrage innerhalb von 30 Tagen."
       }
     }
   },
@@ -435,7 +435,7 @@
       },
       "content": {
         "title": "4. Inhalte Dritter",
-        "content": "Die Radiostreams werden von Drittsendern bereitgestellt. Wir kontrollieren deren Inhalte nicht und sind dafür nicht verantwortlich.\n\n**Urheberrecht:** Die Sender sind dafür verantwortlich, die für ihre Ausstrahlung nötigen Lizenzen zu besitzen. Wenn Sie glauben, dass Ihr Urheberrecht verletzt wird, schreiben Sie an contacto@rradio.online"
+        "content": "Die Radiostreams werden von Drittsendern bereitgestellt. Wir kontrollieren deren Inhalte nicht und sind dafür nicht verantwortlich.\n\n**Urheberrecht:** Die Sender sind dafür verantwortlich, die für ihre Ausstrahlung nötigen Lizenzen zu besitzen. Wenn Sie glauben, dass Ihr Urheberrecht verletzt wird, schreiben Sie an contact@rradio.online"
       },
       "userConduct": {
         "title": "5. Verhalten der Nutzer",
@@ -463,7 +463,7 @@
       },
       "contact": {
         "title": "11. Kontakt",
-        "content": "Bei Fragen zu diesen Bedingungen kontaktieren Sie uns:\n\n**E-Mail:** contacto@rradio.online"
+        "content": "Bei Fragen zu diesen Bedingungen kontaktieren Sie uns:\n\n**E-Mail:** contact@rradio.online"
       }
     }
   },
@@ -484,7 +484,7 @@
     },
     "team": {
       "title": "Das Projekt",
-      "content": "Rradio ist ein unabhängiges Projekt, entwickelt und betreut von einem einzelnen Entwickler mit einer Leidenschaft für Radio. Dahinter steht kein großes Unternehmen: Jede Funktion, jeden Text und jede Korrektur übernehme ich selbst.\n\nWenn Sie einen Fehler finden, ein Sender nicht funktioniert oder Sie eine Verbesserung vorschlagen möchten, schreiben Sie an contacto@rradio.online. Ich lese jede Nachricht."
+      "content": "Rradio ist ein unabhängiges Projekt, entwickelt und betreut von einem einzelnen Entwickler mit einer Leidenschaft für Radio. Dahinter steht kein großes Unternehmen: Jede Funktion, jeden Text und jede Korrektur übernehme ich selbst.\n\nWenn Sie einen Fehler finden, ein Sender nicht funktioniert oder Sie eine Verbesserung vorschlagen möchten, schreiben Sie an contact@rradio.online. Ich lese jede Nachricht."
     },
     "values": {
       "title": "Unsere Werte",
@@ -519,22 +519,22 @@
     "sections": {
       "general": {
         "title": "Allgemeiner Support",
-        "email": "contacto@rradio.online",
+        "email": "contact@rradio.online",
         "description": "Für allgemeine Fragen, technische Probleme oder Vorschläge."
       },
       "privacy": {
         "title": "Datenschutz",
-        "email": "contacto@rradio.online",
+        "email": "contact@rradio.online",
         "description": "Für Anfragen zu Ihren personenbezogenen Daten (DSGVO/CCPA)."
       },
       "legal": {
         "title": "Recht und Urheberrecht",
-        "email": "contacto@rradio.online",
+        "email": "contact@rradio.online",
         "description": "Für rechtliche Anliegen, Urheberrecht oder Anfragen zur Entfernung eines Senders."
       },
       "business": {
         "title": "Kooperationen",
-        "email": "contacto@rradio.online",
+        "email": "contact@rradio.online",
         "description": "Für Kooperationsvorschläge oder geschäftliche Partnerschaften."
       }
     },

@@ -63,7 +63,7 @@ export default async function RootLayout({
                 contactPoint: {
                   '@type': 'ContactPoint',
                   contactType: 'customer support',
-                  email: 'contacto@rradio.online'
+                  email: 'contact@rradio.online'
                 }
               },
               {
