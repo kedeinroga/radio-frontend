@@ -321,7 +321,7 @@
       },
       "cultural": {
         "title": "Radio as a Cultural Bridge",
-        "content": "At Rradio, we believe online radio is the most authentic way to experience a foreign culture without leaving home.\n\n**Real use cases:**\n\n- **Language learning**: Listen to French radio while cooking. It's more effective than any language app because it's real content, not pedagogical scripts.\n\n- **Expats and nostalgia**: Thousands of users listen to radio from their home country to feel closer. The familiar accent, local news, the music you grew up with.\n\n- **Virtual travelers**: Plan your next trip by listening to local radio. Discover what music is trending, what events are being discussed, how that place really sounds.\n\nOnline radio doesn't just transmit audio, it transmits **atmosphere, emotion, and culture in its purest form**."
+        "content": "At Rradio, we believe online radio is the most authentic way to experience a foreign culture without leaving home.\n\n**Real use cases:**\n\n- **Language learning**: Listen to French radio while cooking. It's more effective than any language app because it's real content, not pedagogical scripts.\n\n- **Expats and nostalgia**: If you live abroad, radio from your home country brings you closer to home. The familiar accent, local news, the music you grew up with.\n\n- **Virtual travelers**: Plan your next trip by listening to local radio. Discover what music is trending, what events are being discussed, how that place really sounds.\n\nOnline radio doesn't just transmit audio, it transmits **atmosphere, emotion, and culture in its purest form**."
       },
       "genres": {
         "title": "Explore by Music Genre",
@@ -480,7 +480,7 @@
     },
     "story": {
       "title": "Our Story",
-      "content": "Rradio was born out of nostalgia. As expatriates, we wanted to stay connected to our roots by listening to the same stations as our friends and family.\n\nWe realized there were thousands of great stations on the internet, but they were scattered and hard to find. That is how Rradio was born: a platform that gathers and organizes radio stations from around the world in one place."
+      "content": "Rradio started as a personal project in Peru: I wanted a simple way to listen to radio from any country in the browser, without installing anything or creating an account.\n\nThere are tens of thousands of stations on the internet, but their links are scattered and many stop working. Rradio starts from the public Radio Browser catalog, hides broken and duplicate stations, and organizes them by genre and country, with written guides to help you decide what to listen to."
     },
     "technology": {
       "title": "Technology",

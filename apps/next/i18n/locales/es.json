@@ -322,7 +322,7 @@
       },
       "cultural": {
         "title": "La Radio Como Puente Cultural",
-        "content": "En Rradio creemos que la radio online es la forma más auténtica de experimentar una cultura extranjera sin salir de casa.\n\n**Casos de uso reales:**\n\n- **Aprender idiomas**: Escucha radio francesa mientras cocinas. Es más efectivo que cualquier app de idiomas porque es contenido real, no guiones pedagógicos.\n\n- **Expatriados y nostalgia**: Miles de usuarios escuchan la radio de su país natal para sentirse más cerca de casa. El acento familiar, las noticias locales, la música que creció contigo.\n\n- **Viajeros virtuales**: Planea tu próximo viaje escuchando la radio local. Descubre qué música está de moda, qué eventos se discuten, cómo suena realmente ese lugar.\n\n La radio online no solo transmite audio, transmite **atmósfera, emoción y cultura en estado puro**."
+        "content": "En Rradio creemos que la radio online es la forma más auténtica de experimentar una cultura extranjera sin salir de casa.\n\n**Casos de uso reales:**\n\n- **Aprender idiomas**: Escucha radio francesa mientras cocinas. Es más efectivo que cualquier app de idiomas porque es contenido real, no guiones pedagógicos.\n\n- **Expatriados y nostalgia**: Si vives fuera de tu país, la radio de tu tierra te acerca a casa. El acento familiar, las noticias locales, la música que creció contigo.\n\n- **Viajeros virtuales**: Planea tu próximo viaje escuchando la radio local. Descubre qué música está de moda, qué eventos se discuten, cómo suena realmente ese lugar.\n\n La radio online no solo transmite audio, transmite **atmósfera, emoción y cultura en estado puro**."
       },
       "genres": {
         "title": "Explora por Género Musical",
@@ -481,7 +481,7 @@
     },
     "story": {
       "title": "Nuestra Historia",
-      "content": "Rradio nació de la nostalgia. Como expatriados, queríamos mantener la conexión con nuestras raíces escuchando las mismas estaciones que nuestros amigos y familia.\n\nNos dimos cuenta de que existían miles de estaciones increíbles en internet, pero dispersas y difíciles de encontrar. Así nació Rradio: una plataforma que agrupa y organiza estaciones de radio de todo el mundo en un solo lugar."
+      "content": "Rradio empezó como un proyecto personal en Perú: quería una forma sencilla de escuchar radio de cualquier país desde el navegador, sin instalar nada ni crear una cuenta.\n\nEn internet hay decenas de miles de emisoras, pero sus enlaces están dispersos y muchos dejan de funcionar. Rradio parte del catálogo público de Radio Browser, oculta las emisoras caídas y las duplicadas, y las organiza por géneros y países, con guías escritas para ayudarte a decidir qué escuchar."
     },
     "technology": {
       "title": "Tecnología",

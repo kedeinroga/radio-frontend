@@ -321,7 +321,7 @@
       },
       "cultural": {
         "title": "Radio als Kulturelle Brücke",
-        "content": "Bei Rradio glauben wir, dass Online-Radio der authentischste Weg ist, eine fremde Kultur zu erleben, ohne Ihr Zuhause zu verlassen.\n\n**Reale Anwendungsfälle:**\n\n- **Sprachenlernen**: Hören Sie französisches Radio beim Kochen. Es ist effektiver als jede Sprach-App, weil es echter Inhalt ist, keine pädagogischen Skripte.\n\n- **Expatriates und Nostalgie**: Tausende Nutzer hören Radio aus ihrem Heimatland, um sich näher zu fühlen. Der vertraute Akzent, lokale Nachrichten, die Musik, mit der Sie aufgewachsen sind.\n\n- **Virtuelle Reisende**: Planen Sie Ihre nächste Reise, indem Sie lokales Radio hören. Entdecken Sie, welche Musik im Trend ist, welche Ereignisse diskutiert werden, wie dieser Ort wirklich klingt.\n\nOnline-Radio überträgt nicht nur Audio, es überträgt **Atmosphäre, Emotion und Kultur in ihrer reinsten Form**."
+        "content": "Bei Rradio glauben wir, dass Online-Radio der authentischste Weg ist, eine fremde Kultur zu erleben, ohne Ihr Zuhause zu verlassen.\n\n**Reale Anwendungsfälle:**\n\n- **Sprachenlernen**: Hören Sie französisches Radio beim Kochen. Es ist effektiver als jede Sprach-App, weil es echter Inhalt ist, keine pädagogischen Skripte.\n\n- **Expatriates und Nostalgie**: Wenn Sie im Ausland leben, bringt Sie das Radio aus Ihrer Heimat ein Stück näher nach Hause. Der vertraute Akzent, lokale Nachrichten, die Musik, mit der Sie aufgewachsen sind.\n\n- **Virtuelle Reisende**: Planen Sie Ihre nächste Reise, indem Sie lokales Radio hören. Entdecken Sie, welche Musik im Trend ist, welche Ereignisse diskutiert werden, wie dieser Ort wirklich klingt.\n\nOnline-Radio überträgt nicht nur Audio, es überträgt **Atmosphäre, Emotion und Kultur in ihrer reinsten Form**."
       },
       "genres": {
         "title": "Nach Musikgenre Erkunden",
@@ -480,7 +480,7 @@
     },
     "story": {
       "title": "Unsere Geschichte",
-      "content": "Rradio entstand aus Heimweh. Als Auswanderer wollten wir mit unseren Wurzeln verbunden bleiben und dieselben Sender hören wie unsere Freunde und Familie.\n\nWir merkten, dass es im Internet Tausende großartiger Sender gibt, die aber verstreut und schwer zu finden sind. So entstand Rradio: eine Plattform, die Radiosender aus aller Welt an einem Ort sammelt und ordnet."
+      "content": "Rradio begann als privates Projekt in Peru: Ich wollte eine einfache Möglichkeit, Radio aus jedem Land im Browser zu hören, ohne etwas zu installieren oder ein Konto anzulegen.\n\nIm Internet gibt es Zehntausende Sender, aber ihre Links sind verstreut und viele funktionieren irgendwann nicht mehr. Rradio nutzt den öffentlichen Katalog von Radio Browser, blendet nicht erreichbare und doppelte Sender aus und ordnet sie nach Genres und Ländern, mit redaktionellen Leitfäden, die Ihnen bei der Auswahl helfen."
     },
     "technology": {
       "title": "Technologie",
