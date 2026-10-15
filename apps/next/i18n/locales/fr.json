@@ -368,7 +368,7 @@
   "privacy": {
     "title": "Politique de Confidentialité",
     "lastUpdated": "Dernière mise à jour : {{date}}",
-    "intro": "Chez Rradio, nous respectons votre vie privée. Cette politique explique quelles informations sont traitées lorsque vous utilisez notre service de radio en ligne, pourquoi, et quels sont vos choix.",
+    "intro": "Chez Rradio, nous respectons votre vie privée. Cette politique explique quelles informations sont traitées lorsque vous utilisez notre service de radio en ligne, pourquoi, et quels sont vos choix. Rradio est un projet personnel exploité depuis le Pérou. Le responsable du traitement est le titulaire de Rradio, que vous pouvez contacter à contact@rradio.online.",
     "sections": {
       "collection": {
         "title": "1. Informations que Nous Collectons",
@@ -392,7 +392,7 @@
       },
       "rights": {
         "title": "6. Vos Droits (RGPD/CCPA)",
-        "content": "Selon la loi de votre pays, vous pouvez avoir le droit d'accéder à vos données, de les rectifier ou de les supprimer, de vous opposer à leur traitement, d'en demander la portabilité et de retirer votre consentement à tout moment.\n\nComme nous n'avons pas de comptes utilisateurs, la plupart des données vous concernant se trouvent dans votre propre navigateur et vous pouvez les supprimer vous-même. Pour la publicité, vous pouvez modifier votre choix dans le message de consentement de Google ou dans les paramètres des annonces Google.\n\nPour toute autre demande, écrivez à **contact@rradio.online**."
+        "content": "Selon la loi de votre pays, vous pouvez avoir le droit d'accéder à vos données, de les rectifier ou de les supprimer, de vous opposer à leur traitement, d'en demander la portabilité et de retirer votre consentement à tout moment.\n\nComme nous n'avons pas de comptes utilisateurs, la plupart des données vous concernant se trouvent dans votre propre navigateur et vous pouvez les supprimer vous-même. Pour la publicité, vous pouvez modifier votre choix dans le message de consentement de Google ou dans les paramètres des annonces Google.\n\nPour toute autre demande, écrivez à **contact@rradio.online**.\n\nSi vous estimez que votre demande n'a pas été correctement traitée, vous pouvez déposer une réclamation auprès de l'Autorité nationale de protection des données personnelles du Pérou (loi n° 29733) ou auprès de l'autorité de protection des données de votre pays."
       },
       "children": {
         "title": "7. Confidentialité des Mineurs (COPPA)",
@@ -419,7 +419,7 @@
   "terms": {
     "title": "Conditions d'Utilisation",
     "lastUpdated": "Dernière mise à jour : {{date}}",
-    "intro": "Bienvenue sur Rradio. En utilisant notre service, vous acceptez ces conditions. Merci de les lire attentivement.",
+    "intro": "Bienvenue sur Rradio. En utilisant notre service, vous acceptez ces conditions. Merci de les lire attentivement. Rradio est un projet personnel exploité depuis le Pérou.",
     "sections": {
       "acceptance": {
         "title": "1. Acceptation des Conditions",
@@ -461,8 +461,12 @@
         "title": "10. Modifications des Conditions",
         "content": "Nous pouvons modifier ces conditions à tout moment. Les changements importants seront signalés par un avis sur le site.\n\nL'utilisation continue du service après une modification vaut acceptation des nouvelles conditions."
       },
+      "law": {
+        "title": "11. Droit Applicable",
+        "content": "Les présentes conditions sont régies par les lois de la République du Pérou. Si vous utilisez Rradio en tant que consommateur, cela ne vous prive pas de la protection que vous accordent les dispositions impératives de votre pays de résidence."
+      },
       "contact": {
-        "title": "11. Contact",
+        "title": "12. Contact",
         "content": "Pour toute question sur ces conditions, contactez-nous :\n\n**E-mail :** contact@rradio.online"
       }
     }

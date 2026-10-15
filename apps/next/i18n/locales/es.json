@@ -369,7 +369,7 @@
   "privacy": {
     "title": "Política de Privacidad",
     "lastUpdated": "Última actualización: {{date}}",
-    "intro": "En Rradio, valoramos y respetamos tu privacidad. Esta política explica cómo recopilamos, usamos y protegemos tu información personal cuando utilizas nuestro servicio de radio online.",
+    "intro": "En Rradio, valoramos y respetamos tu privacidad. Esta política explica cómo recopilamos, usamos y protegemos tu información personal cuando utilizas nuestro servicio de radio online. Rradio es un proyecto personal operado desde Perú. El responsable del tratamiento es el titular de Rradio, a quien puedes escribir a contact@rradio.online.",
     "sections": {
       "collection": {
         "title": "1. Información que Recopilamos",
@@ -393,7 +393,7 @@
       },
       "rights": {
         "title": "6. Tus Derechos (GDPR/CCPA)",
-        "content": "Según la ley de tu país, puedes tener derecho a acceder a tus datos, rectificarlos, suprimirlos, oponerte a su tratamiento, solicitar su portabilidad y retirar tu consentimiento en cualquier momento.\n\nComo no tenemos cuentas de usuario, la mayoría de los datos que te conciernen están en tu propio navegador y puedes borrarlos tú mismo. Para la publicidad, puedes cambiar tu elección en el mensaje de consentimiento de Google o en la configuración de anuncios de Google.\n\nPara cualquier otra solicitud, escríbenos a **contact@rradio.online**."
+        "content": "Según la ley de tu país, puedes tener derecho a acceder a tus datos, rectificarlos, suprimirlos, oponerte a su tratamiento, solicitar su portabilidad y retirar tu consentimiento en cualquier momento.\n\nComo no tenemos cuentas de usuario, la mayoría de los datos que te conciernen están en tu propio navegador y puedes borrarlos tú mismo. Para la publicidad, puedes cambiar tu elección en el mensaje de consentimiento de Google o en la configuración de anuncios de Google.\n\nPara cualquier otra solicitud, escríbenos a **contact@rradio.online**.\n\nSi crees que no hemos atendido bien tu solicitud, puedes presentar una reclamación ante la Autoridad Nacional de Protección de Datos Personales del Perú (Ley N.º 29733) o ante la autoridad de protección de datos de tu país."
       },
       "children": {
         "title": "7. Privacidad de Menores (COPPA)",
@@ -420,7 +420,7 @@
   "terms": {
     "title": "Términos de Servicio",
     "lastUpdated": "Última actualización: {{date}}",
-    "intro": "Bienvenido a Rradio. Al usar nuestro servicio, aceptas estos términos. Por favor, léelos cuidadosamente.",
+    "intro": "Bienvenido a Rradio. Al usar nuestro servicio, aceptas estos términos. Por favor, léelos cuidadosamente. Rradio es un proyecto personal operado desde Perú.",
     "sections": {
       "acceptance": {
         "title": "1. Aceptación de los Términos",
@@ -462,8 +462,12 @@
         "title": "10. Modificaciones a los Términos",
         "content": "Nos reservamos el derecho de modificar estos términos en cualquier momento. Los cambios significativos se notificarán mediante un aviso en el sitio.\n\nEl uso continuado del servicio después de cambios constituye aceptación de los nuevos términos."
       },
+      "law": {
+        "title": "11. Ley Aplicable",
+        "content": "Estos términos se rigen por las leyes de la República del Perú. Si usas Rradio como consumidor, esto no te priva de la protección que te otorguen las normas imperativas de tu país de residencia."
+      },
       "contact": {
-        "title": "11. Contacto",
+        "title": "12. Contacto",
         "content": "Si tienes preguntas sobre estos términos, contáctanos:\n\n**Email:** contact@rradio.online"
       }
     }
