@@ -131,6 +131,12 @@ const nextConfig = {
         destination: '/es/blog/:path+',
         permanent: true,
       },
+      // La página de la DMCA pasó a ser "Derechos de autor"
+      {
+        source: '/:locale(es|en|fr|de)/dmca',
+        destination: '/:locale/copyright',
+        permanent: true,
+      },
       // /genres nunca existió; el índice de géneros y países vive en /radio-online.
       {
         source: '/:locale(es|en|fr|de)/genres',

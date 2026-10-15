@@ -13,6 +13,8 @@
  * ❌ NUNCA importar en componentes del cliente
  */
 
+import { BLOCKED_STATIONS } from '@/lib/blockedStations'
+
 const DEFAULT_SERVERS = [
   'https://de1.api.radio-browser.info',
   'https://all.api.radio-browser.info',
@@ -100,6 +102,7 @@ function toDTO(s: RadioBrowserStation): StationDTO | null {
   const streamUrl = s.url_resolved || s.url
   if (!s.stationuuid || !s.name?.trim() || !streamUrl || !isHttps(streamUrl)) return null
   if (s.hls === 1 || /\.m3u8(\?|$)/i.test(streamUrl)) return null
+  if (isBlocked(s)) return null
 
   return {
     id: s.stationuuid,
@@ -158,15 +161,27 @@ const TECH_SUFFIX = /[\s\-_|/([]+(hd|opus|mp3|aac\+?|he-?aac|ogg|flac|hq|lq|hi-?
  * fusionan emisoras homónimas de países distintos.
  */
 function dedupeKey(s: { name: string; countrycode: string }): string {
-  let name = s.name.trim().toLowerCase()
+  return `${baseName(s.name)}|${s.countrycode}`
+}
+
+/** Nombre sin sufijos técnicos, tildes ("Opéra" = "Opera") ni puntuación. */
+function baseName(raw: string): string {
+  let name = raw.trim().toLowerCase()
   let previous
   do {
     previous = name
     name = name.replace(TECH_SUFFIX, '').trim()
   } while (name !== previous)
-  // Sin tildes ("Opéra" = "Opera") ni puntuación
   name = name.normalize('NFD').replace(/\p{M}/gu, '').replace(/[^\p{L}\p{N}]+/gu, ' ').trim()
-  return `${name || s.name.trim().toLowerCase()}|${s.countrycode}`
+  return name || raw.trim().toLowerCase()
+}
+
+// Emisoras retiradas (lib/blockedStations): por id y por nombre, para cubrir sus variantes
+const BLOCKED_IDS = new Set(BLOCKED_STATIONS.map((b) => b.id))
+const BLOCKED_NAMES = new Set(BLOCKED_STATIONS.map((b) => baseName(b.name)))
+
+function isBlocked(s: RadioBrowserStation): boolean {
+  return BLOCKED_IDS.has(s.stationuuid) || BLOCKED_NAMES.has(baseName(s.name))
 }
 
 async function searchStations(query: StationQuery): Promise<StationDTO[]> {

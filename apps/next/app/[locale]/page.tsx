@@ -283,7 +283,7 @@ export default async function HomePage({ params }: PageProps) {
               {[
                 { href: `/${locale}/privacy`, label: t.legal?.privacy || 'Privacidad' },
                 { href: `/${locale}/terms`,   label: t.legal?.terms   || 'Términos' },
-                { href: `/${locale}/dmca`,    label: 'DMCA' },
+                { href: `/${locale}/copyright`, label: t.legal?.copyright || 'Derechos de autor' },
                 { href: `/${locale}/about`,   label: t.legal?.about   || 'Acerca de' },
                 { href: `/${locale}/contact`, label: t.legal?.contact || 'Contacto' },
               ].map(({ href, label }) => (

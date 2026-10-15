@@ -362,7 +362,8 @@
     "privacy": "Datenschutz",
     "terms": "Nutzungsbedingungen",
     "about": "Über uns",
-    "contact": "Kontakt"
+    "contact": "Kontakt",
+    "copyright": "Urheberrecht"
   },
   "privacy": {
     "title": "Datenschutzerklärung",
@@ -529,7 +530,7 @@
       "legal": {
         "title": "Recht und Urheberrecht",
         "email": "contacto@rradio.online",
-        "description": "Für rechtliche Anliegen, DMCA-Meldungen oder Urheberrechtsansprüche."
+        "description": "Für rechtliche Anliegen, Urheberrecht oder Anfragen zur Entfernung eines Senders."
       },
       "business": {
         "title": "Kooperationen",
